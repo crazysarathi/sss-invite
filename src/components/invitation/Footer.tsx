@@ -11,7 +11,7 @@ import { BrandMark } from "@/components/shared/Glyphs";
 export function Footer() {
   return (
     <footer id="footer" className="relative overflow-hidden bg-page">
-      <div className="section-shell pb-10 md:pb-12">
+      <div className="section-shell pb-28 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">
           <AnimatedText as="p" className="t-display text-display-md text-fg">
             {footer.lines[0]} <em className="text-primary">{footer.lines[1]}</em>
