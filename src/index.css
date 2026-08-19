@@ -1,0 +1,394 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ==================================================================
+   THEME TOKENS
+   `applyTheme()` (src/themes/apply.ts) writes every variable below onto
+   <html> at boot and on every palette switch. The values here are the
+   base theme in Blush — a no-JS / pre-boot fallback so the first paint is
+   never unstyled.
+   ================================================================== */
+@layer base {
+  :root {
+    --c-bg: 247 242 236;
+    --c-bg-alt: 240 232 223;
+    --c-surface: 252 250 246;
+    --c-surface-2: 243 236 228;
+    --c-fg: 43 37 33;
+    --c-fg-muted: 109 99 91;
+    --c-fg-subtle: 156 145 136;
+    --c-primary: 182 120 108;
+    --c-primary-fg: 253 248 244;
+    --c-secondary: 139 156 126;
+    --c-secondary-fg: 247 242 236;
+    --c-accent: 166 138 91;
+    --c-line: 227 216 203;
+    --c-line-strong: 201 185 168;
+    --c-overlay: 43 37 33;
+    --c-destructive: 184 87 74;
+
+    --font-display: "Fraunces Variable", Georgia, serif;
+    --font-body: "Jost Variable", system-ui, sans-serif;
+    --font-accent: "Jost Variable", system-ui, sans-serif;
+    --display-weight: 500;
+    --display-tracking: -0.015em;
+    --display-transform: none;
+    --display-leading: 1;
+    --body-weight: 400;
+    --body-leading: 1.7;
+    --accent-weight: 500;
+    --accent-tracking: 0.28em;
+    --accent-transform: uppercase;
+    --display-xl: clamp(3.4rem, 9.5vw, 8.5rem);
+    --display-lg: clamp(2.5rem, 6vw, 5rem);
+    --display-md: clamp(2rem, 4.2vw, 3.5rem);
+    --display-sm: clamp(1.5rem, 2.6vw, 2.125rem);
+    --kicker-size: 0.72rem;
+
+    --radius-sm: 6px;
+    --radius-md: 12px;
+    --radius-lg: 20px;
+    --radius-card: 22px;
+    --radius-btn: 999px;
+    --radius-img: 18px;
+    --radius-field: 12px;
+    --border-w: 1px;
+    --shadow-card: 0 18px 50px -28px rgba(58, 42, 44, 0.28);
+    --shadow-float: 0 30px 70px -30px rgba(58, 42, 44, 0.38);
+    --shadow-btn: 0 12px 28px -14px rgba(196, 115, 127, 0.7);
+
+    --max-w: 1180px;
+    --section-y: clamp(5.5rem, 11vw, 9rem);
+    --gutter: 1.5rem;
+
+    --pattern-opacity: 0.9;
+
+    --ease: cubic-bezier(0.16, 0.84, 0.44, 1);
+    --dur-micro: 0.45s;
+    --dur-base: 1.1s;
+    --dur-slow: 1.6s;
+
+    --nav-height: 76px;
+  }
+
+  html {
+    /* No CSS smooth scrolling: GSAP (ScrollSmoother / ScrollTo) owns scroll
+       animation, and CSS smooth would turn its instant jumps into glides. */
+    scroll-behavior: auto;
+    -webkit-text-size-adjust: 100%;
+    scrollbar-width: thin;
+    scrollbar-color: rgb(var(--c-line-strong)) transparent;
+  }
+
+  html,
+  body {
+    /* clip (not hidden): prevents stray absolute decor from widening the
+       mobile layout viewport without creating a scroll container */
+    overflow-x: clip;
+  }
+
+  body {
+    background-color: rgb(var(--c-bg));
+    color: rgb(var(--c-fg));
+    font-family: var(--font-body);
+    font-weight: var(--body-weight);
+    line-height: var(--body-leading);
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    text-rendering: optimizeLegibility;
+  }
+
+  :focus-visible {
+    outline: 2px solid rgb(var(--c-primary));
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+  /* Sections receive programmatic focus after in-page navigation
+     (scrollToSection) — a ring around a whole section is noise. */
+  section[tabindex="-1"]:focus-visible,
+  footer[tabindex="-1"]:focus-visible,
+  main[tabindex="-1"]:focus-visible {
+    outline: none;
+  }
+
+  ::selection {
+    background: rgb(var(--c-primary));
+    color: rgb(var(--c-primary-fg));
+  }
+
+  ::-webkit-scrollbar {
+    width: 8px;
+    height: 8px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    border-radius: 9999px;
+    border: 2px solid transparent;
+    background: rgb(var(--c-line-strong));
+    background-clip: padding-box;
+  }
+
+  img {
+    color: transparent; /* hide alt text flash while loading */
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    *,
+    *::before,
+    *::after {
+      animation-duration: 0.01ms !important;
+      animation-iteration-count: 1 !important;
+      transition-duration: 0.01ms !important;
+      scroll-behavior: auto !important;
+    }
+  }
+}
+
+/* ==================================================================
+   THEME-DRIVEN HELPER CLASSES
+   ================================================================== */
+@layer components {
+  /* Display type — family, weight, tracking, case and leading all come
+     from the theme. <em> inside is the italic accent (if the theme has one). */
+  .t-display {
+    font-family: var(--font-display);
+    font-weight: var(--display-weight);
+    letter-spacing: var(--display-tracking);
+    text-transform: var(--display-transform);
+    line-height: var(--display-leading);
+    text-wrap: balance;
+  }
+  .t-display em {
+    font-style: normal;
+  }
+  [data-italic="on"] .t-display em {
+    font-style: italic;
+    font-weight: calc(var(--display-weight) - 100);
+  }
+
+  /* Small "voice" type: kickers, labels, nav, buttons */
+  .t-accent {
+    font-family: var(--font-accent);
+    font-weight: var(--accent-weight);
+    letter-spacing: var(--accent-tracking);
+    text-transform: var(--accent-transform);
+  }
+  .t-kicker {
+    @apply t-accent inline-flex items-center gap-3 text-primary;
+    font-size: var(--kicker-size);
+    line-height: 1.2;
+  }
+  .t-label {
+    @apply t-accent text-fg-muted;
+    font-size: 0.7rem;
+    line-height: 1.2;
+  }
+
+  /* Section container: max width + gutter + vertical rhythm from theme */
+  .section-shell {
+    position: relative;
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--max-w);
+    padding-inline: var(--gutter);
+    padding-block: var(--section-y);
+  }
+  .section-shell-x {
+    position: relative;
+    margin-inline: auto;
+    width: 100%;
+    max-width: var(--max-w);
+    padding-inline: var(--gutter);
+  }
+
+  /* Card surface — style resolved by the theme's `shape.card` */
+  .t-surface {
+    position: relative;
+    background-color: rgb(var(--c-surface));
+    border-radius: var(--radius-card);
+    transition: transform var(--dur-micro) var(--ease), box-shadow var(--dur-micro) var(--ease),
+      border-color var(--dur-micro) var(--ease);
+  }
+  [data-card="flat"] .t-surface {
+    background-color: transparent;
+    border-top: var(--border-w) solid rgb(var(--c-line));
+  }
+  [data-card="outline"] .t-surface {
+    border: var(--border-w) solid rgb(var(--c-line));
+  }
+  [data-card="solid"] .t-surface {
+    border: var(--border-w) solid rgb(var(--c-line-strong));
+    box-shadow: var(--shadow-card);
+  }
+  [data-card="glass"] .t-surface {
+    background-color: rgb(var(--c-surface) / 0.55);
+    border: var(--border-w) solid rgb(var(--c-line) / 0.7);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+  }
+  [data-card="lifted"] .t-surface {
+    border: 1px solid rgb(var(--c-line) / 0.6);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Hover personality (theme.motion.hover) */
+  .t-hover {
+    transition: transform var(--dur-micro) var(--ease), box-shadow var(--dur-micro) var(--ease);
+  }
+  [data-hover="lift"] .t-hover:hover {
+    transform: translateY(-5px);
+    box-shadow: var(--shadow-float);
+  }
+  [data-hover="scale"] .t-hover:hover {
+    transform: scale(1.02);
+  }
+
+  /* Ornament — tiny mark beside kickers / between blocks */
+  .t-ornament {
+    display: inline-block;
+    flex: none;
+    background: currentColor;
+  }
+  [data-ornament="none"] .t-ornament {
+    display: none;
+  }
+  [data-ornament="rule"] .t-ornament {
+    width: 2rem;
+    height: 1px;
+  }
+  [data-ornament="diamond"] .t-ornament {
+    width: 6px;
+    height: 6px;
+    transform: rotate(45deg);
+  }
+  [data-ornament="dot"] .t-ornament {
+    width: 7px;
+    height: 7px;
+    border-radius: 50%;
+  }
+
+  /* Background pattern layer — drop <div class="t-pattern" aria-hidden /> */
+  .t-pattern {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: var(--pattern-opacity);
+  }
+  [data-pattern="grid"] .t-pattern {
+    background-image: linear-gradient(rgb(var(--c-line-strong)) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-line-strong)) 1px, transparent 1px);
+    background-size: 72px 72px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 30%, transparent 75%);
+    mask-image: radial-gradient(ellipse 90% 70% at 50% 40%, black 30%, transparent 75%);
+  }
+  [data-pattern="dots"] .t-pattern {
+    background-image: radial-gradient(rgb(var(--c-line-strong)) 1.2px, transparent 1.2px);
+    background-size: 26px 26px;
+    -webkit-mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
+    mask-image: radial-gradient(ellipse 80% 70% at 50% 30%, black 20%, transparent 75%);
+  }
+  [data-pattern="lines"] .t-pattern {
+    background-image: linear-gradient(rgb(var(--c-line-strong)) 1px, transparent 1px);
+    background-size: 100% 48px;
+  }
+  /* court — faint sideline grid: a soft nod to the pickleball court */
+  [data-pattern="court"] .t-pattern {
+    background-image:
+      linear-gradient(rgb(var(--c-line-strong) / 0.28) 1px, transparent 1px),
+      linear-gradient(90deg, rgb(var(--c-line-strong) / 0.28) 1px, transparent 1px);
+    background-size: 96px 96px;
+    -webkit-mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, black 10%, transparent 78%);
+    mask-image: radial-gradient(ellipse 90% 80% at 50% 30%, black 10%, transparent 78%);
+  }
+
+  /* Underline link with animated rule (nav etc.) */
+  .t-underline {
+    position: relative;
+  }
+  .t-underline::after {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -2px;
+    height: 1px;
+    background: currentColor;
+    transform: scaleX(0);
+    transform-origin: left;
+    transition: transform var(--dur-micro) var(--ease);
+  }
+  .t-underline:hover::after,
+  .t-underline:focus-visible::after,
+  .t-underline[aria-current="true"]::after {
+    transform: scaleX(1);
+  }
+}
+
+@layer utilities {
+  .text-stroke {
+    -webkit-text-stroke: 1px rgb(var(--c-fg) / 0.5);
+    color: transparent;
+  }
+  .mask-fade-x {
+    -webkit-mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+    mask-image: linear-gradient(90deg, transparent, black 12%, black 88%, transparent);
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(180deg, black 60%, transparent);
+    mask-image: linear-gradient(180deg, black 60%, transparent);
+  }
+  .touch-target {
+    min-height: 44px;
+    min-width: 44px;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+}
+
+/* ==================================================================
+   FIXED OVERLAYS (live outside #smooth-content, toggled by theme decor)
+   ================================================================== */
+.grain-overlay {
+  position: fixed;
+  inset: 0;
+  z-index: 80;
+  pointer-events: none;
+  display: none;
+  opacity: 0.06;
+  background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+  background-size: 180px 180px;
+}
+[data-grain="on"] .grain-overlay {
+  display: block;
+}
+/* GSAP reveal helpers — elements start hidden, GSAP animates them in.
+   `.gsap-ready` is added on <html> once JS boots and motion is allowed;
+   without JS (or with reduced motion) content stays fully visible. */
+.gsap-ready [data-reveal] {
+  visibility: hidden;
+}
+
+/* Palette switch: every colour cross-fades in place for a beat.
+   ThemeProvider adds `.palette-morph` to <html>, rewrites the --c-* tokens,
+   then removes the class. Only colour properties transition — GSAP owns
+   transforms and opacity, so those are never touched. */
+html.palette-morph,
+html.palette-morph *,
+html.palette-morph *::before,
+html.palette-morph *::after {
+  transition:
+    background-color 0.7s var(--ease),
+    color 0.7s var(--ease),
+    border-color 0.7s var(--ease),
+    fill 0.7s var(--ease),
+    stroke 0.7s var(--ease),
+    box-shadow 0.7s var(--ease) !important;
+}
