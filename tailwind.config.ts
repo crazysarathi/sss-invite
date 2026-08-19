@@ -45,6 +45,7 @@ export default {
         display: ["var(--font-display)"],
         body: ["var(--font-body)"],
         accent: ["var(--font-accent)"],
+        script: ["var(--font-script)"],
       },
       fontSize: {
         "display-xl": ["var(--display-xl)", { lineHeight: "var(--display-leading)" }],
@@ -106,6 +107,10 @@ export default {
           "0%": { transform: "translateY(-100%)" },
           "100%": { transform: "translateY(200%)" },
         },
+        sway: {
+          "0%, 100%": { transform: "rotate(-1.6deg)" },
+          "50%": { transform: "rotate(1.6deg)" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -121,6 +126,7 @@ export default {
         "spin-slow": "spin-slow 18s linear infinite",
         float: "float 6s ease-in-out infinite",
         "scroll-line": "scroll-line 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite",
+        sway: "sway 6s ease-in-out infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

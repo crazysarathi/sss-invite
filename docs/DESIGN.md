@@ -45,17 +45,18 @@ Never hard-code colours (rgba literals) — use `rgb(var(--c-…) / a)` so palet
 - **Colours**: `bg-page` `bg-page-alt` `bg-surface` `bg-surface-2` · `text-fg` `text-fg-muted` (smallest token for REAL text — ≥4.5:1) `text-fg-subtle` (decorative micro-labels only) ·
   `bg-primary text-primary-foreground` · `bg-secondary text-secondary-foreground` · `bg-accent` `text-accent` ·
   `border-line` `border-line-strong` · `bg-overlay/60` · `text-destructive`. Opacity modifiers work everywhere.
-- **Type**: `.t-display` (Fraunces; `<em>` inside = italic accent, e.g. the "&") + `text-display-xl|lg|md|sm`; `.t-accent` (Jost tracked caps), `.t-kicker`, `.t-label`; body is default.
+- **Type**: `.t-display` (Cormorant; `<em>` inside = italic accent, e.g. the "&") + `text-display-xl|lg|md|sm`; `.t-script` (Great Vibes — sign-offs and the "with Matcha bar" line only, never labels); `.t-accent` (Cormorant small caps, tracked — kickers, labels, buttons), `.t-kicker`, `.t-label`; body is Jost (forms, paragraphs).
 - **Shape**: `rounded-card` `rounded-btn` `rounded-img` `rounded-field` `rounded-pill` · `border-theme` · `shadow-card` `shadow-float` `shadow-btn`.
 - **Layout**: `.section-shell` (max-w + gutter + section-y), `.section-shell-x`, `max-w-shell`, `px-gutter`.
 - **Motion (CSS)**: `duration-micro|base|slow`, `ease-theme`; keyframes `marquee`, `pulse-dot`, `float`, `scroll-line`.
-- **Helpers**: `.t-surface` (or `<Surface>`), `.t-hover`, `.t-ornament`, `.t-pattern` (the "court" grid — drop `<div className="t-pattern" aria-hidden />` in a `relative overflow-hidden` section), `.t-underline`.
+- **Helpers**: `.t-surface` (paper card — or `<Surface>`), `.t-paper` (paper grain on a section ground), `.t-frame` (double hairline frame + corner florets — use `<Frame>`), `.t-hover`, `.t-ornament`, `.t-pattern` (the "court" grid), `.t-underline`.
 
 ---
 
 ## 4. Shared components (use them, don't reinvent)
 
 - `SectionHeading`, `AnimatedText` (SplitText, follows `motion.text`), `ScrollReveal`, `Surface`, `Kicker`, `MagneticButton`, `Ticker`, `LazyBoundary`
+- Stationery (`components/stationery`): `Watercolor` (procedural wash, `variant` a/b/c — one per section, multiply-blended), `CornerBotanicals` / `Sprig` (generated line-art foliage, swaying), `Monogram` (P&P in a laurel wreath), `Flourish` (divider, `center` ball/dot), `Frame`, `TornCard` (deckled paper, `seed`). All painted from tokens — a palette re-tints everything.
 - Sport: `Court` (perspective court, `[data-court-line]` for DrawSVG), `Rally` (self-contained loop), `PickleballSvg`
 - 3D: `three/BallCanvas` (lazy; props `palette`, `spin`, `float`, `active`, `radius`) over `three/models` (`Pickleball`, `FloatGroup`, `SceneLights`)
 - Glyphs: `PaddleGlyph`, `MatGlyph`, `MatchaGlyph`, `PeopleGlyph`, `BallGlyph`, `BrandMark`; icons otherwise `lucide-react` only
@@ -88,10 +89,11 @@ left. Reduced motion → both fire immediately, nothing renders. Tempo lives in
 
 ## Section IDs (must match exactly)
 
-`hero`, `details`, `action`, `register`, `footer`.
+`hero`, `hosts`, `details`, `action`, `register`, `footer`.
 
 ## Motion grammar
 
 - Entrances `motion.ease`; scroll moves `motion.easeInOut`; sporty beats (bounces, swings, card "serves") `motion.easeSpring` / `bounce.out` / `back.out`.
-- One hero moment per section: hero = ball drop + court draw; details = cards serve in; action = the rally; register = confetti on success.
+- One hero moment per section: hero = card settles + ball drop + court draw; hosts = names stagger; details = torn cards serve in; action = the rally (print tilts in); register = confetti on success.
+- Stationery rule: every section is a **card on a wash** — `t-paper` ground + `<Watercolor>` + one or two `<CornerBotanicals>`, content centred in a portrait card (`max-w` 34–40rem). Desktop is the same card, larger, with the wash filling the viewport (the reference sites are portrait-first too).
 - Support animations stay subtle; the client is comparing colours, not motion.

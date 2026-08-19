@@ -5,6 +5,8 @@ import { useTheme } from "@/components/theme/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/shared/Kicker";
 import type { ThemeDefinition } from "@/themes/types";
+import { Watercolor } from "@/components/stationery/Watercolor";
+import { CornerBotanicals } from "@/components/stationery/Botanicals";
 import { Envelope } from "./opening/Envelope";
 import { OPENING_PRESET } from "./opening/presets";
 import { useOpeningTimeline } from "./opening/useOpeningTimeline";
@@ -180,9 +182,11 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
       // so a first tap anywhere opens and a second one skips.
       onClick={() => (startedRef.current ? skip() : open())}
     >
-      <div data-backdrop aria-hidden="true" className="absolute inset-0 overflow-hidden bg-page-alt">
+      <div data-backdrop aria-hidden="true" className="t-paper absolute inset-0 overflow-hidden bg-page-alt">
         <div data-decor className="absolute inset-0">
-          <div className="t-pattern" />
+          <Watercolor variant="b" opacity={0.85} />
+          <CornerBotanicals corner="tl" style="fill" />
+          <CornerBotanicals corner="br" style="fill" />
         </div>
       </div>
 

@@ -46,6 +46,8 @@ export function themeToVars(theme: ThemeDefinition): Record<string, string> {
   vars["--font-display"] = t.display.family;
   vars["--font-body"] = t.body.family;
   vars["--font-accent"] = t.accent.family;
+  vars["--font-script"] = t.script.family;
+  vars["--script-weight"] = String(t.script.weight);
   vars["--display-weight"] = String(t.display.weight);
   vars["--display-tracking"] = t.display.tracking;
   vars["--display-transform"] = t.display.transform;

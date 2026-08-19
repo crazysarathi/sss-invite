@@ -68,6 +68,8 @@ export interface ThemeTypography {
     /** Render emphasised display words (the "&") in italic. */
     italicAccent: boolean;
   };
+  /** Calligraphic accent face (the "with Matcha bar" line, sign-offs). */
+  script: FontFace;
   body: FontFace & { leading: string };
   /** Kickers, labels, buttons — the "voice" of the small type. */
   accent: FontFace & { tracking: string; transform: TextTransform };
@@ -82,7 +84,7 @@ export interface ThemeTypography {
 /* ------------------------------------------------------------------ */
 /* Shape                                                               */
 /* ------------------------------------------------------------------ */
-export type CardStyle = "flat" | "outline" | "solid" | "glass" | "lifted";
+export type CardStyle = "flat" | "outline" | "solid" | "glass" | "lifted" | "paper";
 
 export interface ThemeShape {
   radius: {

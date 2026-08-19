@@ -1,17 +1,19 @@
 import { lazy, Suspense, useRef } from "react";
-import { CalendarDays, MapPin } from "lucide-react";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
-import { brand, dateLine, event, hero } from "@/data/siteData";
+import { brand, dateLine, event, hero, opening } from "@/data/siteData";
 import { useTheme, useThemeMotion } from "@/components/theme/ThemeProvider";
 import { useInViewport } from "@/hooks/useInViewport";
 import { Button } from "@/components/ui/button";
-import { Kicker } from "@/components/shared/Kicker";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { LazyBoundary } from "@/components/shared/LazyBoundary";
+import { Surface } from "@/components/shared/Surface";
 import { Court } from "@/components/sport/Court";
 import { PickleballSvg } from "@/components/sport/PickleballSvg";
+import { Watercolor } from "@/components/stationery/Watercolor";
+import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { Flourish, Frame, Monogram } from "@/components/stationery/Ornaments";
 
 const BallCanvas = lazy(() => import("@/components/three/BallCanvas"));
 
@@ -21,15 +23,15 @@ interface HeroProps {
 }
 
 /**
- * Hero — the invitation card, full screen.
+ * Hero — the invitation card itself, centred on a watercolour backdrop.
  *
- *   ENTRANCE  the court lines draw themselves in; a 3D pickleball drops
- *             from above, bounces twice and settles beside the title
- *             (its ground shadow breathes with the bounce); the title's
- *             characters spring up; kicker, sublines, partners, facts and
- *             CTAs rise in after.
- *   SCROLL    the ball rolls away and sinks with parallax, the court drifts,
- *             the copy lifts and dims (desktop).
+ *   ENTRANCE  the card settles in (continuing the envelope's card zoom),
+ *             the court lines draw themselves behind it, a 3D pickleball
+ *             drops and bounces to rest on the card's corner (its shadow
+ *             breathing with the bounce), the title springs up letter by
+ *             letter, then monogram, script line, partners, date and CTAs
+ *             rise in.
+ *   SCROLL    the ball rolls off and sinks, the court drifts, the card lifts.
  * Reduced motion → everything simply visible, no 3D.
  */
 export function Hero({ booted }: HeroProps) {
@@ -46,43 +48,46 @@ export function Hero({ booted }: HeroProps) {
       const root = ref.current;
       if (!root || !booted) return;
       const q = gsap.utils.selector(root);
+      const card = root.querySelector<HTMLElement>("[data-hero-card]");
       const title = root.querySelector<HTMLElement>("[data-hero-title]");
       const ball = root.querySelector<HTMLElement>("[data-hero-ball]");
       const shadow = root.querySelector<HTMLElement>("[data-hero-shadow]");
       const court = root.querySelector<HTMLElement>("[data-hero-court]");
-      const copy = root.querySelector<HTMLElement>("[data-hero-copy]");
       const lines = q("[data-court-line]");
       const reveals = q("[data-reveal]");
 
       if (prefersReducedMotion()) {
-        gsap.set([title, ball, shadow, court, ...reveals], { autoAlpha: 1, clearProps: "transform" });
+        gsap.set([card, title, ball, shadow, court, ...reveals], { autoAlpha: 1, clearProps: "transform" });
         return;
       }
 
       const base = motion.duration.base;
       const tl = gsap.timeline({ defaults: { ease: motion.ease } });
 
+      /* 0. the card settles */
+      if (card) tl.fromTo(card, { autoAlpha: 0, y: 36, scale: 0.97 }, { autoAlpha: 1, y: 0, scale: 1, duration: base, ease: "power3.out" }, 0);
+
       /* 1. court draws itself */
       if (court) gsap.set(court, { autoAlpha: 1 });
       if (lines.length) {
-        tl.fromTo(lines, { drawSVG: "50% 50%" }, { drawSVG: "0% 100%", duration: base * 1.2, stagger: 0.05, ease: "power2.inOut" }, 0);
+        tl.fromTo(lines, { drawSVG: "50% 50%" }, { drawSVG: "0% 100%", duration: base * 1.2, stagger: 0.05, ease: "power2.inOut" }, 0.1);
       }
       const surface = root.querySelector("[data-court-surface]");
-      if (surface) tl.fromTo(surface, { opacity: 0 }, { opacity: 1, duration: base, ease: "power1.out" }, 0.2);
+      if (surface) tl.fromTo(surface, { opacity: 0 }, { opacity: 1, duration: base, ease: "power1.out" }, 0.3);
 
-      /* 2. the ball drops and bounces to rest */
+      /* 2. the ball drops and bounces to rest on the card corner */
       if (ball && shadow) {
         gsap.set(ball, { autoAlpha: 1 });
-        tl.fromTo(ball, { yPercent: -320 }, { yPercent: 0, duration: base * 1.5, ease: "bounce.out" }, 0.15)
+        const t0 = 0.45;
+        tl.fromTo(ball, { yPercent: -420 }, { yPercent: 0, duration: base * 1.5, ease: "bounce.out" }, t0)
           .fromTo(
             shadow,
             { autoAlpha: 0, scale: 0.25 },
             { autoAlpha: 1, scale: 1, duration: base * 1.5, ease: "bounce.out", transformOrigin: "50% 50%" },
-            0.15
+            t0
           )
-          // squash on the first landing (bounce.out's first contact ≈ 36% in)
-          .to(ball, { scaleY: 0.84, scaleX: 1.1, duration: 0.08, ease: "power2.in", transformOrigin: "50% 100%" }, 0.15 + base * 1.5 * 0.36)
-          .to(ball, { scaleY: 1, scaleX: 1, duration: 0.32, ease: "elastic.out(1, 0.45)" }, 0.15 + base * 1.5 * 0.36 + 0.08);
+          .to(ball, { scaleY: 0.84, scaleX: 1.1, duration: 0.08, ease: "power2.in", transformOrigin: "50% 100%" }, t0 + base * 1.5 * 0.36)
+          .to(ball, { scaleY: 1, scaleX: 1, duration: 0.32, ease: "elastic.out(1, 0.45)" }, t0 + base * 1.5 * 0.36 + 0.08);
       }
 
       /* 3. the title springs up, character by character */
@@ -101,7 +106,7 @@ export function Hero({ booted }: HeroProps) {
             stagger: { each: motion.stagger.chars, from: "start" },
             onComplete: () => split.revert(),
           },
-          0.35
+          0.55
         );
       }
 
@@ -109,28 +114,22 @@ export function Hero({ booted }: HeroProps) {
       if (reveals.length) {
         tl.fromTo(
           reveals,
-          { autoAlpha: 0, y: motion.distance },
-          { autoAlpha: 1, y: 0, duration: base, stagger: motion.stagger.items, clearProps: "transform" },
-          0.75
+          { autoAlpha: 0, y: motion.distance * 0.7 },
+          { autoAlpha: 1, y: 0, duration: base, stagger: motion.stagger.items * 0.8, clearProps: "transform" },
+          0.8
         );
       }
 
       /* SCROLL — scrubbed across the hero */
-      const scrub = {
-        trigger: root,
-        start: "top top",
-        end: "bottom top",
-        scrub: motion.scrub,
-      };
-      // the ball rolls off to the right and sinks, fading before the hero ends
+      const scrub = { trigger: root, start: "top top", end: "bottom top", scrub: motion.scrub };
       if (ball) {
-        gsap.to(ball, { x: "22vw", y: "38vh", rotation: 140, ease: "none", scrollTrigger: scrub });
-        gsap.to(ball, { autoAlpha: 0, ease: "none", scrollTrigger: { ...scrub, start: "45% top", end: "85% top" } });
+        gsap.to(ball, { x: "26vw", y: "40vh", rotation: 160, ease: "none", scrollTrigger: scrub });
+        gsap.to(ball, { autoAlpha: 0, ease: "none", scrollTrigger: { ...scrub, start: "40% top", end: "80% top" } });
       }
-      if (shadow) gsap.to(shadow, { x: "22vw", y: "38vh", autoAlpha: 0, ease: "none", scrollTrigger: scrub });
-      if (court) gsap.to(court, { yPercent: 14 * motion.parallax * 2, ease: "none", scrollTrigger: scrub });
+      if (shadow) gsap.to(shadow, { x: "26vw", y: "40vh", autoAlpha: 0, ease: "none", scrollTrigger: scrub });
+      if (court) gsap.to(court, { yPercent: 12 * motion.parallax * 2, ease: "none", scrollTrigger: scrub });
       gsap.matchMedia().add("(min-width: 768px)", () => {
-        if (copy) gsap.to(copy, { yPercent: -18, autoAlpha: 0.1, ease: "none", scrollTrigger: { ...scrub, end: "75% top" } });
+        if (card) gsap.to(card, { yPercent: -14, autoAlpha: 0.15, ease: "none", scrollTrigger: { ...scrub, end: "80% top" } });
       });
     },
     { scope: ref, dependencies: [booted] }
@@ -142,119 +141,117 @@ export function Hero({ booted }: HeroProps) {
   };
 
   return (
-    <section id="hero" ref={ref} className="relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-page">
+    <section id="hero" ref={ref} className="t-paper relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-page">
+      <Watercolor variant="a" opacity={0.9} />
       {/* court backdrop */}
       <div
         data-hero-court
         aria-hidden="true"
-        className={cn("pointer-events-none absolute inset-x-0 bottom-0 top-[18%] opacity-0 will-change-transform", reduced && "opacity-100")}
+        className={cn("pointer-events-none absolute inset-x-0 bottom-0 top-[22%] opacity-0 will-change-transform", reduced && "opacity-100")}
       >
-        <Court className="opacity-60 md:opacity-90" />
+        <Court className="opacity-50 md:opacity-70" />
       </div>
-      {/* soft glow behind the card */}
-      <div
-        aria-hidden="true"
-        className="pointer-events-none absolute left-1/2 top-[42%] h-[70vmin] w-[90vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--c-surface)/0.9),rgb(var(--c-surface)/0))]"
-      />
+      <CornerBotanicals corner="tl" style="fill" />
+      <CornerBotanicals corner="br" style="fill" />
 
-      <div className="section-shell-x relative z-10 flex flex-1 flex-col items-center justify-center pb-16 pt-[calc(var(--nav-height)+1.25rem)] text-center md:pb-28 md:pt-[calc(var(--nav-height)+2.5rem)]">
-        {/* the ball — in-flow on mobile, floated to the title's shoulder on desktop */}
-        <div className="relative mb-3 h-20 w-20 md:absolute md:right-0 md:top-[18%] md:mb-0 md:h-[clamp(10rem,17vw,15rem)] md:w-[clamp(10rem,17vw,15rem)] lg:-right-[2vw]">
-          <span
-            data-hero-shadow
-            aria-hidden="true"
-            className={cn("absolute -bottom-2 left-[12%] right-[12%] h-[18%] rounded-full bg-overlay/30 opacity-0 [filter:blur(6px)]", reduced && "opacity-100")}
-          />
-          <div
-            ref={ballRef}
-            data-hero-ball
-            className={cn("absolute inset-0 opacity-0 [filter:drop-shadow(0_18px_18px_rgb(var(--c-overlay)/0.22))]", reduced && "opacity-100")}
-          >
-            {reduced ? (
-              <PickleballSvg className="h-full w-full" />
-            ) : (
-              <LazyBoundary fallback={<PickleballSvg className="h-full w-full" />}>
-                <Suspense fallback={<PickleballSvg className="h-full w-full" />}>
-                  <BallCanvas palette={theme.three.palette} spin={0.35} float={0.12} active={ballInView} radius={1.08} />
-                </Suspense>
-              </LazyBoundary>
-            )}
+      <div className="section-shell-x relative z-10 flex flex-1 flex-col items-center justify-center pb-14 pt-[calc(var(--nav-height)+1rem)] md:pb-16 md:pt-[calc(var(--nav-height)+0.5rem)]">
+        <div data-hero-card className={cn("relative w-full max-w-[34rem] opacity-0 md:max-w-[40rem]", reduced && "opacity-100")}>
+          {/* the ball — resting on the card's top-right corner */}
+          <div className="absolute -right-2 -top-5 z-20 h-[4.75rem] w-[4.75rem] sm:-right-8 sm:-top-12 sm:h-28 sm:w-28 md:-right-14 md:-top-16 md:h-36 md:w-36">
+            <span
+              data-hero-shadow
+              aria-hidden="true"
+              className={cn("absolute -bottom-1.5 left-[14%] right-[14%] h-[16%] rounded-full bg-overlay/35 opacity-0 [filter:blur(5px)]", reduced && "opacity-100")}
+            />
+            <div
+              ref={ballRef}
+              data-hero-ball
+              className={cn("absolute inset-0 opacity-0 [filter:drop-shadow(0_16px_16px_rgb(var(--c-overlay)/0.22))]", reduced && "opacity-100")}
+            >
+              {reduced ? (
+                <PickleballSvg className="h-full w-full" />
+              ) : (
+                <LazyBoundary fallback={<PickleballSvg className="h-full w-full" />}>
+                  <Suspense fallback={<PickleballSvg className="h-full w-full" />}>
+                    <BallCanvas palette={theme.three.palette} spin={0.35} float={0.1} active={ballInView} radius={1.08} />
+                  </Suspense>
+                </LazyBoundary>
+              )}
+            </div>
           </div>
-        </div>
 
-        <div data-hero-copy className="flex max-w-4xl flex-col items-center">
-          <p data-reveal className="mb-4 md:mb-7">
-            <Kicker ornament="both">{hero.eyebrow}</Kicker>
-          </p>
+          <Surface className="px-5 py-8 sm:px-8 md:px-12 md:py-9">
+            <Frame className="px-3 py-7 text-center sm:px-6 md:px-8 md:py-7">
+              <div data-reveal className="mx-auto mb-3 h-[5.25rem] w-[5.25rem] md:mb-4 md:h-24 md:w-24">
+                <Monogram className="h-full w-full" />
+              </div>
 
-          <h1 data-hero-title className="t-display text-display-xl text-fg opacity-0">
-            {a} <em className="text-primary">{amp}</em> {b}
-          </h1>
+              <p data-reveal className="t-accent text-[0.72rem] text-fg-muted md:text-[0.78rem]">
+                {opening.eyebrow}
+              </p>
+              <p data-reveal className="t-accent mt-3 text-kicker text-primary md:mt-4">
+                {hero.eyebrow}
+              </p>
 
-          <p data-reveal className="t-display mt-2 text-display-sm italic text-primary md:mt-3">
-            {brand.subline}
-          </p>
-          <p data-reveal className="t-accent mt-4 text-[0.72rem] text-fg-muted md:mt-6 md:text-sm">
-            {brand.tagline}
-          </p>
+              <h1
+                data-hero-title
+                className="t-display mt-2 text-[clamp(2.6rem,10.5vw,3.4rem)] text-fg opacity-0 md:mt-2 md:text-[clamp(3rem,5vw,4rem)]"
+              >
+                {a} <em className="text-primary">{amp}</em> {b}
+              </h1>
+              <p data-reveal className="t-script -mt-0.5 text-[2.1rem] leading-none text-primary md:text-[2.6rem]">
+                {brand.subline}
+              </p>
 
-          <p data-reveal className="mt-5 max-w-2xl text-balance text-sm leading-relaxed text-fg-muted md:mt-8 md:text-base">
-            {brand.partners.map((p, i) => (
-              <span key={p.name} className="inline-block whitespace-nowrap">
-                {i > 0 && <span className="mx-2 text-primary md:mx-3">×</span>}
-                <span className="text-fg">{p.name}</span>
-              </span>
-            ))}
-          </p>
+              <div data-reveal className="mt-4 md:mt-4">
+                <Flourish />
+              </div>
 
-          <ul data-reveal className="mt-6 flex flex-wrap items-center justify-center gap-2 md:mt-10 md:gap-3">
-            <li className="inline-flex items-center gap-2 rounded-pill border border-line bg-surface/80 px-4 py-2 text-sm text-fg shadow-card backdrop-blur">
-              <MapPin aria-hidden="true" className="h-4 w-4 text-primary" />
-              {event.venue.name}
-            </li>
-            <li className="inline-flex items-center gap-2 rounded-pill border border-line bg-surface/80 px-4 py-2 text-sm text-fg shadow-card backdrop-blur">
-              <CalendarDays aria-hidden="true" className="h-4 w-4 text-primary" />
-              {dateLine()}
-            </li>
-          </ul>
+              <p data-reveal className="t-accent mt-4 text-[0.8rem] tracking-[0.3em] text-fg md:text-[0.88rem]">
+                {brand.tagline}
+              </p>
 
-          <div data-reveal className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-11 md:gap-4">
-            <MagneticButton>
-              <Button asChild size="lg" className="min-w-[10rem]">
-                <a href={hero.primaryCta.href} onClick={go(hero.primaryCta.href)}>
-                  {hero.primaryCta.label}
-                </a>
-              </Button>
-            </MagneticButton>
-            <Button asChild size="lg" variant="outline" className="min-w-[10rem]">
-              <a href={hero.secondaryCta.href} onClick={go(hero.secondaryCta.href)}>
-                {hero.secondaryCta.label}
-              </a>
-            </Button>
-          </div>
+              <p data-reveal className="mt-4 text-balance leading-relaxed md:mt-4">
+                {brand.partners.map((p, i) => (
+                  <span key={p.name} className="inline-block whitespace-nowrap">
+                    {i > 0 && <span className="mx-2 text-primary">×</span>}
+                    <span className="t-display text-[1.15rem] text-fg md:text-[1.25rem]">{p.name}</span>
+                  </span>
+                ))}
+              </p>
+
+              <div data-reveal className="mt-4 md:mt-4">
+                <Flourish center="dot" className="w-28" />
+              </div>
+
+              <p data-reveal className="t-accent mt-4 text-[0.7rem] text-fg-muted md:text-[0.76rem]">
+                {hero.saveTheDate}
+              </p>
+              <p data-reveal className="t-display mt-0.5 text-[1.7rem] leading-tight text-fg md:text-[1.9rem]">
+                {dateLine()}
+              </p>
+              <p data-reveal className="t-accent mt-1.5 text-[0.76rem] text-fg md:text-[0.82rem]">
+                {event.venue.name} · {event.venue.city}
+              </p>
+
+              <div data-reveal className="mt-6 flex flex-wrap items-center justify-center gap-3 md:mt-6">
+                <MagneticButton>
+                  <Button asChild className="min-w-[10rem]">
+                    <a href={hero.primaryCta.href} onClick={go(hero.primaryCta.href)}>
+                      {hero.primaryCta.label}
+                    </a>
+                  </Button>
+                </MagneticButton>
+                <Button asChild variant="outline" className="min-w-[10rem]">
+                  <a href={hero.secondaryCta.href} onClick={go(hero.secondaryCta.href)}>
+                    {hero.secondaryCta.label}
+                  </a>
+                </Button>
+              </div>
+            </Frame>
+          </Surface>
         </div>
       </div>
-
-      <ScrollHint className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 md:flex" show={booted} />
     </section>
-  );
-}
-
-/** "Scroll" micro-label with a breathing line. */
-function ScrollHint({ className, show }: { className?: string; show: boolean }) {
-  return (
-    <div
-      aria-hidden="true"
-      className={cn(
-        "flex-col items-center gap-2 text-fg-subtle transition-opacity duration-slow ease-theme",
-        show ? "opacity-100" : "opacity-0",
-        className
-      )}
-    >
-      <span className="t-label">{hero.scrollHint}</span>
-      <span className="relative block h-10 w-px overflow-hidden bg-line-strong">
-        <span className="absolute inset-x-0 top-0 block h-1/2 animate-scroll-line bg-primary" />
-      </span>
-    </div>
   );
 }

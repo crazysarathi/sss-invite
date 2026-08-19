@@ -9,21 +9,37 @@ experience", the four partners, the location, "date coming soon", "See our
 Smashers in action" and a **Save your spot** form (the "collect database") —
 and nothing else. One layout; the client chooses only the **colours**.
 
+**Mood:** classic invitation stationery (reference: wedding-invitation sites such
+as invitationmedia.in / thedigitalyes.com) — portrait paper cards on soft
+watercolour washes with botanical sprigs, a monogram in a laurel wreath, hairline
+frames with corner florets, torn-paper cards, Cormorant serif + Great Vibes
+script + Cormorant small caps — crossed with the sport: a court, a 3D pickleball,
+paddles and a rally. Every wash, sprig, frame and ornament is generated from the
+palette tokens (no stock artwork), so the colour picker re-tints all of it.
+
 ## What the client sees
 
-1. **Opening** — a sealed envelope with a 3D pickleball as the wax seal. Tap it:
-   the ball pops off and rolls away, the flap springs open, the card slides out
-   and grows into the page.
-2. **Hero** — the court lines draw themselves in, a 3D pickleball drops in and
-   bounces to rest beside the title, the title springs up letter by letter.
-   On scroll the ball rolls away with parallax.
-3. **Details** — location (with directions), date (coming soon), what
-   (pickleball · pilates · matcha bar, with looping glyphs) and "hosted by".
-4. **See our Smashers in action** — the hosts' line beside a never-ending
-   animated rally (paddles, net, ball arc, shadow, impact rings) + Instagram.
-5. **Save your spot** — the guest form. Confetti on success.
-6. **Footer** — sign-off, host crest, partners, Instagram, hashtag.
-7. **Colours** (floating pill, bottom-left) — six pastel palettes grouped by the
+1. **Opening** — a sealed envelope (monogram card inside) with a 3D pickleball as
+   the wax seal, on a watercolour backdrop. Tap it: the ball pops off and rolls
+   away, the flap springs open, the card slides out and grows into the page.
+2. **Hero — the invitation card** — a framed paper card: monogram, "You're
+   invited to", *Pickle & Pilates*, "with Matcha bar" in script, flourish, "A
+   wellness experience", the four hosts, "Save the date · Date coming soon",
+   venue, buttons. Behind it the court lines draw themselves in; a 3D pickleball
+   drops and bounces to rest on the card's corner; the title springs up letter by
+   letter. On scroll the ball rolls away and the card lifts.
+3. **Hosts** — "Four partners. One morning." · Introducing *the hosts*: the four
+   names on a torn-paper ledger.
+4. **Details** — three torn-paper cards: location (directions), date (coming
+   soon), what (pickleball · pilates · matcha bar, with looping glyphs).
+5. **See our Smashers in action** — the hosts' line beside the never-ending rally
+   (paddles, net, ball arc, shadow, impact rings) mounted like a taped storyboard
+   print, + Instagram.
+6. **Save your spot** — an arch-topped card with the monogram, then the guest
+   form. Confetti on success.
+7. **Footer** — script sign-off, closing lines, host crest, partners, directions,
+   Instagram, hashtag.
+8. **Colours** (floating pill, bottom-left) — six pastel palettes grouped by the
    hosts' asks: *pink shades* (Blush, Rose), *ivory shades* (Ivory, Linen),
    *logo colours lightened* (Sky & Lime, Sage & Sky). Picking one re-colours the
    whole page live (`?palette=<id>` also works and the choice is remembered).
@@ -34,7 +50,7 @@ and nothing else. One layout; the client chooses only the **colours**.
 - Tailwind CSS 3 + a few shadcn/ui primitives, driven entirely by CSS variables
 - GSAP 3 — ScrollTrigger, ScrollSmoother, SplitText, DrawSVG, MotionPath
 - Three.js + React Three Fiber — the procedural pickleball (lazy, 2 canvases)
-- lucide-react icons, sonner toasts, self-hosted @fontsource fonts (Fraunces + Jost)
+- lucide-react icons, sonner toasts, self-hosted @fontsource fonts (Cormorant, Cormorant SC, Great Vibes, Jost)
 
 ## Commands
 
@@ -57,7 +73,8 @@ src/
     types.ts apply.ts index.ts
   components/
     theme/               # ThemeProvider (palette state, live morph), PalettePicker
-    invitation/          # OpeningScreen (+opening/ envelope), Hero, Details, Action, RSVP (+rsvp/), Footer, Invitation
+    invitation/          # OpeningScreen (+opening/ envelope), Hero, Hosts, Details, Action, RSVP (+rsvp/), Footer, Invitation
+    stationery/          # Watercolor (procedural wash), Botanicals (sprigs), Ornaments (Monogram, Flourish, Frame, TornCard)
     sport/               # Court (hero backdrop), Rally (animated rally), PickleballSvg
     three/               # models (pickleball, float, lights), BallCanvas
     layout/              # TopBar, BackToTop

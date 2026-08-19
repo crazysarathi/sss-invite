@@ -17,7 +17,7 @@ const DESKTOP_ONLY = flags.includes("--desktop");
 const BASE = process.env.SHOOT_URL || "http://localhost:4173/";
 const ALL = ["blush", "rose", "ivory", "linen", "sky", "sage"];
 const PALETTES = paletteArg === "all" ? ALL : [paletteArg];
-const SECTIONS = ["hero", "details", "action", "register", "footer"];
+const SECTIONS = ["hero", "hosts", "details", "action", "register", "footer"];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

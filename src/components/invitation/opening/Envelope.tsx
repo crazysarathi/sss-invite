@@ -2,8 +2,9 @@ import { lazy, Suspense } from "react";
 import { LazyBoundary } from "@/components/shared/LazyBoundary";
 import { brand, dateLine, event, opening } from "@/data/siteData";
 import { cn } from "@/lib/utils";
-import { BallGlyph, BrandMark } from "@/components/shared/Glyphs";
+import { BallGlyph } from "@/components/shared/Glyphs";
 import { Kicker } from "@/components/shared/Kicker";
+import { Monogram } from "@/components/stationery/Ornaments";
 import type { ThemeThree } from "@/themes/types";
 
 /* The 3D seal is code-split: the SVG glyph stands in until three loads. */
@@ -77,18 +78,16 @@ export function Envelope({ palette, liner }: EnvelopeProps) {
           }}
         >
           <span data-card-hover className="absolute inset-0 block">
-            <span className="absolute inset-0 flex flex-col items-center justify-center gap-1.5 rounded-md border-theme border-line-strong bg-surface px-4 py-3 text-center text-fg shadow-card md:gap-2.5 md:px-8 md:py-5">
-              <span className="text-primary">
-                <BrandMark variant="mark" markClassName="h-6 w-6 md:h-7 md:w-7" />
-              </span>
+            <span className="absolute inset-0 flex flex-col items-center justify-center gap-1 rounded-[3px] border-theme border-line-strong bg-surface px-4 py-3 text-center text-fg shadow-card md:gap-1.5 md:px-8 md:py-5">
+              <Monogram className="h-9 w-9 md:h-12 md:w-12" />
               <Kicker ornament="none" className="max-md:text-[0.6rem] max-md:tracking-[0.22em]">
                 {opening.invitedLine}
               </Kicker>
               <span className="t-display block max-w-full text-display-sm md:text-[length:calc(var(--display-md)*0.82)]">
                 {a} <em>{amp}</em> {b}
               </span>
-              <span className="t-accent text-[0.62rem] text-fg-muted md:text-xs">{brand.subline}</span>
-              <span aria-hidden="true" className="my-0.5 block h-px w-10 bg-line-strong" />
+              <span className="t-script text-[1.1rem] leading-none text-primary md:text-[1.5rem]">{brand.subline}</span>
+              <span aria-hidden="true" className="my-0.5 block h-px w-10 bg-accent/70" />
               <span className="t-label block text-[0.6rem] leading-relaxed md:text-[0.7rem]">
                 {when}
                 <br />

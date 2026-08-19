@@ -89,9 +89,21 @@ export const opening = {
 /* ------------------------------------------------------------------ */
 export const hero = {
   eyebrow: "You're invited to",
+  saveTheDate: "Save the date",
   primaryCta: { label: "Save my spot", href: "#register" },
   secondaryCta: { label: "The details", href: "#details" },
-  scrollHint: "Scroll",
+} as const;
+
+/* ------------------------------------------------------------------ */
+/* Hosts — the four names, introduced like a family card               */
+/* ------------------------------------------------------------------ */
+export const hosts = {
+  kicker: "Four partners. One morning.",
+  intro: "Introducing",
+  /** Set in script beneath `intro`. */
+  script: "the hosts",
+  /** Sign-off under the names. */
+  line: "Moving well, gathering often — together.",
 } as const;
 
 /** The small button in the top bar. */
@@ -125,6 +137,8 @@ export const action = {
   /** The hosts' line, verbatim. */
   title: "See our Smashers in action",
   body: "Salem's own pickleball team takes the court — then it's your turn.",
+  /** Script caption under the rally "print". */
+  caption: "the Smashers, on court",
   cta: { label: "Follow the Smashers", href: "https://www.instagram.com/salemsupersmashers?igsh=d2l6YmlhMGZpM3hn" },
   ticker: "SEE OUR SMASHERS IN ACTION ✦ PICKLE & PILATES ✦ WITH MATCHA BAR ✦ FOREST HILLS COUNTRY CLUB ✦ ",
 } as const;
@@ -194,7 +208,10 @@ export const social = {
 
 export const footer = {
   hostedBy: "Hosted by",
+  /** Script sign-off. */
+  script: "Celebrate this morning with us",
   lines: ["See you on the court.", "And on the mat."],
+  directionsCta: "Get directions",
   copyright: "© 2026 Salem Super Smashers · Pickle & Pilates",
 } as const;
 
@@ -206,5 +223,5 @@ export function dateLine(): string {
   return event.dateStatus === "confirmed" && event.dateLabel ? event.dateLabel : event.dateTbaLabel;
 }
 
-export const siteData = { brand, meta, event, opening, hero, navCta, details, action, rsvp, social, footer } as const;
+export const siteData = { brand, meta, event, opening, hero, navCta, hosts, details, action, rsvp, social, footer } as const;
 export type SiteData = typeof siteData;

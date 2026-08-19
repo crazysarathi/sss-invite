@@ -3,16 +3,18 @@ import { prefersReducedMotion } from "@/lib/utils";
 import { burstConfetti } from "@/lib/confetti";
 import { rsvp } from "@/data/siteData";
 import { useTheme } from "@/components/theme/ThemeProvider";
-import { SectionHeading } from "@/components/shared/SectionHeading";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
+import { AnimatedText } from "@/components/shared/AnimatedText";
 import { Surface } from "@/components/shared/Surface";
-import { PickleballSvg } from "@/components/sport/PickleballSvg";
+import { Watercolor } from "@/components/stationery/Watercolor";
+import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { Flourish, Monogram } from "@/components/stationery/Ornaments";
 import { RsvpPanel } from "./rsvp/RsvpPanel";
 
 /**
- * "Save your spot" — the hosts' "collect database": heading, one card with
- * the form. A successful send bursts confetti in the palette's colours.
- * (The page never says "RSVP" — the hosts' content doesn't.)
+ * "Save your spot" — the hosts' "collect database": an arch-topped paper
+ * card with the monogram at its crown, then the form. A successful send
+ * bursts confetti in the palette's colours. (The page never says "RSVP".)
  */
 export function RSVP() {
   const { theme } = useTheme();
@@ -34,16 +36,25 @@ export function RSVP() {
   useEffect(() => () => stopConfetti.current?.(), []);
 
   return (
-    <section id={rsvp.id} className="relative overflow-hidden bg-page-alt">
-      <div className="t-pattern" aria-hidden="true" />
-      {/* a couple of resting balls in the corners */}
-      <PickleballSvg aria-hidden="true" className="pointer-events-none absolute -left-10 top-16 h-32 w-32 opacity-40 md:h-44 md:w-44" />
-      <PickleballSvg aria-hidden="true" className="pointer-events-none absolute -bottom-12 -right-8 h-40 w-40 opacity-40 md:h-56 md:w-56" />
+    <section id={rsvp.id} className="t-paper relative overflow-hidden bg-page">
+      <Watercolor variant="b" opacity={0.85} />
+      <CornerBotanicals corner="tr" style="fill" />
+      <CornerBotanicals corner="bl" style="line" size="clamp(7rem, 16vw, 13rem)" />
 
       <div className="section-shell">
-        <SectionHeading kicker={rsvp.kicker} title={rsvp.title} lead={rsvp.lead} />
         <ScrollReveal className="mx-auto max-w-xl">
-          <Surface className="p-6 sm:p-10">
+          <Surface className="relative rounded-t-[999px] px-5 pb-8 pt-12 sm:px-8 md:px-12 md:pb-12 md:pt-14">
+            <div className="mx-auto mb-4 h-[5.5rem] w-[5.5rem] md:h-24 md:w-24">
+              <Monogram className="h-full w-full" />
+            </div>
+            <div className="mx-auto mb-8 max-w-md text-center md:mb-10">
+              <p className="t-accent text-kicker text-primary">{rsvp.kicker}</p>
+              <AnimatedText as="h2" className="t-display mt-2 text-display-md text-fg">
+                {rsvp.title}
+              </AnimatedText>
+              <Flourish className="mt-4" center="dot" />
+              <p className="mt-4 text-balance text-[0.95rem] text-fg-muted md:text-base">{rsvp.lead}</p>
+            </div>
             <RsvpPanel onSuccess={celebrate} />
           </Surface>
         </ScrollReveal>
