@@ -2,7 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
-import { brand, hero } from "@/data/siteData";
+import { brand, navCta } from "@/data/siteData";
 import { useThemeMotion } from "@/components/theme/ThemeProvider";
 import { BrandMark } from "@/components/shared/Glyphs";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,7 @@ interface TopBarProps {
 }
 
 /**
- * A very small fixed bar: the brand mark (back to top) and an RSVP button.
+ * A very small fixed bar: the brand mark (back to top) and a "Join us" button.
  * Transparent over the hero, glassy once the reader scrolls. Lives outside
  * #smooth-content (position: fixed).
  */
@@ -72,13 +72,13 @@ export function TopBar({ booted }: TopBarProps) {
         </a>
         <Button asChild size="sm" className="px-5">
           <a
-            href={hero.primaryCta.href}
+            href={navCta.href}
             onClick={(e) => {
               e.preventDefault();
-              scrollToSection(hero.primaryCta.href);
+              scrollToSection(navCta.href);
             }}
           >
-            {hero.primaryCta.label}
+            {navCta.label}
           </a>
         </Button>
       </div>

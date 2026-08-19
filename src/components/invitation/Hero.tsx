@@ -122,8 +122,10 @@ export function Hero({ booted }: HeroProps) {
         end: "bottom top",
         scrub: motion.scrub,
       };
+      // the ball rolls off to the right and sinks, fading before the hero ends
       if (ball) {
         gsap.to(ball, { x: "22vw", y: "38vh", rotation: 140, ease: "none", scrollTrigger: scrub });
+        gsap.to(ball, { autoAlpha: 0, ease: "none", scrollTrigger: { ...scrub, start: "45% top", end: "85% top" } });
       }
       if (shadow) gsap.to(shadow, { x: "22vw", y: "38vh", autoAlpha: 0, ease: "none", scrollTrigger: scrub });
       if (court) gsap.to(court, { yPercent: 14 * motion.parallax * 2, ease: "none", scrollTrigger: scrub });
@@ -147,7 +149,7 @@ export function Hero({ booted }: HeroProps) {
         aria-hidden="true"
         className={cn("pointer-events-none absolute inset-x-0 bottom-0 top-[18%] opacity-0 will-change-transform", reduced && "opacity-100")}
       >
-        <Court className="opacity-90" />
+        <Court className="opacity-60 md:opacity-90" />
       </div>
       {/* soft glow behind the card */}
       <div
@@ -155,9 +157,9 @@ export function Hero({ booted }: HeroProps) {
         className="pointer-events-none absolute left-1/2 top-[42%] h-[70vmin] w-[90vmin] -translate-x-1/2 -translate-y-1/2 rounded-full bg-[radial-gradient(closest-side,rgb(var(--c-surface)/0.9),rgb(var(--c-surface)/0))]"
       />
 
-      <div className="section-shell-x relative z-10 flex flex-1 flex-col items-center justify-center pb-24 pt-[calc(var(--nav-height)+2.5rem)] text-center md:pb-28">
+      <div className="section-shell-x relative z-10 flex flex-1 flex-col items-center justify-center pb-16 pt-[calc(var(--nav-height)+1.25rem)] text-center md:pb-28 md:pt-[calc(var(--nav-height)+2.5rem)]">
         {/* the ball — in-flow on mobile, floated to the title's shoulder on desktop */}
-        <div className="relative mb-4 h-24 w-24 md:absolute md:right-[clamp(1rem,9vw,10rem)] md:top-[18%] md:mb-0 md:h-[clamp(10rem,18vw,15rem)] md:w-[clamp(10rem,18vw,15rem)]">
+        <div className="relative mb-3 h-20 w-20 md:absolute md:right-0 md:top-[18%] md:mb-0 md:h-[clamp(10rem,17vw,15rem)] md:w-[clamp(10rem,17vw,15rem)] lg:-right-[2vw]">
           <span
             data-hero-shadow
             aria-hidden="true"
@@ -181,7 +183,7 @@ export function Hero({ booted }: HeroProps) {
         </div>
 
         <div data-hero-copy className="flex max-w-4xl flex-col items-center">
-          <p data-reveal className="mb-5 md:mb-7">
+          <p data-reveal className="mb-4 md:mb-7">
             <Kicker ornament="both">{hero.eyebrow}</Kicker>
           </p>
 
@@ -192,11 +194,11 @@ export function Hero({ booted }: HeroProps) {
           <p data-reveal className="t-display mt-2 text-display-sm italic text-primary md:mt-3">
             {brand.subline}
           </p>
-          <p data-reveal className="t-accent mt-5 text-[0.8rem] text-fg-muted md:mt-6 md:text-sm">
+          <p data-reveal className="t-accent mt-4 text-[0.72rem] text-fg-muted md:mt-6 md:text-sm">
             {brand.tagline}
           </p>
 
-          <p data-reveal className="mt-6 max-w-2xl text-balance text-sm leading-relaxed text-fg-muted md:mt-8 md:text-base">
+          <p data-reveal className="mt-5 max-w-2xl text-balance text-sm leading-relaxed text-fg-muted md:mt-8 md:text-base">
             {brand.partners.map((p, i) => (
               <span key={p.name} className="inline-block whitespace-nowrap">
                 {i > 0 && <span className="mx-2 text-primary md:mx-3">×</span>}
@@ -205,7 +207,7 @@ export function Hero({ booted }: HeroProps) {
             ))}
           </p>
 
-          <ul data-reveal className="mt-8 flex flex-wrap items-center justify-center gap-2.5 md:mt-10 md:gap-3">
+          <ul data-reveal className="mt-6 flex flex-wrap items-center justify-center gap-2 md:mt-10 md:gap-3">
             <li className="inline-flex items-center gap-2 rounded-pill border border-line bg-surface/80 px-4 py-2 text-sm text-fg shadow-card backdrop-blur">
               <MapPin aria-hidden="true" className="h-4 w-4 text-primary" />
               {event.venue.name}
@@ -216,15 +218,15 @@ export function Hero({ booted }: HeroProps) {
             </li>
           </ul>
 
-          <div data-reveal className="mt-9 flex flex-wrap items-center justify-center gap-3 md:mt-11 md:gap-4">
+          <div data-reveal className="mt-7 flex flex-wrap items-center justify-center gap-3 md:mt-11 md:gap-4">
             <MagneticButton>
-              <Button asChild size="lg" className="min-w-40">
+              <Button asChild size="lg" className="min-w-[10rem]">
                 <a href={hero.primaryCta.href} onClick={go(hero.primaryCta.href)}>
                   {hero.primaryCta.label}
                 </a>
               </Button>
             </MagneticButton>
-            <Button asChild size="lg" variant="outline" className="min-w-40">
+            <Button asChild size="lg" variant="outline" className="min-w-[10rem]">
               <a href={hero.secondaryCta.href} onClick={go(hero.secondaryCta.href)}>
                 {hero.secondaryCta.label}
               </a>
@@ -233,7 +235,7 @@ export function Hero({ booted }: HeroProps) {
         </div>
       </div>
 
-      <ScrollHint className="absolute bottom-6 left-1/2 z-10 -translate-x-1/2 md:bottom-8" show={booted} />
+      <ScrollHint className="absolute bottom-8 left-1/2 z-10 hidden -translate-x-1/2 md:flex" show={booted} />
     </section>
   );
 }
@@ -244,7 +246,7 @@ function ScrollHint({ className, show }: { className?: string; show: boolean }) 
     <div
       aria-hidden="true"
       className={cn(
-        "flex flex-col items-center gap-2 text-fg-subtle transition-opacity duration-slow ease-theme",
+        "flex-col items-center gap-2 text-fg-subtle transition-opacity duration-slow ease-theme",
         show ? "opacity-100" : "opacity-0",
         className
       )}

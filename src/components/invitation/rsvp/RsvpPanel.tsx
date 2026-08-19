@@ -75,16 +75,16 @@ interface RsvpPanelProps {
 }
 
 /**
- * The RSVP form and its success state, swapped with a GSAP cross-fade
+ * The "save your spot" form and its success state, swapped with a GSAP cross-fade
  * (instant under reduced motion). Focus moves to the success heading on
  * swap (see RsvpSuccess) and back to the name field on "send another".
- * Layout-agnostic — each RSVP variant places it in its own composition.
+ * Layout-agnostic — the section places it in its own composition.
  */
 export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
   const uid = useId();
   const id = (k: string) => `${uid}-${k}`;
   const motion = useThemeMotion();
-  const { theme } = useTheme();
+  const { palette } = useTheme();
 
   const rootRef = useRef<HTMLDivElement>(null);
   const formRef = useRef<HTMLFormElement>(null);
@@ -151,7 +151,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
       guests: values.guests,
       interest: values.interest,
       message: values.message.trim(),
-      theme: theme.id,
+      theme: palette.id,
     };
     try {
       await submitRsvp(payload);

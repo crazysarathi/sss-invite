@@ -11,7 +11,7 @@ interface InvitationProps {
 /**
  * The invitation, section by section — only what the hosts asked for:
  * hero (the card) → details (where / when / what / hosted by) →
- * "See our Smashers in action" → RSVP (collect database) → footer.
+ * "See our Smashers in action" → save your spot (collect database) → footer.
  */
 export function Invitation({ booted }: InvitationProps) {
   return (

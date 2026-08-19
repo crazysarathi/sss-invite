@@ -54,7 +54,7 @@ export default function BallCanvas({ palette, spin = 0.45, float = 0.05, active 
         resize={{ offsetSize: true, scroll: false }}
         style={{ width: "100%", height: "100%" }}
       >
-        <SceneLights light={palette.light} rim={palette.secondary} fill={palette.primary} intensity={1.35} />
+        <SceneLights light={palette.light} rim={palette.secondary} fill={palette.primary} intensity={1.7} />
         <FloatGroup amplitude={float} rotAmplitude={0.12} speed={0.8}>
           <Spinner spin={spin}>
             <Pickleball

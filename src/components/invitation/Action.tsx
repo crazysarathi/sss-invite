@@ -53,7 +53,7 @@ export function Action() {
       </div>
 
       <div className="section-shell">
-        <div className="grid items-center gap-12 lg:grid-cols-12 lg:gap-14">
+        <div className="grid items-center gap-10 lg:grid-cols-12 lg:gap-14 [&>*]:min-w-0">
           <div className="lg:col-span-5">
             <ScrollReveal className="mb-5 flex items-center gap-4">
               <img

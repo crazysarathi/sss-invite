@@ -11,7 +11,7 @@ interface RsvpSuccessProps {
 }
 
 /**
- * Success face of the RSVP panel: a check drawn inside a themed ring,
+ * Success face of the form panel: a check drawn inside a themed ring,
  * then title / body / "send another" rising in with the theme's stagger.
  * Moves focus to the heading once it is visible. Reduced motion →
  * everything is simply visible and focus moves immediately.

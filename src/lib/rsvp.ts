@@ -1,6 +1,6 @@
 import { rsvp } from "@/data/siteData";
 
-/** The RSVP payload — mirrors the form fields configured in siteData. */
+/** The guest-details payload — mirrors the form fields configured in siteData. */
 export interface RsvpPayload {
   name: string;
   email: string;
@@ -9,7 +9,7 @@ export interface RsvpPayload {
   guests: number;
   interest: string;
   message: string;
-  /** Which theme the guest RSVP'd from — handy analytics for the client. */
+  /** Which colour palette the guest submitted from — handy analytics for the client. */
   theme?: string;
 }
 
@@ -33,7 +33,7 @@ export async function submitRsvp(payload: RsvpPayload): Promise<void> {
   if (mode === "formsubmit") {
     const body = new FormData();
     Object.entries(payload).forEach(([k, v]) => body.append(k, String(v ?? "")));
-    body.append("_subject", "Pickle & Pilates RSVP");
+    body.append("_subject", "Pickle & Pilates — new guest");
     body.append("_captcha", "false");
     const res = await fetch(`https://formsubmit.co/ajax/${endpoint}`, {
       method: "POST",
@@ -49,5 +49,5 @@ export async function submitRsvp(payload: RsvpPayload): Promise<void> {
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(`RSVP endpoint ${res.status}`);
+  if (!res.ok) throw new Error(`Guest endpoint ${res.status}`);
 }

@@ -9,7 +9,7 @@
  *   Location: Forest Hills Country Club
  *   Date: coming soon
  *   "See our Smashers in action"
- *   (Collect database) → the RSVP form
+ *   (Collect database) → the "Save your spot" form (never called RSVP on the page)
  *
  * Components never hard-code copy — edit here. Items marked TODO are
  * placeholders awaiting confirmation from the hosts.
@@ -60,7 +60,7 @@ export const event = {
    */
   dateStatus: "tba" as DateStatus,
   dateTbaLabel: "Date coming soon",
-  dateTbaNote: "RSVP now and we'll tell you first",
+  dateTbaNote: "Save your spot and we'll tell you first",
   /** Used once dateStatus is "confirmed" (display string, e.g. "Sunday, 4 October 2026"). */
   dateLabel: "",
   timeLabel: "",
@@ -89,10 +89,13 @@ export const opening = {
 /* ------------------------------------------------------------------ */
 export const hero = {
   eyebrow: "You're invited to",
-  primaryCta: { label: "RSVP", href: "#rsvp" },
+  primaryCta: { label: "Save my spot", href: "#register" },
   secondaryCta: { label: "The details", href: "#details" },
   scrollHint: "Scroll",
 } as const;
+
+/** The small button in the top bar. */
+export const navCta = { label: "Join us", href: "#register" } as const;
 
 /* ------------------------------------------------------------------ */
 /* Details                                                             */
@@ -127,12 +130,14 @@ export const action = {
 } as const;
 
 /* ------------------------------------------------------------------ */
-/* RSVP — "collect database"                                           */
+/* Save your spot — "collect database" (the word RSVP never appears)   */
 /* ------------------------------------------------------------------ */
 export const rsvp = {
-  kicker: "RSVP",
+  /** Section anchor (used by every "Save my spot" / "Join us" button). */
+  id: "register",
+  kicker: "Join us",
   title: "Save your spot",
-  lead: "Let us know you're coming — we'll share the date and details with you first.",
+  lead: "Leave your details — we'll share the date and everything you need to know with you first.",
   fields: {
     name: { label: "Full name", placeholder: "Your name" },
     email: { label: "Email", placeholder: "you@example.com" },
@@ -157,13 +162,13 @@ export const rsvp = {
     },
     message: { label: "A note for the hosts", placeholder: "Questions, or just say hi" },
   },
-  cta: "Confirm my spot",
+  cta: "Save my spot",
   submitting: "Sending…",
   successTitle: "You're on the list",
   successBody: "Thank you — we'll be in touch with the date and details soon.",
-  successToast: "RSVP received — see you on the court and on the mat.",
-  errorToast: "Something went wrong sending your RSVP. Please try again.",
-  anotherCta: "Send another RSVP",
+  successToast: "Got it — see you on the court and on the mat.",
+  errorToast: "Something went wrong sending your details. Please try again.",
+  anotherCta: "Add another guest",
   /**
    * Submission handler configuration (see src/lib/rsvp.ts):
    *   mode "mock"       — no backend; resolves after a short delay (default)
@@ -201,5 +206,5 @@ export function dateLine(): string {
   return event.dateStatus === "confirmed" && event.dateLabel ? event.dateLabel : event.dateTbaLabel;
 }
 
-export const siteData = { brand, meta, event, opening, hero, details, action, rsvp, social, footer } as const;
+export const siteData = { brand, meta, event, opening, hero, navCta, details, action, rsvp, social, footer } as const;
 export type SiteData = typeof siteData;

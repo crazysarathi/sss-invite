@@ -155,7 +155,7 @@ export function PalettePicker() {
                 "absolute flex flex-col overflow-hidden border-line bg-page text-fg shadow-float opacity-0",
                 isMobile
                   ? "inset-x-0 bottom-0 max-h-[86svh] rounded-t-[1.5rem] border-t"
-                  : "bottom-24 left-7 w-[min(92vw,30rem)] rounded-card border"
+                  : "bottom-24 left-7 max-h-[calc(100svh-7.5rem)] w-[min(92vw,30rem)] rounded-card border"
               )}
             >
               <div className="flex items-start justify-between gap-4 px-6 pt-6 md:px-7 md:pt-7">
@@ -233,7 +233,7 @@ function PaletteChip({ palette: p, active, onSelect }: PaletteChipProps) {
         active ? "border-primary shadow-card" : "border-line hover:-translate-y-0.5 hover:border-line-strong"
       )}
     >
-      <span aria-hidden="true" className="relative block aspect-[5/3] w-full" style={{ backgroundColor: c.bg }}>
+      <span aria-hidden="true" className="relative block aspect-[2/1] w-full" style={{ backgroundColor: c.bg }}>
         <span className="absolute left-[10%] top-[16%] block h-[8%] w-[46%] rounded-pill" style={{ backgroundColor: c.fg, opacity: 0.85 }} />
         <span className="absolute left-[10%] top-[32%] block h-[5%] w-[30%] rounded-pill" style={{ backgroundColor: c.fgMuted, opacity: 0.6 }} />
         <span className="absolute bottom-[14%] left-[10%] block h-[16%] w-[34%] rounded-pill" style={{ backgroundColor: c.primary }} />

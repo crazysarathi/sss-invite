@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  */
 const buttonVariants = cva(
   [
-    "t-accent inline-flex items-center justify-center gap-2 whitespace-nowrap rounded-btn",
+    "t-accent inline-flex max-w-full items-center justify-center gap-2 whitespace-nowrap rounded-btn [letter-spacing:0.16em]",
     "transition-[color,background-color,border-color,box-shadow,transform,filter] duration-micro ease-theme",
     "focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 focus-visible:ring-offset-page",
     "disabled:pointer-events-none disabled:opacity-50 [&_svg]:pointer-events-none [&_svg]:size-[1.05em] [&_svg]:shrink-0",
@@ -29,9 +29,9 @@ const buttonVariants = cva(
         link: "text-primary underline-offset-4 hover:underline [letter-spacing:0.04em]",
       },
       size: {
-        default: "h-12 px-7 text-sm",
+        default: "h-12 px-6 text-[0.8rem]",
         sm: "h-10 px-5 text-xs",
-        lg: "h-14 px-9 text-base",
+        lg: "h-14 px-8 text-[0.9rem]",
         icon: "h-11 w-11",
       },
     },

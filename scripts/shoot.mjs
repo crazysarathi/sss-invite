@@ -17,7 +17,7 @@ const DESKTOP_ONLY = flags.includes("--desktop");
 const BASE = process.env.SHOOT_URL || "http://localhost:4173/";
 const ALL = ["blush", "rose", "ivory", "linen", "sky", "sage"];
 const PALETTES = paletteArg === "all" ? ALL : [paletteArg];
-const SECTIONS = ["hero", "details", "action", "rsvp", "footer"];
+const SECTIONS = ["hero", "details", "action", "register", "footer"];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 
@@ -134,7 +134,7 @@ async function run(palette) {
         trigger.click();
         await new Promise((r) => setTimeout(r, 900));
         const chip = Array.from(document.querySelectorAll('[role="dialog"] [data-chip]')).find((b) =>
-          new RegExp(nextId, "i").test(b.getAttribute("aria-label") || "")
+          new RegExp("^" + nextId, "i").test(b.getAttribute("aria-label") || "")
         );
         if (!chip) return "no-chip";
         chip.click();

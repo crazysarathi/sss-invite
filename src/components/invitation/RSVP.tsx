@@ -10,8 +10,9 @@ import { PickleballSvg } from "@/components/sport/PickleballSvg";
 import { RsvpPanel } from "./rsvp/RsvpPanel";
 
 /**
- * RSVP — "collect database": heading, one card with the form. A successful
- * send bursts confetti in the palette's colours.
+ * "Save your spot" — the hosts' "collect database": heading, one card with
+ * the form. A successful send bursts confetti in the palette's colours.
+ * (The page never says "RSVP" — the hosts' content doesn't.)
  */
 export function RSVP() {
   const { theme } = useTheme();
@@ -33,7 +34,7 @@ export function RSVP() {
   useEffect(() => () => stopConfetti.current?.(), []);
 
   return (
-    <section id="rsvp" className="relative overflow-hidden bg-page-alt">
+    <section id={rsvp.id} className="relative overflow-hidden bg-page-alt">
       <div className="t-pattern" aria-hidden="true" />
       {/* a couple of resting balls in the corners */}
       <PickleballSvg aria-hidden="true" className="pointer-events-none absolute -left-10 top-16 h-32 w-32 opacity-40 md:h-44 md:w-44" />
