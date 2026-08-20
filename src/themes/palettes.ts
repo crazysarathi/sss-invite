@@ -226,7 +226,7 @@ export const palettes: readonly PaletteDefinition[] = [
 ] as const;
 
 export const PALETTE_GROUPS: Record<PaletteDefinition["group"], { label: string; hint: string }> = {
-  pink: { label: "Pink shades", hint: "Blush & rose" },
+  pink: { label: "Pink shades", hint: "Blushs & rose" },
   ivory: { label: "Ivory shades", hint: "Cream & linen" },
   logo: { label: "Logo colours", hint: "Lighter blue & green" },
   court: { label: "Court colours", hint: "Sage & lavender" },
