@@ -8,7 +8,7 @@ interface LazyBoundaryProps {
 
 /**
  * Error boundary for optional, lazily-loaded enhancements (3D scenes, the
- * envelope's seal ball). If the chunk fails to load or WebGL throws, the
+ * opening seal ball). If the chunk fails to load or WebGL throws, the
  * invitation must keep working — render the fallback, never crash the tree.
  */
 export class LazyBoundary extends Component<LazyBoundaryProps, { failed: boolean }> {

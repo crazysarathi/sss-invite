@@ -202,15 +202,19 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
 
   const describedBy = (k: FieldKey) => (errors[k] ? `${id(k)}-error` : undefined);
 
+  // Compact control heights so the card fits a desktop/tablet viewport
+  // (44px still clears the touch-target minimum on mobile).
+  const control = cn(FIELD_BORDER, "h-11");
+
   return (
     <div ref={rootRef} className={cn("relative flex flex-col", className)}>
       {phase === "form" ? (
-        <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-7">
+        <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-4 sm:space-y-5">
           <Field id={id("name")} label={fields.name.label} error={errors.name}>
             <Input
               ref={nameRef}
               id={id("name")}
-              className={FIELD_BORDER}
+              className={control}
               name="name"
               autoComplete="name"
               placeholder={fields.name.placeholder}
@@ -222,12 +226,12 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
             />
           </Field>
 
-          <div className="grid gap-7 sm:grid-cols-2 sm:gap-5">
+          <div className="grid gap-4 sm:grid-cols-2 sm:gap-4">
             <Field id={id("email")} label={fields.email.label} error={errors.email}>
               <Input
                 ref={emailRef}
                 id={id("email")}
-                className={FIELD_BORDER}
+                className={control}
                 name="email"
                 type="email"
                 inputMode="email"
@@ -244,7 +248,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
               <Input
                 ref={phoneRef}
                 id={id("phone")}
-                className={FIELD_BORDER}
+                className={control}
                 name="phone"
                 type="tel"
                 inputMode="tel"
@@ -266,7 +270,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
             onChange={(v) => update("attendance", v)}
           />
 
-          <div className="grid gap-7 sm:grid-cols-[auto_1fr] sm:gap-5">
+          <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:gap-4">
             <Stepper
               id={id("guests")}
               label={fields.guests.label}
@@ -279,7 +283,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
             />
             <Field id={id("interest")} label={fields.interest.label}>
               <Select value={values.interest} onValueChange={(v) => update("interest", v)}>
-                <SelectTrigger id={id("interest")} aria-label={fields.interest.label} className={FIELD_BORDER}>
+                <SelectTrigger id={id("interest")} aria-label={fields.interest.label} className={control}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
@@ -296,18 +300,18 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
           <Field id={id("message")} label={fields.message.label}>
             <Textarea
               id={id("message")}
-              className={FIELD_BORDER}
+              className={cn(FIELD_BORDER, "min-h-[5.25rem]")}
               name="message"
-              rows={4}
+              rows={3}
               placeholder={fields.message.placeholder}
               value={values.message}
               onChange={(e) => update("message", e.target.value)}
             />
           </Field>
 
-          <div className="pt-2">
+          <div className="pt-1">
             <MagneticButton className="block w-full sm:inline-block sm:w-auto">
-              <Button type="submit" size="lg" disabled={submitting} aria-busy={submitting} className="w-full sm:w-auto sm:min-w-[14rem]">
+              <Button type="submit" disabled={submitting} aria-busy={submitting} className="w-full sm:w-auto sm:min-w-[14rem]">
                 {submitting ? (
                   <>
                     <Loader2 aria-hidden="true" className="animate-spin" />

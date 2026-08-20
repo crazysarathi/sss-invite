@@ -21,7 +21,7 @@ export function Footer() {
 
       <div className="section-shell pb-28 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">
-          <AnimatedText as="p" split="words" className="t-script text-[2.4rem] leading-none text-primary md:text-[3.2rem]">
+          <AnimatedText as="p" split="words" className="t-script text-[1.85rem] leading-none text-primary sm:text-[2.4rem] md:text-[3.2rem]">
             {footer.script}
           </AnimatedText>
           <ScrollReveal delay={0.1}>
@@ -48,7 +48,7 @@ export function Footer() {
               {brand.partners.map((p, i) => (
                 <span key={p.name} className="inline-block whitespace-nowrap">
                   {i > 0 && <span className="mx-2 text-primary">×</span>}
-                  <span className="t-display text-[1.1rem] text-fg">{p.name}</span>
+                  <span className="t-display text-[0.98rem] text-fg md:text-[1.1rem]">{p.name}</span>
                 </span>
               ))}
             </p>

@@ -25,7 +25,7 @@ interface FieldProps {
 
 export function Field({ id, label, note, error, children, className }: FieldProps) {
   return (
-    <div className={cn("space-y-2.5", className)}>
+    <div className={cn("space-y-2", className)}>
       <Label htmlFor={id} className="flex items-baseline gap-2">
         <span>{label}</span>
         {note && <span className="font-body text-xs normal-case tracking-normal text-fg-subtle">{note}</span>}
@@ -59,8 +59,8 @@ interface SegmentedRadioProps {
 export function SegmentedRadio({ name, label, options, value, onChange }: SegmentedRadioProps) {
   return (
     <fieldset className="min-w-0">
-      <legend className="t-accent mb-2.5 block text-[0.68rem] text-fg-muted">{label}</legend>
-      <div className="grid gap-2 sm:grid-cols-3">
+      <legend className="t-accent mb-2 block text-[0.68rem] text-fg-muted">{label}</legend>
+      <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
         {options.map((o) => (
           <label key={o.value} className="relative block cursor-pointer">
             <input
@@ -73,7 +73,7 @@ export function SegmentedRadio({ name, label, options, value, onChange }: Segmen
             />
             <span
               className={cn(
-                "flex min-h-12 items-center justify-center rounded-btn border-line-strong bg-surface px-3 py-2.5 text-center text-sm leading-snug text-fg",
+                "flex min-h-11 items-center justify-center rounded-btn border-line-strong bg-surface px-1.5 py-2 text-center text-[0.8rem] leading-snug text-fg sm:px-3 sm:text-sm",
                 FIELD_BORDER,
                 "transition-[background-color,color,border-color] duration-micro ease-theme",
                 "hover:border-fg",
@@ -109,17 +109,17 @@ export const Stepper = forwardRef<HTMLDivElement, StepperProps>(function Stepper
   ref
 ) {
   const btn =
-    "flex h-12 w-12 shrink-0 items-center justify-center text-fg transition-colors duration-micro ease-theme hover:bg-fg/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:bg-fg/[0.08] focus-visible:relative focus-visible:z-10 disabled:pointer-events-none disabled:opacity-35 [&_svg]:size-4";
+    "flex h-11 w-11 shrink-0 items-center justify-center text-fg transition-colors duration-micro ease-theme hover:bg-fg/[0.06] focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-inset focus-visible:ring-ring focus-visible:bg-fg/[0.08] focus-visible:relative focus-visible:z-10 disabled:pointer-events-none disabled:opacity-35 [&_svg]:size-4";
   return (
     <div className="min-w-0">
-      <span id={`${id}-label`} className="t-accent mb-2.5 block text-[0.68rem] text-fg-muted">
+      <span id={`${id}-label`} className="t-accent mb-2 block text-[0.68rem] text-fg-muted">
         {label}
       </span>
       <div
         ref={ref}
         role="group"
         aria-labelledby={`${id}-label`}
-        className={cn("inline-flex h-12 items-stretch overflow-hidden rounded-field border-input bg-surface", FIELD_BORDER)}
+        className={cn("inline-flex h-11 items-stretch overflow-hidden rounded-field border-input bg-surface", FIELD_BORDER)}
       >
         <button
           type="button"
@@ -133,7 +133,7 @@ export const Stepper = forwardRef<HTMLDivElement, StepperProps>(function Stepper
         <output
           aria-live="polite"
           aria-atomic="true"
-          className="t-display flex min-w-14 items-center justify-center border-x-[length:var(--border-w)] border-input px-2 text-2xl leading-none text-fg tabular-nums"
+          className="t-display flex min-w-12 items-center justify-center border-x-[length:var(--border-w)] border-input px-2 text-xl leading-none text-fg tabular-nums"
         >
           {value}
         </output>

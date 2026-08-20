@@ -53,21 +53,21 @@ export function Hosts() {
             <Flourish className="mt-4" center="dot" />
           </ScrollReveal>
           <ScrollReveal delay={0.1} className="mt-6">
-            <p className="t-accent text-[1.05rem] tracking-[0.3em] text-fg md:text-[1.2rem]">{hosts.intro}</p>
+            <p className="t-accent text-[0.88rem] tracking-[0.26em] text-fg sm:text-[1.05rem] sm:tracking-[0.3em] md:text-[1.2rem]">{hosts.intro}</p>
           </ScrollReveal>
-          <AnimatedText as="h2" split="words" className="t-script mt-1 text-[3rem] leading-none text-primary md:text-[3.8rem]">
+          <AnimatedText as="h2" split="words" className="t-script mt-1 text-[2.3rem] leading-none text-primary sm:text-[3rem] md:text-[3.8rem]">
             {hosts.script}
           </AnimatedText>
 
-          <TornCard seed={3} className="mt-10 md:mt-12">
-            <div data-ledger className="grid grid-cols-1 gap-x-6 gap-y-8 px-6 py-10 sm:grid-cols-2 md:px-12 md:py-12">
+          <TornCard seed={3} className="mt-8 md:mt-12">
+            <div data-ledger className="grid grid-cols-1 gap-x-6 gap-y-7 px-4 py-8 sm:grid-cols-2 sm:px-6 sm:py-10 md:px-12 md:py-12">
               {brand.partners.map((p, i) => (
                 <div key={p.name} data-host className="relative text-center">
                   <span aria-hidden="true" className="t-accent mb-2 block text-[0.7rem] text-accent">
                     ✦
                   </span>
-                  <p className="t-display text-[1.5rem] leading-tight text-fg md:text-[1.7rem]">{p.name}</p>
-                  <p className="t-accent mt-1.5 text-[0.72rem] text-fg-muted md:text-[0.78rem]">{p.role}</p>
+                  <p className="t-display text-[1.3rem] leading-tight text-fg sm:text-[1.5rem] md:text-[1.7rem]">{p.name}</p>
+                  <p className="t-accent mt-1.5 text-[0.66rem] text-fg-muted sm:text-[0.72rem] md:text-[0.78rem]">{p.role}</p>
                   {i === 0 && (
                     <img
                       src={brand.hostCrest}
@@ -85,7 +85,7 @@ export function Hosts() {
           </TornCard>
 
           <ScrollReveal delay={0.15} className="mt-8 md:mt-10">
-            <p className="t-display text-balance text-[1.35rem] italic leading-snug text-fg-muted md:text-[1.5rem]">{hosts.line}</p>
+            <p className="t-display text-balance text-[1.1rem] italic leading-snug text-fg-muted sm:text-[1.35rem] md:text-[1.5rem]">{hosts.line}</p>
           </ScrollReveal>
         </div>
       </div>

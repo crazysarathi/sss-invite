@@ -51,13 +51,15 @@ export const base: ThemeDefinition = {
       tracking: "0.22em",
       transform: "none",
     },
+    /* vw + rem slopes so phones sit near the (much smaller) minimum while
+       desktop keeps the original scale — "reduce the words on mobile". */
     scale: {
-      xl: "clamp(3.6rem, 9.5vw, 8.5rem)",
-      lg: "clamp(2.6rem, 6vw, 5rem)",
-      md: "clamp(2.1rem, 4.2vw, 3.5rem)",
-      sm: "clamp(1.6rem, 2.6vw, 2.25rem)",
+      xl: "clamp(2.5rem, 8vw + 1rem, 8.5rem)",
+      lg: "clamp(1.9rem, 5vw + 0.6rem, 5rem)",
+      md: "clamp(1.6rem, 3.4vw + 0.5rem, 3.5rem)",
+      sm: "clamp(1.3rem, 2vw + 0.5rem, 2.25rem)",
     },
-    kickerSize: "0.82rem",
+    kickerSize: "clamp(0.68rem, 0.55vw + 0.55rem, 0.82rem)",
     load: () =>
       Promise.all([
         import("@fontsource-variable/cormorant/wght.css"),
@@ -82,8 +84,8 @@ export const base: ThemeDefinition = {
 
   layout: {
     maxWidth: "1180px",
-    sectionY: "clamp(5.5rem, 11vw, 9rem)",
-    gutter: "1.5rem",
+    sectionY: "clamp(4rem, 8vw + 1.5rem, 9rem)",
+    gutter: "clamp(1rem, 4vw, 1.5rem)",
   },
 
   decor: {

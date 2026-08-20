@@ -74,7 +74,7 @@ export const event = {
 } as const;
 
 /* ------------------------------------------------------------------ */
-/* Opening screen (the envelope)                                       */
+/* Opening screen (the sealed doors)                                   */
 /* ------------------------------------------------------------------ */
 export const opening = {
   eyebrow: "Salem Super Smashers presents",

@@ -1,13 +1,11 @@
 import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react";
-import { brand, footer, opening } from "@/data/siteData";
+import { brand, dateLine, event, footer, opening } from "@/data/siteData";
 import { prefersReducedMotion } from "@/lib/utils";
 import { useTheme } from "@/components/theme/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/shared/Kicker";
 import type { ThemeDefinition } from "@/themes/types";
-import { Watercolor } from "@/components/stationery/Watercolor";
-import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
-import { Envelope } from "./opening/Envelope";
+import { GateDoors, SealBall } from "./opening/Gates";
 import { OPENING_PRESET } from "./opening/presets";
 import { useOpeningTimeline } from "./opening/useOpeningTimeline";
 
@@ -17,7 +15,7 @@ const FONT_WAIT_MS = 1500;
 const nextFrame = () => new Promise<void>((r) => requestAnimationFrame(() => r()));
 
 /**
- * Warm the theme's display / accent / body faces (bounded) so the card's
+ * Warm the theme's display / accent / body faces (bounded) so the stage's
  * display type measures right and doesn't swap mid-choreography.
  */
 async function warmFonts(theme: ThemeDefinition): Promise<void> {
@@ -53,16 +51,16 @@ interface OpeningScreenProps {
 }
 
 /**
- * The invitation's opening experience: a sealed envelope you tap. The
- * pickleball seal pops off, the flap lifts, the card slides out and grows
- * into the website. Rendered by App outside #smooth-content, so it may be
- * `position: fixed`.
+ * The invitation's opening experience: two paper leaves sealed at the seam
+ * by the pickleball. Tap, and the ball serves off with a spin while the
+ * doors swing apart to reveal the website. Rendered by App outside
+ * #smooth-content, so it may be `position: fixed`.
  *
  * Contract:
  *   - locks document scroll while up (restored on finish / unmount);
  *   - reduced motion → renders nothing, `onOpen()` + `onComplete()` at once;
- *   - the envelope itself is the gate (a real button), plus the text
- *     button; Enter / Space open, Escape (or a second tap) skips to the end;
+ *   - the seal itself is the gate (a real button), plus the text button;
+ *     Enter / Space open, Escape (or a second tap) skips to the end;
  *   - `onOpen()` fires once when the exit begins, `onComplete()` once when it
  *     has finished — never the other way round.
  * The choreography's tempo comes from opening/presets.
@@ -71,7 +69,7 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
   const { theme } = useTheme();
   const preset = OPENING_PRESET;
   const rootRef = useRef<HTMLDivElement>(null);
-  const envButtonRef = useRef<HTMLButtonElement>(null);
+  const sealButtonRef = useRef<HTMLButtonElement>(null);
   const [reduced] = useState(() => prefersReducedMotion());
   const [ready, setReady] = useState(false);
   const [hidden, setHidden] = useState(false);
@@ -109,15 +107,15 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
   const open = useCallback(() => {
     if (doneRef.current || startedRef.current) return;
     startedRef.current = true;
-    // The envelope stops being a control once it's opening: drop its focus ring.
-    envButtonRef.current?.blur();
+    // The seal stops being a control once it's opening: drop its focus ring.
+    sealButtonRef.current?.blur();
     stage.open();
   }, [stage]);
 
   const skip = useCallback(() => {
     if (doneRef.current) return;
     startedRef.current = true;
-    envButtonRef.current?.blur();
+    sealButtonRef.current?.blur();
     stage.skip();
   }, [stage]);
 
@@ -150,10 +148,10 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
     };
   }, [reduced, theme]);
 
-  // Focus the envelope once it's on stage — unless the user is in the
+  // Focus the seal once it's on stage — unless the user is in the
   // colour picker, which this must not yank focus out of.
   useEffect(() => {
-    if (ready && !pickerIsUp()) envButtonRef.current?.focus({ preventScroll: true });
+    if (ready && !pickerIsUp()) sealButtonRef.current?.focus({ preventScroll: true });
   }, [ready]);
 
   // Keyboard: Enter / Space open (unless a control handles it natively), Escape skips.
@@ -175,6 +173,8 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
 
   if (reduced) return null;
 
+  const [a, amp, b] = brand.nameParts;
+
   return (
     <div
       ref={rootRef}
@@ -185,45 +185,54 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
       style={hidden ? { display: "none" } : undefined}
       // Buttons inside have no handlers of their own: their clicks bubble here,
       // so a first tap anywhere opens and a second one skips. Guarded against
-      // the picker: with no focus trap, Tab can reach the envelope button
-      // under the picker's backdrop, and Enter would click it natively.
+      // the picker: with no focus trap, Tab can reach the seal button under
+      // the picker's backdrop, and Enter would click it natively.
       onClick={() => {
         if (pickerIsUp()) return;
         if (startedRef.current) skip();
         else open();
       }}
     >
-      <div data-backdrop aria-hidden="true" className="t-paper absolute inset-0 overflow-hidden bg-page-alt">
-        <div data-decor className="absolute inset-0">
-          <Watercolor variant="b" opacity={0.85} />
-          <CourtsideSketches />
-        </div>
-      </div>
+      <GateDoors />
 
       {ready && (
-        <div className="relative flex h-full w-full flex-col items-center justify-center gap-5 px-5 py-6 text-fg sm:gap-6">
+        <div className="relative z-10 flex h-full w-full flex-col items-center justify-center gap-4 px-6 py-6 text-fg sm:gap-5">
           <p data-kicker className="max-w-full">
             <Kicker
               ornament="both"
-              className="max-w-full text-center max-sm:tracking-[0.22em] max-sm:[&>[aria-hidden]]:hidden"
+              className="max-w-full text-center max-sm:text-[0.62rem] max-sm:tracking-[0.2em] max-sm:[&>[aria-hidden]]:hidden"
             >
               {opening.eyebrow}
             </Kicker>
           </p>
 
-          <div data-float className="relative">
-            <button
-              ref={envButtonRef}
-              data-env
-              type="button"
-              aria-label="Open the invitation"
-              // Focus lands here on mount: a hairline frame well outside the paper.
-              className="relative block cursor-pointer rounded-md focus-visible:outline-1 focus-visible:outline-primary/70 focus-visible:[outline-offset:14px]"
-              onPointerEnter={(e) => e.pointerType === "mouse" && stage.hover(true)}
-              onPointerLeave={(e) => e.pointerType === "mouse" && stage.hover(false)}
-            >
-              <Envelope palette={theme.three.palette} liner={preset.liner} />
-            </button>
+          <button
+            ref={sealButtonRef}
+            data-seal
+            type="button"
+            aria-label="Open the invitation"
+            // Focus lands here on mount: a hairline ring well outside the medallion.
+            className="relative block cursor-pointer rounded-full focus-visible:outline-1 focus-visible:outline-primary/70 focus-visible:[outline-offset:12px]"
+            onPointerEnter={(e) => e.pointerType === "mouse" && stage.hover(true)}
+            onPointerLeave={(e) => e.pointerType === "mouse" && stage.hover(false)}
+          >
+            <SealBall palette={theme.three.palette} />
+          </button>
+
+          <div data-titles className="flex max-w-[88vw] flex-col items-center gap-1 text-center sm:gap-1.5">
+            <Kicker ornament="none" className="text-[0.62rem] tracking-[0.22em] md:text-[0.7rem]">
+              {opening.invitedLine}
+            </Kicker>
+            <span className="t-display block text-[clamp(1.9rem,7.5vw,2.5rem)] md:text-[clamp(2.5rem,3.6vw,3.1rem)]">
+              {a} <em>{amp}</em> {b}
+            </span>
+            <span className="t-script text-[1.25rem] leading-none text-primary md:text-[1.6rem]">
+              {brand.subline}
+            </span>
+            <span aria-hidden="true" className="my-1 block h-px w-12 bg-accent/70" />
+            <span className="t-label block text-[0.62rem] leading-relaxed md:text-[0.7rem]">
+              {dateLine()} · {event.venue.name}
+            </span>
           </div>
 
           <div data-gate className="flex flex-col items-center gap-3 text-center sm:gap-4">

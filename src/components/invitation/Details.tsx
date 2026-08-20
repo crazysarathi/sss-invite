@@ -72,8 +72,8 @@ export function Details() {
 
         <div className="grid gap-7 md:grid-cols-3 md:gap-6">
           <DetailCard seed={4} icon={<MapPin aria-hidden="true" className="h-5 w-5" />} label={details.location.label}>
-            <p className="t-display text-[1.7rem] leading-tight text-fg">{event.venue.name}</p>
-            <p className="t-accent mt-1.5 text-[0.76rem] text-fg-muted">{event.venue.city}</p>
+            <p className="t-display text-[1.4rem] leading-tight text-fg md:text-[1.7rem]">{event.venue.name}</p>
+            <p className="t-accent mt-1.5 text-[0.7rem] text-fg-muted md:text-[0.76rem]">{event.venue.city}</p>
             <a
               href={event.venue.mapsUrl}
               target="_blank"
@@ -86,7 +86,7 @@ export function Details() {
           </DetailCard>
 
           <DetailCard seed={8} icon={<CalendarDays aria-hidden="true" className="h-5 w-5" />} label={details.date.label} pulse={event.dateStatus === "tba"}>
-            <p className="t-display text-[1.7rem] leading-tight text-fg">{dateLine()}</p>
+            <p className="t-display text-[1.4rem] leading-tight text-fg md:text-[1.7rem]">{dateLine()}</p>
             <p className="mt-2 text-balance text-sm text-fg-muted">{event.dateStatus === "tba" ? event.dateTbaNote : event.timeLabel}</p>
           </DetailCard>
 
@@ -98,8 +98,8 @@ export function Details() {
                     <WhatGlyph kind={item.key} />
                   </span>
                   <span>
-                    <span className="t-display block text-[1.25rem] leading-tight text-fg">{item.title}</span>
-                    <span className="t-accent block text-[0.68rem] text-fg-muted">{item.note}</span>
+                    <span className="t-display block text-[1.1rem] leading-tight text-fg md:text-[1.25rem]">{item.title}</span>
+                    <span className="t-accent block text-[0.64rem] text-fg-muted md:text-[0.68rem]">{item.note}</span>
                   </span>
                 </li>
               ))}
@@ -125,7 +125,7 @@ interface DetailCardProps {
 function DetailCard({ icon, label, seed, pulse, children }: DetailCardProps) {
   return (
     <TornCard seed={seed} className="opacity-0" data-detail-card>
-      <div className="flex flex-col items-center px-6 py-9 text-center md:px-7 md:py-10">
+      <div className="flex flex-col items-center px-5 py-8 text-center md:px-7 md:py-10">
         {icon && <span className="mb-4 grid h-11 w-11 place-items-center rounded-full border border-accent/60 text-primary">{icon}</span>}
         <p className="t-accent mb-3 inline-flex items-center gap-2 text-[0.74rem] text-fg-muted">
           {label}

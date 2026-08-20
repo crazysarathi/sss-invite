@@ -92,7 +92,7 @@ function AppShell() {
 
       <BackToTop />
       {/* Mounted from the very first frame so the client can recolour the
-          envelope screen too — its trigger sits above the opening overlay. */}
+          opening doors too — its trigger sits above the opening overlay. */}
       <Suspense fallback={null}>
         <PalettePicker />
       </Suspense>

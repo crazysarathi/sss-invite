@@ -1,7 +1,7 @@
 /**
  * BallCanvas — a small R3F canvas holding one procedural 3D pickleball:
  * themed light rig + the ball floating and slowly turning. Used twice:
- * the wax-seal ball on the opening envelope, and the hero ball.
+ * the seal ball on the opening doors, and the hero ball.
  *
  * Movement of the ball as an OBJECT (bounce in, roll off, scroll parallax)
  * is GSAP on the HTML container, not three — keep the scene dumb.

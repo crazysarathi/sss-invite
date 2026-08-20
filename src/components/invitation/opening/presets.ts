@@ -1,59 +1,46 @@
 /**
- * Tempo for the envelope opening. Every beat is a multiplier of the
- * theme's `motion.duration.base`, so the preset only shapes the
- * choreography (how the ball leaves, how the flap opens, how the card
- * exits) — the absolute pace comes from the theme's motion.
+ * Tempo for the gate opening. Every beat is a multiplier of the theme's
+ * `motion.duration.base`, so the preset only shapes the choreography (how
+ * the ball serves off, how the doors swing apart) — the absolute pace
+ * comes from the theme's motion.
  */
 export interface OpeningPreset {
   /** Beat lengths (× base). */
   beats: {
-    /** Seal splits, ball pops off, rolls and drops. */
+    /** Copy + ring step aside. */
+    text: number;
+    /** The seal ball squashes, hops and serves off past the floor. */
     ball: number;
-    /** Flap rotates open. */
-    flap: number;
-    /** Card slides up out of the pocket. */
-    card: number;
-    /** Pause with the card out. */
-    hold: number;
-    /** Card grows toward the viewer while the envelope drops away. */
-    exit: number;
-    /** Final card fade. */
-    fade: number;
+    /** The door leaves swing apart. */
+    doors: number;
   };
-  /** How early the next beat starts before the previous ends (× base). */
-  overlap: { flap: number; card: number; fade: number };
+  /** How long after the open begins the doors start moving (× base). */
+  doorsDelay: number;
   ball: {
+    /** Hop height as a fraction of the viewport height. */
+    rise: number;
+    /** Total spin (deg) across the serve. */
+    rotation: number;
     /** Gravity ease on the drop. */
     ease: string;
-    /** Total roll rotation (deg). */
-    rotation: number;
-    /** Bounce once on the pocket before rolling off. */
-    bounce: boolean;
-    /** Horizontal travel as a fraction of the envelope width. */
-    throwX: number;
   };
-  flap: { ease: string };
-  /** Card slide ease — falls back to `motion.ease` when omitted. */
-  cardEase?: string;
-  exit: {
+  doors: {
     ease: string;
-    /** Blur (px) applied while the card fades. 0 = none. */
-    blur: number;
-    scale: { desktop: number; mobile: number };
+    /** Slight swing (deg) each leaf takes as it slides out. */
+    rotateY: number;
+    /** How far each leaf travels (xPercent — >100 clears its own shadow). */
+    travel: number;
   };
-  /** Tailwind classes for the flap liner (visible once open). */
-  liner: string;
-  /** Intro tilt (deg) the envelope settles from. */
-  introTilt: number;
+  /** How far (px) the leaves part on hover — a little "peek" invitation. */
+  hoverPart: number;
 }
 
-/** The Pickle & Pilates opening: springy — the seal ball pops, bounces once on the pocket and rolls off; the flap springs open; the card zooms in cleanly. */
+/** The Pickle & Pilates opening: the seal ball serves off with a spin and
+ *  the two paper leaves swing apart like the doors of the club. */
 export const OPENING_PRESET: OpeningPreset = {
-  beats: { ball: 0.75, flap: 0.6, card: 0.65, hold: 0.22, exit: 0.5, fade: 0.3 },
-  overlap: { flap: 0.15, card: 0.2, fade: 0.2 },
-  ball: { ease: "power2.in", rotation: 600, bounce: true, throwX: 0.55 },
-  flap: { ease: "back.out(1.4)" },
-  exit: { ease: "power3.inOut", blur: 4, scale: { desktop: 1.9, mobile: 1.5 } },
-  liner: "bg-primary/10",
-  introTilt: 12,
+  beats: { text: 0.3, ball: 0.85, doors: 1.05 },
+  doorsDelay: 0.3,
+  ball: { rise: 0.16, rotation: 780, ease: "power2.in" },
+  doors: { ease: "power3.inOut", rotateY: 6, travel: 106 },
+  hoverPart: 9,
 };

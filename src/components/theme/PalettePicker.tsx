@@ -109,7 +109,7 @@ export function PalettePicker() {
 
   // Escape closes. Capture phase + stopPropagation, so with the picker open
   // over the opening screen, Escape closes only the picker — it must not
-  // also reach the opening screen's window listener and skip the envelope.
+  // also reach the opening screen's window listener and skip the opening.
   // Gated on `mounted` so a rapid second Escape during the close animation
   // is still swallowed (hide() is idempotent while closing).
   useEffect(() => {

@@ -79,7 +79,7 @@ export function Action() {
               <Flourish className="mx-0 mt-5 max-lg:mx-auto" />
             </ScrollReveal>
             <ScrollReveal delay={0.15}>
-              <p className="mx-auto mt-5 max-w-md text-pretty text-base text-fg-muted md:mt-6 md:text-lg lg:mx-0">{action.body}</p>
+              <p className="mx-auto mt-5 max-w-md text-pretty text-[0.95rem] text-fg-muted md:mt-6 md:text-lg lg:mx-0">{action.body}</p>
             </ScrollReveal>
             <ScrollReveal delay={0.25} className="mt-8">
               <MagneticButton>
@@ -102,7 +102,7 @@ export function Action() {
                   <div className="t-pattern" aria-hidden="true" />
                   <Rally className="relative" />
                 </div>
-                <p className="t-script pointer-events-none absolute inset-x-0 bottom-4 text-center text-[1.6rem] leading-none text-fg-muted md:bottom-5 md:text-[1.9rem]">
+                <p className="t-script pointer-events-none absolute inset-x-0 bottom-4 text-center text-[1.35rem] leading-none text-fg-muted md:bottom-5 md:text-[1.9rem]">
                   {action.caption}
                 </p>
                 {/* tape */}

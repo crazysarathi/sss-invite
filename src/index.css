@@ -42,11 +42,11 @@
     --accent-weight: 600;
     --accent-tracking: 0.22em;
     --accent-transform: none;
-    --display-xl: clamp(3.6rem, 9.5vw, 8.5rem);
-    --display-lg: clamp(2.6rem, 6vw, 5rem);
-    --display-md: clamp(2.1rem, 4.2vw, 3.5rem);
-    --display-sm: clamp(1.6rem, 2.6vw, 2.25rem);
-    --kicker-size: 0.82rem;
+    --display-xl: clamp(2.5rem, 8vw + 1rem, 8.5rem);
+    --display-lg: clamp(1.9rem, 5vw + 0.6rem, 5rem);
+    --display-md: clamp(1.6rem, 3.4vw + 0.5rem, 3.5rem);
+    --display-sm: clamp(1.3rem, 2vw + 0.5rem, 2.25rem);
+    --kicker-size: clamp(0.68rem, 0.55vw + 0.55rem, 0.82rem);
 
     --radius-sm: 4px;
     --radius-md: 8px;
@@ -61,8 +61,8 @@
     --shadow-btn: 0 12px 28px -14px rgba(196, 115, 127, 0.7);
 
     --max-w: 1180px;
-    --section-y: clamp(5.5rem, 11vw, 9rem);
-    --gutter: 1.5rem;
+    --section-y: clamp(4rem, 8vw + 1.5rem, 9rem);
+    --gutter: clamp(1rem, 4vw, 1.5rem);
 
     --pattern-opacity: 0.55;
 
@@ -75,6 +75,14 @@
     --dur-slow: 1.6s;
 
     --nav-height: 76px;
+  }
+
+  /* Mobile: a shorter bar. Safe as a media query — applyTheme never writes
+     --nav-height inline, so this isn't overridden by the theme. */
+  @media (max-width: 640px) {
+    :root {
+      --nav-height: 62px;
+    }
   }
 
   html {

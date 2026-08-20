@@ -25,7 +25,7 @@ interface HeroProps {
 /**
  * Hero — the invitation card itself, centred on a watercolour backdrop.
  *
- *   ENTRANCE  the card settles in (continuing the envelope's card zoom),
+ *   ENTRANCE  the card settles in (under the opening doors' reveal),
  *             the court lines draw themselves behind it, a 3D pickleball
  *             drops and bounces to rest on the card's corner (its shadow
  *             breathing with the bounce), the title springs up letter by
@@ -190,13 +190,13 @@ export function Hero({ booted }: HeroProps) {
             </div>
           </div>
 
-          <Surface className="px-5 py-8 sm:px-8 md:px-12 md:py-9">
-            <Frame className="px-3 py-7 text-center sm:px-6 md:px-8 md:py-7">
-              <div data-reveal className="mx-auto mb-3 h-[5.25rem] w-[5.25rem] md:mb-4 md:h-24 md:w-24">
+          <Surface className="px-4 py-7 sm:px-8 sm:py-8 md:px-12 md:py-9">
+            <Frame className="px-2.5 py-6 text-center sm:px-6 sm:py-7 md:px-8">
+              <div data-reveal className="mx-auto mb-2.5 h-[4.25rem] w-[4.25rem] sm:h-[5.25rem] sm:w-[5.25rem] md:mb-4 md:h-24 md:w-24">
                 <Monogram className="h-full w-full" />
               </div>
 
-              <p data-reveal className="t-accent text-[0.72rem] text-fg-muted md:text-[0.78rem]">
+              <p data-reveal className="t-accent text-[0.62rem] text-fg-muted sm:text-[0.72rem] md:text-[0.78rem]">
                 {opening.eyebrow}
               </p>
               <p data-reveal className="t-accent mt-3 text-kicker text-primary md:mt-4">
@@ -205,11 +205,11 @@ export function Hero({ booted }: HeroProps) {
 
               <h1
                 data-hero-title
-                className="t-display mt-2 text-[clamp(2.6rem,10.5vw,3.4rem)] text-fg opacity-0 md:mt-2 md:text-[clamp(3rem,5vw,4rem)]"
+                className="t-display mt-2 text-[clamp(2.05rem,9vw,3.4rem)] text-fg opacity-0 md:mt-2 md:text-[clamp(3rem,5vw,4rem)]"
               >
                 {a} <em className="text-primary">{amp}</em> {b}
               </h1>
-              <p data-reveal className="t-script -mt-0.5 text-[2.1rem] leading-none text-primary md:text-[2.6rem]">
+              <p data-reveal className="t-script -mt-0.5 text-[1.65rem] leading-none text-primary sm:text-[2.1rem] md:text-[2.6rem]">
                 {brand.subline}
               </p>
 
@@ -217,15 +217,15 @@ export function Hero({ booted }: HeroProps) {
                 <Flourish />
               </div>
 
-              <p data-reveal className="t-accent mt-4 text-[0.8rem] tracking-[0.3em] text-fg md:text-[0.88rem]">
+              <p data-reveal className="t-accent mt-4 text-[0.68rem] tracking-[0.24em] text-fg sm:text-[0.8rem] sm:tracking-[0.3em] md:text-[0.88rem]">
                 {brand.tagline}
               </p>
 
               <p data-reveal className="mt-4 text-balance leading-relaxed md:mt-4">
                 {brand.partners.map((p, i) => (
                   <span key={p.name} className="inline-block whitespace-nowrap">
-                    {i > 0 && <span className="mx-2 text-primary">×</span>}
-                    <span className="t-display text-[1.15rem] text-fg md:text-[1.25rem]">{p.name}</span>
+                    {i > 0 && <span className="mx-1.5 text-primary sm:mx-2">×</span>}
+                    <span className="t-display text-[1rem] text-fg sm:text-[1.15rem] md:text-[1.25rem]">{p.name}</span>
                   </span>
                 ))}
               </p>
@@ -234,17 +234,17 @@ export function Hero({ booted }: HeroProps) {
                 <Flourish center="dot" className="w-28" />
               </div>
 
-              <p data-reveal className="t-accent mt-4 text-[0.7rem] text-fg-muted md:text-[0.76rem]">
+              <p data-reveal className="t-accent mt-4 text-[0.62rem] text-fg-muted sm:text-[0.7rem] md:text-[0.76rem]">
                 {hero.saveTheDate}
               </p>
-              <p data-reveal className="t-display mt-0.5 text-[1.7rem] leading-tight text-fg md:text-[1.9rem]">
+              <p data-reveal className="t-display mt-0.5 text-[1.4rem] leading-tight text-fg sm:text-[1.7rem] md:text-[1.9rem]">
                 {dateLine()}
               </p>
-              <p data-reveal className="t-accent mt-1.5 text-[0.76rem] text-fg md:text-[0.82rem]">
+              <p data-reveal className="t-accent mt-1.5 text-[0.66rem] text-fg sm:text-[0.76rem] md:text-[0.82rem]">
                 {event.venue.name} · {event.venue.city}
               </p>
 
-              <div data-reveal className="mt-6 flex flex-wrap items-center justify-center gap-3 md:mt-6">
+              <div data-reveal className="mt-5 flex flex-wrap items-center justify-center gap-2.5 max-[420px]:flex-col max-[420px]:items-stretch sm:gap-3 md:mt-6">
                 <MagneticButton>
                   <Button asChild className="min-w-[10rem]">
                     <a href={hero.primaryCta.href} onClick={go(hero.primaryCta.href)}>
