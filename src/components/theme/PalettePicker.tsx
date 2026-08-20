@@ -95,18 +95,35 @@ export function PalettePicker() {
     { dependencies: [open, mounted, isMobile] }
   );
 
-  // Escape closes.
+  // While the panel is up — including its closing animation — flag the
+  // document so the OpeningScreen ignores its open/skip gestures (clicks,
+  // Enter/Space, and its ready-focus). Gated on `mounted`, not `open`:
+  // the panel is still on screen during the close tween.
   useEffect(() => {
-    if (!open) return;
+    if (!mounted) return;
+    document.documentElement.dataset.pickerOpen = "true";
+    return () => {
+      delete document.documentElement.dataset.pickerOpen;
+    };
+  }, [mounted]);
+
+  // Escape closes. Capture phase + stopPropagation, so with the picker open
+  // over the opening screen, Escape closes only the picker — it must not
+  // also reach the opening screen's window listener and skip the envelope.
+  // Gated on `mounted` so a rapid second Escape during the close animation
+  // is still swallowed (hide() is idempotent while closing).
+  useEffect(() => {
+    if (!mounted) return;
     const onKey = (e: KeyboardEvent) => {
       if (e.key === "Escape") {
         e.preventDefault();
+        e.stopPropagation();
         hide();
       }
     };
-    window.addEventListener("keydown", onKey);
-    return () => window.removeEventListener("keydown", onKey);
-  }, [open, hide]);
+    window.addEventListener("keydown", onKey, true);
+    return () => window.removeEventListener("keydown", onKey, true);
+  }, [mounted, hide]);
 
   const swatches = [palette.colors.primary, palette.colors.secondary, palette.colors.accent];
 

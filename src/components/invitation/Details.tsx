@@ -8,7 +8,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { AnimatedText } from "@/components/shared/AnimatedText";
 import { MatchaGlyph, MatGlyph, PaddleGlyph } from "@/components/shared/Glyphs";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish, TornCard } from "@/components/stationery/Ornaments";
 
 /**
@@ -55,8 +55,7 @@ export function Details() {
   return (
     <section id="details" ref={ref} className="t-paper relative overflow-hidden bg-page">
       <Watercolor variant="c" opacity={0.85} />
-      <CornerBotanicals corner="tl" style="line" size="clamp(7rem, 16vw, 13rem)" />
-      <CornerBotanicals corner="br" style="fill" />
+      <CourtsideSketches density="light" />
 
       <div className="section-shell">
         <div className="mx-auto mb-12 max-w-xl text-center md:mb-16">

@@ -91,11 +91,11 @@ function AppShell() {
       </div>
 
       <BackToTop />
-      {booted && (
-        <Suspense fallback={null}>
-          <PalettePicker />
-        </Suspense>
-      )}
+      {/* Mounted from the very first frame so the client can recolour the
+          envelope screen too — its trigger sits above the opening overlay. */}
+      <Suspense fallback={null}>
+        <PalettePicker />
+      </Suspense>
       <Toaster position="bottom-center" />
     </>
   );

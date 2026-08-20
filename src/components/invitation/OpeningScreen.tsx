@@ -6,7 +6,7 @@ import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/shared/Kicker";
 import type { ThemeDefinition } from "@/themes/types";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Envelope } from "./opening/Envelope";
 import { OPENING_PRESET } from "./opening/presets";
 import { useOpeningTimeline } from "./opening/useOpeningTimeline";
@@ -40,6 +40,10 @@ async function warmFonts(theme: ThemeDefinition): Promise<void> {
 
 const isNativeControl = (t: EventTarget | null) =>
   t instanceof HTMLElement && /^(BUTTON|A|INPUT|TEXTAREA|SELECT)$/.test(t.tagName);
+
+/** The colour picker is up (or still closing) over this screen — its modal
+ *  must swallow every open/skip gesture, not just Escape. */
+const pickerIsUp = () => document.documentElement.dataset.pickerOpen === "true";
 
 interface OpeningScreenProps {
   /** The exit begins — start the hero + nav entrances so they overlap it. */
@@ -146,16 +150,17 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
     };
   }, [reduced, theme]);
 
-  // Focus the envelope once it's on stage.
+  // Focus the envelope once it's on stage — unless the user is in the
+  // colour picker, which this must not yank focus out of.
   useEffect(() => {
-    if (ready) envButtonRef.current?.focus({ preventScroll: true });
+    if (ready && !pickerIsUp()) envButtonRef.current?.focus({ preventScroll: true });
   }, [ready]);
 
   // Keyboard: Enter / Space open (unless a control handles it natively), Escape skips.
   useEffect(() => {
     if (reduced) return;
     const onKey = (e: KeyboardEvent) => {
-      if (doneRef.current) return;
+      if (doneRef.current || pickerIsUp()) return;
       if (e.key === "Escape") {
         e.preventDefault();
         skip();
@@ -179,14 +184,19 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
       className="fixed inset-0 z-[100] cursor-pointer select-none overflow-hidden touch-none [overscroll-behavior:none]"
       style={hidden ? { display: "none" } : undefined}
       // Buttons inside have no handlers of their own: their clicks bubble here,
-      // so a first tap anywhere opens and a second one skips.
-      onClick={() => (startedRef.current ? skip() : open())}
+      // so a first tap anywhere opens and a second one skips. Guarded against
+      // the picker: with no focus trap, Tab can reach the envelope button
+      // under the picker's backdrop, and Enter would click it natively.
+      onClick={() => {
+        if (pickerIsUp()) return;
+        if (startedRef.current) skip();
+        else open();
+      }}
     >
       <div data-backdrop aria-hidden="true" className="t-paper absolute inset-0 overflow-hidden bg-page-alt">
         <div data-decor className="absolute inset-0">
           <Watercolor variant="b" opacity={0.85} />
-          <CornerBotanicals corner="tl" style="fill" />
-          <CornerBotanicals corner="br" style="fill" />
+          <CourtsideSketches />
         </div>
       </div>
 

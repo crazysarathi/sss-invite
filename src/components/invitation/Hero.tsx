@@ -10,9 +10,9 @@ import { MagneticButton } from "@/components/shared/MagneticButton";
 import { LazyBoundary } from "@/components/shared/LazyBoundary";
 import { Surface } from "@/components/shared/Surface";
 import { Court } from "@/components/sport/Court";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { PickleballSvg } from "@/components/sport/PickleballSvg";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
 import { Flourish, Frame, Monogram } from "@/components/stationery/Ornaments";
 
 const BallCanvas = lazy(() => import("@/components/three/BallCanvas"));
@@ -120,16 +120,22 @@ export function Hero({ booted }: HeroProps) {
         );
       }
 
-      /* SCROLL — scrubbed across the hero */
+      /* SCROLL — scrubbed across the hero. The scrub tweens target wrapper
+         elements the entrance never animates: a scrubbed tween captures its
+         start values whenever it first renders, so sharing an element with
+         the entrance would freeze a mid-entrance opacity and restore it
+         (card invisible) every time the user scrolls back to the top. */
       const scrub = { trigger: root, start: "top top", end: "bottom top", scrub: motion.scrub };
-      if (ball) {
-        gsap.to(ball, { x: "26vw", y: "40vh", rotation: 160, ease: "none", scrollTrigger: scrub });
-        gsap.to(ball, { autoAlpha: 0, ease: "none", scrollTrigger: { ...scrub, start: "40% top", end: "80% top" } });
+      const ballWrap = root.querySelector<HTMLElement>("[data-hero-ball-wrap]");
+      const cardLift = root.querySelector<HTMLElement>("[data-hero-card-lift]");
+      if (ballWrap) {
+        gsap.to(ballWrap, { x: "26vw", y: "40vh", ease: "none", scrollTrigger: scrub });
+        gsap.to(ballWrap, { autoAlpha: 0, ease: "none", scrollTrigger: { ...scrub, start: "40% top", end: "80% top" } });
       }
-      if (shadow) gsap.to(shadow, { x: "26vw", y: "40vh", autoAlpha: 0, ease: "none", scrollTrigger: scrub });
+      if (ball) gsap.to(ball, { rotation: 160, ease: "none", scrollTrigger: scrub });
       if (court) gsap.to(court, { yPercent: 12 * motion.parallax * 2, ease: "none", scrollTrigger: scrub });
       gsap.matchMedia().add("(min-width: 768px)", () => {
-        if (card) gsap.to(card, { yPercent: -14, autoAlpha: 0.15, ease: "none", scrollTrigger: { ...scrub, end: "80% top" } });
+        if (cardLift) gsap.to(cardLift, { yPercent: -14, autoAlpha: 0.15, ease: "none", scrollTrigger: { ...scrub, end: "80% top" } });
       });
     },
     { scope: ref, dependencies: [booted] }
@@ -151,13 +157,17 @@ export function Hero({ booted }: HeroProps) {
       >
         <Court className="opacity-50 md:opacity-70" />
       </div>
-      <CornerBotanicals corner="tl" style="fill" />
-      <CornerBotanicals corner="br" style="fill" />
+      <CourtsideSketches />
 
       <div className="section-shell-x relative z-10 flex flex-1 flex-col items-center justify-center pb-14 pt-[calc(var(--nav-height)+1rem)] md:pb-16 md:pt-[calc(var(--nav-height)+0.5rem)]">
-        <div data-hero-card className={cn("relative w-full max-w-[34rem] opacity-0 md:max-w-[40rem]", reduced && "opacity-100")}>
+        {/* data-hero-card-lift: scroll-scrub target — never touched by the entrance */}
+        <div data-hero-card-lift className="w-full max-w-[34rem] md:max-w-[40rem]">
+        <div data-hero-card className={cn("relative w-full opacity-0", reduced && "opacity-100")}>
           {/* the ball — resting on the card's top-right corner */}
-          <div className="absolute -right-2 -top-5 z-20 h-[4.75rem] w-[4.75rem] sm:-right-8 sm:-top-12 sm:h-28 sm:w-28 md:-right-14 md:-top-16 md:h-36 md:w-36">
+          <div
+            data-hero-ball-wrap
+            className="absolute -right-2 -top-5 z-20 h-[4.75rem] w-[4.75rem] sm:-right-8 sm:-top-12 sm:h-28 sm:w-28 md:-right-14 md:-top-16 md:h-36 md:w-36"
+          >
             <span
               data-hero-shadow
               aria-hidden="true"
@@ -250,6 +260,7 @@ export function Hero({ booted }: HeroProps) {
               </div>
             </Frame>
           </Surface>
+        </div>
         </div>
       </div>
     </section>

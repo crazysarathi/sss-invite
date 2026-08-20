@@ -7,7 +7,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { AnimatedText } from "@/components/shared/AnimatedText";
 import { Surface } from "@/components/shared/Surface";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish, Monogram } from "@/components/stationery/Ornaments";
 import { RsvpPanel } from "./rsvp/RsvpPanel";
 
@@ -38,8 +38,7 @@ export function RSVP() {
   return (
     <section id={rsvp.id} className="t-paper relative overflow-hidden bg-page">
       <Watercolor variant="b" opacity={0.85} />
-      <CornerBotanicals corner="tr" style="fill" />
-      <CornerBotanicals corner="bl" style="line" size="clamp(7rem, 16vw, 13rem)" />
+      <CourtsideSketches density="light" />
 
       <div className="section-shell">
         <ScrollReveal className="mx-auto max-w-xl">

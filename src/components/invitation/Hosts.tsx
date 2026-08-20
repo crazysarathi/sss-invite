@@ -6,7 +6,7 @@ import { useThemeMotion } from "@/components/theme/ThemeProvider";
 import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { AnimatedText } from "@/components/shared/AnimatedText";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish, TornCard } from "@/components/stationery/Ornaments";
 
 /**
@@ -44,8 +44,7 @@ export function Hosts() {
   return (
     <section id="hosts" ref={ref} className="t-paper relative overflow-hidden bg-page-alt">
       <Watercolor variant="b" opacity={0.85} />
-      <CornerBotanicals corner="tr" style="line" />
-      <CornerBotanicals corner="bl" style="line" size="clamp(7rem, 16vw, 13rem)" />
+      <CourtsideSketches flip density="light" />
 
       <div className="section-shell">
         <div className="mx-auto max-w-[40rem] text-center">

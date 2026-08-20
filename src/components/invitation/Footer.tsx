@@ -6,7 +6,7 @@ import { ScrollReveal } from "@/components/shared/ScrollReveal";
 import { BrandMark } from "@/components/shared/Glyphs";
 import { Button } from "@/components/ui/button";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish } from "@/components/stationery/Ornaments";
 
 /**
@@ -17,8 +17,7 @@ export function Footer() {
   return (
     <footer id="footer" className="t-paper relative overflow-hidden bg-page-alt">
       <Watercolor variant="c" opacity={0.8} />
-      <CornerBotanicals corner="tl" style="fill" />
-      <CornerBotanicals corner="br" style="line" />
+      <CourtsideSketches flip density="light" />
 
       <div className="section-shell pb-28 md:pb-12">
         <div className="mx-auto max-w-3xl text-center">

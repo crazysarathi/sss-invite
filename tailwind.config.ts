@@ -111,6 +111,11 @@ export default {
           "0%, 100%": { transform: "rotate(-1.6deg)" },
           "50%": { transform: "rotate(1.6deg)" },
         },
+        // dasharray period is 11 (1 + 10); -66 is a whole number of periods,
+        // so the loop wraps seamlessly.
+        "dash-drift": {
+          to: { "stroke-dashoffset": "-66" },
+        },
         "accordion-down": {
           from: { height: "0" },
           to: { height: "var(--radix-accordion-content-height)" },
@@ -127,6 +132,7 @@ export default {
         float: "float 6s ease-in-out infinite",
         "scroll-line": "scroll-line 1.8s cubic-bezier(0.65, 0, 0.35, 1) infinite",
         sway: "sway 6s ease-in-out infinite",
+        "dash-drift": "dash-drift 7s linear infinite",
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
       },

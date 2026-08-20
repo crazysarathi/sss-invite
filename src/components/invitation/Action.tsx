@@ -11,7 +11,7 @@ import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { Rally } from "@/components/sport/Rally";
 import { Watercolor } from "@/components/stationery/Watercolor";
-import { CornerBotanicals } from "@/components/stationery/Botanicals";
+import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish } from "@/components/stationery/Ornaments";
 
 /**
@@ -51,7 +51,7 @@ export function Action() {
   return (
     <section id="action" ref={ref} className="t-paper relative overflow-hidden bg-page-alt">
       <Watercolor variant="a" opacity={0.8} />
-      <CornerBotanicals corner="bl" style="fill" />
+      <CourtsideSketches flip density="light" />
       <div className="relative border-y border-accent/40 bg-surface/40 py-2.5">
         <Ticker text={action.ticker} speed={42} textClassName="text-[0.7rem] text-fg-muted md:text-[0.74rem]" />
       </div>
