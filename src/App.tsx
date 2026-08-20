@@ -9,7 +9,6 @@ import { OpeningScreen } from "@/components/invitation/OpeningScreen";
 import { Invitation } from "@/components/invitation/Invitation";
 import { TopBar } from "@/components/layout/TopBar";
 import { BackToTop } from "@/components/layout/BackToTop";
-import { SoundToggle } from "@/components/shared/SoundToggle";
 import { Toaster } from "@/components/ui/sonner";
 
 /**
@@ -58,8 +57,8 @@ function AppShell() {
     window.scrollTo(0, 0);
   }, []);
 
-  // Ambient music: starts as soon as the browser allows (autoplay where
-  // trusted, otherwise the first tap / key — the opening's own gesture).
+  // Sound effects only (no music): arm the audio unlock so the opening's
+  // own tap gesture enables the serve whoosh and rally pocks.
   useEffect(() => {
     sound.boot();
   }, []);
@@ -82,10 +81,8 @@ function AppShell() {
         <OpeningScreen
           onOpen={() => {
             setBooted(true);
-            // The seal serves off — whoosh, then settle the bed to its
-            // milder "inside" level for the scroll.
+            // The seal ball serves off the gates — whoosh + pop.
             sound.serve();
-            sound.setScene("inside");
           }}
           onComplete={() => {
             setBooted(true);
@@ -100,7 +97,6 @@ function AppShell() {
       </div>
 
       <BackToTop />
-      <SoundToggle />
       <Toaster position="bottom-center" />
     </>
   );
