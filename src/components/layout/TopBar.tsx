@@ -68,7 +68,7 @@ export function TopBar({ booted }: TopBarProps) {
           className="rounded-md text-fg transition-opacity hover:opacity-75"
           aria-label={`${brand.name} — back to top`}
         >
-          <BrandMark variant="lockup" markClassName="h-7 w-7 text-primary md:h-8 md:w-8" textClassName="text-[0.95rem] md:text-[1.15rem]" />
+          <BrandMark variant="lockup" markClassName="h-8 w-8 md:h-9 md:w-9" textClassName="text-[0.95rem] md:text-[1.15rem]" />
         </a>
         <Button asChild size="sm" className="px-5">
           <a

@@ -1,6 +1,7 @@
 import { useRef } from "react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
+import { sound } from "@/lib/audio";
 import { useInViewport } from "@/hooks/useInViewport";
 import { useThemeMotion } from "@/components/theme/ThemeProvider";
 
@@ -28,20 +29,36 @@ function Paddle({ side }: { side: "left" | "right" }) {
   return (
     <g data-paddle={side}>
       <g transform={`translate(${side === "left" ? 60 : 540} 292) scale(${flip} 1)`}>
-        {/* handle */}
-        <rect x="-6" y="-34" width="12" height="42" rx="5" fill="rgb(var(--c-fg-muted))" />
-        <rect x="-4" y="-30" width="8" height="30" rx="3" fill="rgb(var(--c-line-strong))" opacity="0.7" />
-        {/* face */}
-        <g transform="rotate(-28 0 -34)">
-          <rect x="-34" y="-120" width="68" height="94" rx="30" fill="rgb(var(--c-primary))" />
-          <rect x="-28" y="-114" width="56" height="82" rx="26" fill="rgb(var(--c-primary-fg))" opacity="0.18" />
-          <g fill="rgb(var(--c-primary-fg))" opacity="0.5">
-            <circle cx="-12" cy="-96" r="2.4" />
-            <circle cx="10" cy="-100" r="2.4" />
-            <circle cx="0" cy="-80" r="2.4" />
-            <circle cx="-16" cy="-66" r="2.4" />
-            <circle cx="14" cy="-64" r="2.4" />
-            <circle cx="-2" cy="-48" r="2.4" />
+        {/* the big reference paddle at 0.44 scale: same blade proportions, long wrapped handle */}
+        <rect x="-6.5" y="-44" width="13" height="48" rx="5" fill="rgb(var(--c-surface))" stroke="rgb(var(--c-accent))" strokeWidth="2.4" />
+        <g stroke="rgb(var(--c-line-strong))" strokeWidth="1.2" strokeLinecap="round" opacity="0.8">
+          <path d="M-5 -32 L5 -35" />
+          <path d="M-5 -22 L5 -25" />
+          <path d="M-5 -12 L5 -15" />
+        </g>
+        <rect x="-9.5" y="2" width="19" height="7" rx="3.5" fill="rgb(var(--c-surface))" stroke="rgb(var(--c-accent))" strokeWidth="2.4" />
+        <g transform="rotate(-28 0 -44)">
+          <path
+            d="M0 -131
+               C20 -131 34 -127 35 -112
+               C36.5 -99 36.5 -86 35 -76
+               C34 -62 25.5 -51 14 -45
+               C9 -42 6 -41 5 -38
+               L-5 -38
+               C-6 -41 -9 -42 -14 -45
+               C-25.5 -51 -34 -62 -35 -76
+               C-36.5 -86 -36.5 -99 -35 -112
+               C-34 -127 -20 -131 0 -131 Z"
+            fill="rgb(var(--c-primary))"
+            stroke="rgb(var(--c-accent))"
+            strokeWidth="3.5"
+            strokeLinejoin="round"
+          />
+          <g fill="none" stroke="#ffffff" strokeWidth="1.3" strokeLinecap="round" opacity="0.3">
+            <path d="M-28 -106 C-8 -112 12 -115 27 -117" />
+            <path d="M-29 -92 C-6 -98 14 -100 28 -102" />
+            <path d="M-27 -76 C-4 -82 14 -84 26 -86" />
+            <path d="M-22 -58 C0 -64 14 -66 22 -68" />
           </g>
         </g>
       </g>
@@ -114,11 +131,15 @@ export function Rally({ className }: RallyProps) {
       shadowArc(L.x, R.x, 0, tl);
       swing(padL, 1, FLIGHT * 2 - 0.3, 0, tl);
       impact(ringL, 1.25, 0, tl);
+      // the paddle "pock" at each contact (0.001: a callback at exactly 0
+      // would be skipped when the repeating timeline wraps)
+      tl.call(() => sound.paddleHit(), [], 0.001);
       // right → left
       tl.to(ball, { motionPath: { path: ARC_BACK }, rotation: 720, duration: FLIGHT, ease: "none" }, FLIGHT);
       shadowArc(R.x, L.x, FLIGHT, tl);
       swing(padR, -1, FLIGHT - 0.3, FLIGHT, tl);
       impact(ringR, 1.25, FLIGHT, tl);
+      tl.call(() => sound.paddleHit(), [], FLIGHT);
       // reset spin so it never grows unbounded
       tl.set(ball, { rotation: 0 }, FLIGHT * 2);
       tlRef.current = tl;
@@ -143,10 +164,12 @@ export function Rally({ className }: RallyProps) {
     <div ref={ref} className={cn("relative w-full", className)}>
       <svg viewBox={`0 0 ${W} ${H}`} aria-hidden="true" focusable="false" className="block h-auto w-full overflow-visible">
         <defs>
-          <radialGradient id="pnp-rally-ball" cx="38%" cy="32%" r="72%">
-            <stop offset="0%" stopColor="rgb(var(--c-surface))" />
-            <stop offset="70%" stopColor="rgb(var(--c-surface-2))" />
-            <stop offset="100%" stopColor="rgb(var(--c-line-strong))" />
+          {/* light + shade overlaid on the chartreuse ball body */}
+          <radialGradient id="pnp-rally-ball" cx="38%" cy="30%" r="78%">
+            <stop offset="0%" stopColor="#ffffff" stopOpacity="0.5" />
+            <stop offset="45%" stopColor="#ffffff" stopOpacity="0.06" />
+            <stop offset="75%" stopColor="#000000" stopOpacity="0" />
+            <stop offset="100%" stopColor="#000000" stopOpacity="0.24" />
           </radialGradient>
           <pattern id="pnp-rally-mesh" width="7" height="7" patternUnits="userSpaceOnUse">
             <path d="M0 0 L7 7 M7 0 L0 7" stroke="rgb(var(--c-primary) / 0.4)" strokeWidth="0.8" />
@@ -177,14 +200,24 @@ export function Rally({ className }: RallyProps) {
 
         {/* the ball (at origin; GSAP translates it along the arc) */}
         <g data-ball>
-          <circle r="13" fill="url(#pnp-rally-ball)" stroke="rgb(var(--c-line-strong))" strokeWidth="1.2" />
-          <g fill="rgb(var(--c-fg-muted))" opacity="0.8">
-            <circle cx="0" cy="-6" r="1.6" />
-            <circle cx="-5.5" cy="-1" r="1.6" />
-            <circle cx="5.5" cy="-1" r="1.6" />
-            <circle cx="-3" cy="6" r="1.6" />
-            <circle cx="3" cy="6" r="1.6" />
+          <circle r="13" fill="rgb(var(--c-accent))" />
+          <circle r="13" fill="url(#pnp-rally-ball)" stroke="rgb(var(--c-overlay) / 0.18)" strokeWidth="1" />
+          {/* recessed holes: lit rim below, dark hole above */}
+          <g>
+            {[
+              [0, -6],
+              [-5.5, -1],
+              [5.5, -1],
+              [-3, 6],
+              [3, 6],
+            ].map(([cx, cy]) => (
+              <g key={`${cx},${cy}`}>
+                <circle cx={cx} cy={cy + 0.5} r="1.7" fill="#ffffff" opacity="0.35" />
+                <circle cx={cx} cy={cy} r="1.7" fill="rgb(var(--c-overlay))" opacity="0.55" />
+              </g>
+            ))}
           </g>
+          <ellipse cx="-4.5" cy="-6.5" rx="3" ry="1.8" fill="#ffffff" opacity="0.45" transform="rotate(-30 -4.5 -6.5)" />
         </g>
       </svg>
     </div>

@@ -182,7 +182,7 @@
     font-weight: calc(var(--display-weight) - 100);
   }
 
-  /* Calligraphic accent — "with Matcha bar", sign-offs. Never for labels. */
+  /* Calligraphic accent — "with Matcha & Ube bar", sign-offs. Never for labels. */
   .t-script {
     font-family: var(--font-script);
     font-weight: var(--script-weight);

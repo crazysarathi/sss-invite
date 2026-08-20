@@ -10,9 +10,9 @@ import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish, TornCard } from "@/components/stationery/Ornaments";
 
 /**
- * Hosts — "Four partners. One morning." The four names presented like a
- * family card: small-caps intro, a script line, then a torn-paper ledger
- * with each host and what they bring. Names stagger in one by one.
+ * Hosts — "Four partners. One experience." The four names presented like a
+ * family card: a torn-paper ledger with each host and what they bring.
+ * Names stagger in one by one.
  */
 export function Hosts() {
   const ref = useRef<HTMLElement>(null);
@@ -49,15 +49,11 @@ export function Hosts() {
       <div className="section-shell">
         <div className="mx-auto max-w-[40rem] text-center">
           <ScrollReveal>
-            <p className="t-accent text-kicker text-fg-muted">{hosts.kicker}</p>
+            <AnimatedText as="h2" className="t-accent text-kicker text-fg-muted">
+              {hosts.kicker}
+            </AnimatedText>
             <Flourish className="mt-4" center="dot" />
           </ScrollReveal>
-          <ScrollReveal delay={0.1} className="mt-6">
-            <p className="t-accent text-[0.88rem] tracking-[0.26em] text-fg sm:text-[1.05rem] sm:tracking-[0.3em] md:text-[1.2rem]">{hosts.intro}</p>
-          </ScrollReveal>
-          <AnimatedText as="h2" split="words" className="t-script mt-1 text-[2.3rem] leading-none text-primary sm:text-[3rem] md:text-[3.8rem]">
-            {hosts.script}
-          </AnimatedText>
 
           <TornCard seed={3} className="mt-8 md:mt-12">
             <div data-ledger className="grid grid-cols-1 gap-x-6 gap-y-7 px-4 py-8 sm:grid-cols-2 sm:px-6 sm:py-10 md:px-12 md:py-12">
@@ -73,10 +69,10 @@ export function Hosts() {
                       src={brand.hostCrest}
                       alt=""
                       width={40}
-                      height={40}
+                      height={46}
                       loading="lazy"
                       decoding="async"
-                      className="mx-auto mt-3 h-10 w-10 rounded-md bg-surface object-contain p-0.5 shadow-card"
+                      className="mx-auto mt-3 h-10 w-10 object-contain"
                     />
                   )}
                 </div>

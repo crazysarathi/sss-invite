@@ -3,7 +3,7 @@
  * colors so the celebration matches the invitation.
  */
 
-const DEFAULT_COLORS = ["#b6786c", "#8b9c7e", "#a68a5b", "#f3ead9", "#e3d8cb"];
+const DEFAULT_COLORS = ["#75689f", "#8fa184", "#c3d64b", "#b3abc8", "#f2f0f6"];
 
 interface Particle {
   x: number;

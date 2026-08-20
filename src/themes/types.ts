@@ -68,7 +68,7 @@ export interface ThemeTypography {
     /** Render emphasised display words (the "&") in italic. */
     italicAccent: boolean;
   };
-  /** Calligraphic accent face (the "with Matcha bar" line, sign-offs). */
+  /** Calligraphic accent face (the "with Matcha & Ube bar" line, sign-offs). */
   script: FontFace;
   body: FontFace & { leading: string };
   /** Kickers, labels, buttons — the "voice" of the small type. */

@@ -45,8 +45,10 @@ export default function BallCanvas({ palette, spin = 0.45, float = 0.05, active 
   return (
     <div className="pointer-events-none h-full w-full" aria-hidden="true">
       <Canvas
-        dpr={[1, 1.75]}
-        gl={{ antialias: true, alpha: true, powerPreference: "high-performance" }}
+        // Touch devices: skip MSAA and cap DPR — the canvas is small, so the
+        // GPU savings dwarf the (invisible) quality difference.
+        dpr={[1, coarse ? 1.5 : 1.75]}
+        gl={{ antialias: !coarse, alpha: true, powerPreference: "high-performance" }}
         camera={{ position: [0, 0, 4.2], fov: 32 }}
         frameloop={reduced ? "demand" : active ? "always" : "never"}
         // The container is scaled by GSAP (pops in from 0): measure layout

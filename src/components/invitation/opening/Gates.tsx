@@ -1,5 +1,6 @@
 import { lazy, Suspense } from "react";
 import { LazyBoundary } from "@/components/shared/LazyBoundary";
+import { useIdleReady } from "@/hooks/useIdleReady";
 import { cn } from "@/lib/utils";
 import { BallGlyph } from "@/components/shared/Glyphs";
 import { Watercolor } from "@/components/stationery/Watercolor";
@@ -40,17 +41,19 @@ function DoorLeaf({ side }: { side: "left" | "right" }) {
         left ? "left-0 origin-left" : "right-0 origin-right"
       )}
     >
+      {/* double hairline frame — each leaf framed like an invitation cover.
+          Painted FIRST so the courtside sketches (paddle, balls) sit above
+          the frame lines, never sliced by them. */}
+      <span className="pointer-events-none absolute inset-3 border border-accent/60 sm:inset-5" />
+      <span className="pointer-events-none absolute inset-[18px] border border-accent/25 sm:inset-7" />
+
       {/* full-viewport decor, clipped to this half so the wash is continuous.
           Starts transparent (no flash before the timeline mounts); the intro
           fades it in. */}
       <div data-decor className={cn("absolute inset-y-0 w-[200%] opacity-0", left ? "left-0" : "right-0")}>
-        <Watercolor variant="b" opacity={0.85} />
+        <Watercolor variant="b" opacity={0.85} eager />
         <CourtsideSketches />
       </div>
-
-      {/* double hairline frame — each leaf framed like an invitation cover */}
-      <span className="pointer-events-none absolute inset-3 border border-accent/60 sm:inset-5" />
-      <span className="pointer-events-none absolute inset-[18px] border border-accent/25 sm:inset-7" />
 
       {/* seam: a hairline plus a soft fold shadow where the leaves meet */}
       <span
@@ -81,6 +84,9 @@ interface SealProps {
  * ([data-ring]) and serves the ball off ([data-ball]) on open.
  */
 export function SealBall({ palette }: SealProps) {
+  // Don't even start fetching three.js until the main thread is idle — the
+  // glyph opens the show, the 3D ball takes over as soon as it's cheap to.
+  const enhanced = useIdleReady();
   return (
     <span className="relative block h-[5.25rem] w-[5.25rem] sm:h-28 sm:w-28 md:h-32 md:w-32">
       {/* engraved ring */}
@@ -112,15 +118,19 @@ export function SealBall({ palette }: SealProps) {
         data-ball
         className="absolute inset-[13%] block [filter:drop-shadow(0_10px_10px_rgb(var(--c-overlay)/0.28))]"
       >
-        <LazyBoundary fallback={<BallGlyph className="h-full w-full text-primary [&>circle:first-child]:fill-surface" />}>
-          <Suspense
-            fallback={
-              <BallGlyph className="h-full w-full text-primary [&>circle:first-child]:fill-surface" />
-            }
-          >
-            <BallCanvas palette={palette} />
-          </Suspense>
-        </LazyBoundary>
+        {enhanced ? (
+          <LazyBoundary fallback={<BallGlyph className="h-full w-full text-primary [&>circle:first-child]:fill-surface" />}>
+            <Suspense
+              fallback={
+                <BallGlyph className="h-full w-full text-primary [&>circle:first-child]:fill-surface" />
+              }
+            >
+              <BallCanvas palette={palette} />
+            </Suspense>
+          </LazyBoundary>
+        ) : (
+          <BallGlyph className="h-full w-full text-primary [&>circle:first-child]:fill-surface" />
+        )}
       </span>
     </span>
   );

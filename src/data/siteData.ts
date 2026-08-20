@@ -3,19 +3,18 @@
  *
  * This mirrors the content the hosts sent (and nothing more):
  *
- *   Pickle & Pilates with Matcha bar
+ *   Pickle & Pilates with Matcha & Ube bar
  *   A wellness experience
  *   Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Cha Wellness
  *   Location: Forest Hills Country Club
- *   Date: coming soon
+ *   Date: 29th August, Saturday
  *   "See our Smashers in action"
  *   (Collect database) → the "Save your spot" form (never called RSVP on the page)
  *
  * Components never hard-code copy — edit here. Items marked TODO are
  * placeholders awaiting confirmation from the hosts.
  */
-import crestNav from "@/assets/logos/sss-logo-nav.png";
-import crest from "@/assets/logos/sss-logo-small.png";
+import crest from "@/assets/logos/sss-crest.svg";
 
 /* ------------------------------------------------------------------ */
 /* Brand & hosts                                                       */
@@ -24,18 +23,18 @@ export const brand = {
   name: "Pickle & Pilates",
   /** Split for display type: ["Pickle", "&", "Pilates"]. */
   nameParts: ["Pickle", "&", "Pilates"] as const,
-  subline: "with Matcha bar",
+  subline: "with Matcha & Ube bar",
   tagline: "A wellness experience",
   host: "Salem Super Smashers",
   hostShort: "SSS",
+  /** The hosts' crest, cut out to a transparent SVG (no card, no border). */
   hostCrest: crest,
-  hostCrestNav: crestNav,
   /** Shown in order, joined with "×" — exactly as the hosts wrote it. */
   partners: [
     { name: "Salem Super Smashers", role: "Pickleball" },
     { name: "Gurkha Life", role: "Lifestyle" },
     { name: "The Tens Movement Lab", role: "Pilates" },
-    { name: "Cha Wellness", role: "Matcha bar" },
+    { name: "Cha Wellness", role: "Matcha & Ube bar" },
   ] as const,
   hashtag: "#PickleAndPilates",
 } as const;
@@ -43,7 +42,7 @@ export const brand = {
 export const meta = {
   title: "Pickle & Pilates — You're Invited | Salem Super Smashers",
   description:
-    "Pickle & Pilates with Matcha bar — a wellness experience by Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Cha Wellness at Forest Hills Country Club, Salem.",
+    "Pickle & Pilates with Matcha & Ube bar — a wellness experience by Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Cha Wellness at Forest Hills Country Club, Salem — 29th August, Saturday.",
   url: "https://sss.botify.in/pickle-and-pilates/",
 } as const;
 
@@ -54,15 +53,14 @@ export type DateStatus = "confirmed" | "tba";
 
 export const event = {
   /**
-   * "tba" → every date slot reads `dateTbaLabel` (the hosts announced
-   * "date coming soon"). Set to "confirmed" and fill `dateLabel` when final.
-   * TODO: confirm date with the hosts.
+   * "tba" → every date slot reads `dateTbaLabel`. Confirmed by the hosts
+   * on 2026-08-20: 29th August, Saturday.
    */
-  dateStatus: "tba" as DateStatus,
+  dateStatus: "confirmed" as DateStatus,
   dateTbaLabel: "Date coming soon",
   dateTbaNote: "Save your spot and we'll tell you first",
-  /** Used once dateStatus is "confirmed" (display string, e.g. "Sunday, 4 October 2026"). */
-  dateLabel: "",
+  /** Used once dateStatus is "confirmed" (display string). */
+  dateLabel: "29th August, Saturday",
   timeLabel: "",
   venue: {
     name: "Forest Hills Country Club",
@@ -90,6 +88,8 @@ export const opening = {
 export const hero = {
   eyebrow: "You're invited to",
   saveTheDate: "Save the date",
+  /** Small-caps prefix before the venue line. */
+  venueLabel: "Venue",
   primaryCta: { label: "Save my spot", href: "#register" },
   secondaryCta: { label: "The details", href: "#details" },
 } as const;
@@ -98,10 +98,7 @@ export const hero = {
 /* Hosts — the four names, introduced like a family card               */
 /* ------------------------------------------------------------------ */
 export const hosts = {
-  kicker: "Four partners. One morning.",
-  intro: "Introducing",
-  /** Set in script beneath `intro`. */
-  script: "the hosts",
+  kicker: "Four partners. One experience.",
   /** Sign-off under the names. */
   line: "Moving well, gathering often — together.",
 } as const;
@@ -121,9 +118,9 @@ export const details = {
   what: {
     label: "What",
     items: [
-      { key: "pickleball", title: "Pickleball", note: "Open courts" },
-      { key: "pilates", title: "Pilates", note: "Guided session" },
-      { key: "matcha", title: "Matcha bar", note: "By Cha Wellness" },
+      { key: "pickleball", title: "Pickleball", note: "Indoor courts" },
+      { key: "pilates", title: "Mat Pilates", note: "Guided session" },
+      { key: "matcha", title: "Matcha & Ube bar", note: "By Cha Wellness" },
     ],
   },
   hostedBy: "Hosted by",
@@ -138,9 +135,9 @@ export const action = {
   title: "See our Smashers in action",
   body: "Salem's own pickleball team takes the court — then it's your turn.",
   /** Script caption under the rally "print". */
-  caption: "the Smashers, on court",
+  caption: "Salem super smashers on the court",
   cta: { label: "Follow the Smashers", href: "https://www.instagram.com/salemsupersmashers?igsh=d2l6YmlhMGZpM3hn" },
-  ticker: "SEE OUR SMASHERS IN ACTION ✦ PICKLE & PILATES ✦ WITH MATCHA BAR ✦ FOREST HILLS COUNTRY CLUB ✦ ",
+  ticker: "SEE OUR SMASHERS IN ACTION ✦ PICKLE & PILATES ✦ WITH MATCHA & UBE BAR ✦ 29TH AUGUST, SATURDAY ✦ FOREST HILLS COUNTRY CLUB ✦ ",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -151,7 +148,7 @@ export const rsvp = {
   id: "register",
   kicker: "Join us",
   title: "Save your spot",
-  lead: "Leave your details — we'll share the date and everything you need to know with you first.",
+  lead: "Leave your details — we'll share everything you need to know with you first.",
   fields: {
     name: { label: "Full name", placeholder: "Your name" },
     email: { label: "Email", placeholder: "you@example.com" },
@@ -160,18 +157,16 @@ export const rsvp = {
       label: "Will you be joining us?",
       options: [
         { value: "yes", label: "Count me in" },
-        { value: "maybe", label: "Not sure yet" },
         { value: "no", label: "Can't make it" },
       ],
     },
     guests: { label: "Guests (including you)", min: 1, max: 4 },
-    interest: {
-      label: "I'm here for",
+    /** TODO: sample slots — swap in the final timings once the hosts confirm. */
+    slot: {
+      label: "Time slot",
       options: [
-        { value: "both", label: "Pickleball & pilates" },
-        { value: "pickleball", label: "Pickleball" },
-        { value: "pilates", label: "Pilates" },
-        { value: "matcha", label: "The matcha & the company" },
+        { value: "4-7", label: "4 pm to 7 pm" },
+        { value: "5-8", label: "5 pm to 8 pm" },
       ],
     },
     message: { label: "A note for the hosts", placeholder: "Questions, or just say hi" },
@@ -179,7 +174,7 @@ export const rsvp = {
   cta: "Save my spot",
   submitting: "Sending…",
   successTitle: "You're on the list",
-  successBody: "Thank you — we'll be in touch with the date and details soon.",
+  successBody: "Thank you — we'll be in touch with the details soon.",
   successToast: "Got it — see you on the court and on the mat.",
   errorToast: "Something went wrong sending your details. Please try again.",
   anotherCta: "Add another guest",
@@ -209,7 +204,7 @@ export const social = {
 export const footer = {
   hostedBy: "Hosted by",
   /** Script sign-off. */
-  script: "Celebrate this morning with us",
+  script: "Celebrate this experience with us",
   lines: ["See you on the court.", "And on the mat."],
   directionsCta: "Get directions",
   copyright: "© 2026 Salem Super Smashers · Pickle & Pilates",

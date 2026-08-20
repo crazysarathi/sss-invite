@@ -1,21 +1,22 @@
 /**
- * Visual QA harness — screenshots the opening, every section and the colour
- * picker in a palette, on desktop and mobile, and collects console/page errors.
+ * Visual QA harness — screenshots the opening and every section, on desktop
+ * and mobile, and collects console/page errors. Colours are fixed to the
+ * single wisteria palette (the picker was removed on the client's request).
  *
  *   npm run build && npm run preview &        # serves http://localhost:4173
- *   node scripts/shoot.mjs blush /tmp/shots
- *   node scripts/shoot.mjs sky /tmp/shots --reduced     # prefers-reduced-motion
- *   node scripts/shoot.mjs all /tmp/shots               # every palette
+ *   node scripts/shoot.mjs wisteria /tmp/shots
+ *   node scripts/shoot.mjs wisteria /tmp/shots --reduced  # prefers-reduced-motion
+ *   node scripts/shoot.mjs all /tmp/shots
  */
 import puppeteer from "puppeteer-core";
 import fs from "fs";
 
-const [, , paletteArg = "blush", outRoot = "/tmp/shots", ...flags] = process.argv;
+const [, , paletteArg = "wisteria", outRoot = "/tmp/shots", ...flags] = process.argv;
 const REDUCED = flags.includes("--reduced");
 const MOBILE_ONLY = flags.includes("--mobile");
 const DESKTOP_ONLY = flags.includes("--desktop");
 const BASE = process.env.SHOOT_URL || "http://localhost:4173/";
-const ALL = ["blush", "rose", "ivory", "linen", "sky", "sage"];
+const ALL = ["wisteria"];
 const PALETTES = paletteArg === "all" ? ALL : [paletteArg];
 const SECTIONS = ["hero", "hosts", "details", "action", "register", "footer"];
 
@@ -99,58 +100,6 @@ async function run(palette) {
         await shootSection(page, id, `${out}/${r.tag}${String(i).padStart(2, "0")}-${id}.png`);
         i++;
       }
-
-      await page.evaluate(() => window.scrollTo({ top: 0, behavior: "instant" }));
-      await sleep(800);
-
-      // colour picker
-      const selOpened = await page.evaluate(() => {
-        const btn = document.querySelector('button[aria-haspopup="dialog"]');
-        if (btn) {
-          btn.click();
-          return true;
-        }
-        return false;
-      });
-      await sleep(1400);
-      if (selOpened) await page.screenshot({ path: `${out}/${r.tag}91-picker.png` });
-      await page.keyboard.press("Escape");
-      await sleep(500);
-    });
-    errs.push(...errors);
-    await page.close().catch(() => {});
-  }
-
-  // Palette SWITCH test (desktop): open the picker, pick the next palette, screenshot mid-morph + after.
-  if (!MOBILE_ONLY && !REDUCED) {
-    const next = ALL[(ALL.indexOf(palette) + 1) % ALL.length];
-    const { page, errors } = await openPage(palette, 1440, 900, false);
-    await safe(`${palette} switch`, async () => {
-      await openInvitation(page);
-      await shootSection(page, "details", `${out}/s00-before-switch.png`, 1200);
-      const switched = await page.evaluate(async (nextId) => {
-        const trigger = document.querySelector('button[aria-haspopup="dialog"]');
-        if (!trigger) return "no-trigger";
-        trigger.click();
-        await new Promise((r) => setTimeout(r, 900));
-        const chip = Array.from(document.querySelectorAll('[role="dialog"] [data-chip]')).find((b) =>
-          new RegExp("^" + nextId, "i").test(b.getAttribute("aria-label") || "")
-        );
-        if (!chip) return "no-chip";
-        chip.click();
-        return "clicked";
-      }, next);
-      await sleep(350);
-      await page.screenshot({ path: `${out}/s01-switching.png` });
-      await sleep(1500);
-      await page.keyboard.press("Escape");
-      await sleep(700);
-      await page.screenshot({ path: `${out}/s02-after-switch-${next}.png` });
-      const info = await page.evaluate(() => ({
-        palette: new URL(location.href).searchParams.get("palette"),
-        y: window.scrollY,
-      }));
-      console.log(`[${palette}] switch → ${next}: ${switched}; now ${JSON.stringify(info)}`);
     });
     errs.push(...errors);
     await page.close().catch(() => {});

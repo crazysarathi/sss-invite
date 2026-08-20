@@ -99,32 +99,22 @@ interface BrandMarkProps {
 }
 
 /**
- * The Pickle & Pilates mark. The monogram is a wiffle ball whose holes are
- * arranged as a "P" — the wordmark is set in the theme's display face with
- * the ampersand as the italic accent, so the logo re-dresses per theme.
+ * The Pickle & Pilates mark. The mark is the hosts' crest (transparent
+ * SVG — no card, no border); the wordmark is set in the theme's display
+ * face with the ampersand as the italic accent.
  */
 export function BrandMark({ variant = "lockup", className, markClassName, textClassName }: BrandMarkProps) {
   const [a, amp, b] = brand.nameParts;
   return (
     <span className={cn("inline-flex items-center gap-3", className)}>
       {variant !== "wordmark" && (
-        <svg
-          viewBox="0 0 48 48"
-          className={cn("h-9 w-9 shrink-0", markClassName)}
+        <img
+          src={brand.hostCrest}
+          alt=""
           aria-hidden="true"
-          focusable="false"
-        >
-          <circle cx="24" cy="24" r="21" fill="none" stroke="currentColor" strokeWidth="1.5" />
-          {/* holes tracing a soft "P" */}
-          <circle cx="18" cy="14" r="2.1" fill="currentColor" />
-          <circle cx="18" cy="21" r="2.1" fill="currentColor" />
-          <circle cx="18" cy="28" r="2.1" fill="currentColor" />
-          <circle cx="18" cy="35" r="2.1" fill="currentColor" />
-          <circle cx="25" cy="13.5" r="2.1" fill="currentColor" />
-          <circle cx="30.5" cy="17.5" r="2.1" fill="currentColor" />
-          <circle cx="30" cy="24" r="2.1" fill="currentColor" />
-          <circle cx="25" cy="27.5" r="2.1" fill="currentColor" />
-        </svg>
+          decoding="async"
+          className={cn("h-9 w-9 shrink-0 object-contain", markClassName)}
+        />
       )}
       {variant !== "mark" && (
         <span className={cn("t-display whitespace-nowrap text-[1.15rem] leading-none", textClassName)}>

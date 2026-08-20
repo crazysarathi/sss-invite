@@ -27,7 +27,7 @@ interface FormValues {
   phone: string;
   attendance: string;
   guests: number;
-  interest: string;
+  slot: string;
   message: string;
 }
 
@@ -39,7 +39,7 @@ const initialValues = (): FormValues => ({
   phone: "",
   attendance: fields.attendance.options[0].value,
   guests: fields.guests.min,
-  interest: fields.interest.options[0].value,
+  slot: fields.slot.options[0].value,
   message: "",
 });
 
@@ -51,7 +51,6 @@ const COPY = {
   nameError: "Please enter your name (at least 2 characters).",
   emailError: "Please enter a valid email address.",
   phoneError: "Please enter a valid phone number (7–15 digits).",
-  optional: "Optional",
   fewer: "Fewer guests",
   more: "More guests",
 } as const;
@@ -61,7 +60,7 @@ function validate(v: FormValues): Errors {
   if (v.name.trim().length < 2) errors.name = COPY.nameError;
   if (!EMAIL_RE.test(v.email.trim())) errors.email = COPY.emailError;
   const digits = v.phone.replace(/\D/g, "");
-  if (v.phone.trim() && (digits.length < 7 || digits.length > 15)) errors.phone = COPY.phoneError;
+  if (digits.length < 7 || digits.length > 15) errors.phone = COPY.phoneError;
   return errors;
 }
 
@@ -149,7 +148,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
       phone: values.phone.trim(),
       attendance: values.attendance,
       guests: values.guests,
-      interest: values.interest,
+      slot: values.slot,
       message: values.message.trim(),
       theme: palette.id,
     };
@@ -244,7 +243,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
                 required
               />
             </Field>
-            <Field id={id("phone")} label={fields.phone.label} note={COPY.optional} error={errors.phone}>
+            <Field id={id("phone")} label={fields.phone.label} error={errors.phone}>
               <Input
                 ref={phoneRef}
                 id={id("phone")}
@@ -258,6 +257,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
                 onChange={(e) => update("phone", e.target.value)}
                 aria-invalid={errors.phone ? true : undefined}
                 aria-describedby={describedBy("phone")}
+                required
               />
             </Field>
           </div>
@@ -281,13 +281,13 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
               decrementLabel={COPY.fewer}
               incrementLabel={COPY.more}
             />
-            <Field id={id("interest")} label={fields.interest.label}>
-              <Select value={values.interest} onValueChange={(v) => update("interest", v)}>
-                <SelectTrigger id={id("interest")} aria-label={fields.interest.label} className={control}>
+            <Field id={id("slot")} label={fields.slot.label}>
+              <Select value={values.slot} onValueChange={(v) => update("slot", v)}>
+                <SelectTrigger id={id("slot")} aria-label={fields.slot.label} className={control}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {fields.interest.options.map((o) => (
+                  {fields.slot.options.map((o) => (
                     <SelectItem key={o.value} value={o.value}>
                       {o.label}
                     </SelectItem>

@@ -47,8 +47,8 @@ interface PickleballProps {
 export function Pickleball({
   radius = 1,
   holes = 26,
-  color = "#f3ead9",
-  holeColor = "#c9b9a8",
+  color = "#c3d64b",
+  holeColor = "#6e743e",
   roughness = 0.42,
   metalness = 0.05,
   ...props
@@ -145,7 +145,7 @@ interface SceneLightsProps {
   fill?: string;
 }
 
-export function SceneLights({ intensity = 1, light = "#ffffff", rim = "#8b9c7e", fill = "#b6786c" }: SceneLightsProps) {
+export function SceneLights({ intensity = 1, light = "#ffffff", rim = "#8fa184", fill = "#75689f" }: SceneLightsProps) {
   return (
     <>
       <ambientLight intensity={0.45 * intensity} color={light} />

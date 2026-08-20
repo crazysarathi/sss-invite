@@ -1,6 +1,7 @@
 /**
- * Theme registry: one base theme, many colour palettes.
- * `?palette=<id>` in the URL wins, then localStorage, then Blush.
+ * Theme registry: one base theme, one fixed colour palette — the court
+ * scheme (sage & lavender panels, chartreuse ball) from the client's
+ * reference photo.
  */
 import { base } from "./base";
 import { DEFAULT_PALETTE, isPaletteId, paletteById, withPalette, type PaletteDefinition, type PaletteId } from "./palettes";

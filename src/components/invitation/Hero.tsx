@@ -4,6 +4,7 @@ import { cn, prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
 import { brand, dateLine, event, hero, opening } from "@/data/siteData";
 import { useTheme, useThemeMotion } from "@/components/theme/ThemeProvider";
+import { useIdleReady } from "@/hooks/useIdleReady";
 import { useInViewport } from "@/hooks/useInViewport";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/shared/MagneticButton";
@@ -40,6 +41,8 @@ export function Hero({ booted }: HeroProps) {
   const ref = useRef<HTMLElement>(null);
   const ballRef = useRef<HTMLDivElement>(null);
   const ballInView = useInViewport(ballRef, "0px");
+  // The SVG ball stands in until the main thread is idle — see useIdleReady.
+  const enhanced = useIdleReady();
   const [a, amp, b] = brand.nameParts;
   const reduced = prefersReducedMotion();
 
@@ -148,7 +151,7 @@ export function Hero({ booted }: HeroProps) {
 
   return (
     <section id="hero" ref={ref} className="t-paper relative isolate flex min-h-[100svh] flex-col overflow-hidden bg-page">
-      <Watercolor variant="a" opacity={0.9} />
+      <Watercolor variant="a" opacity={0.9} eager />
       {/* court backdrop */}
       <div
         data-hero-court
@@ -178,7 +181,7 @@ export function Hero({ booted }: HeroProps) {
               data-hero-ball
               className={cn("absolute inset-0 opacity-0 [filter:drop-shadow(0_16px_16px_rgb(var(--c-overlay)/0.22))]", reduced && "opacity-100")}
             >
-              {reduced ? (
+              {reduced || !enhanced ? (
                 <PickleballSvg className="h-full w-full" />
               ) : (
                 <LazyBoundary fallback={<PickleballSvg className="h-full w-full" />}>
@@ -196,7 +199,7 @@ export function Hero({ booted }: HeroProps) {
                 <Monogram className="h-full w-full" />
               </div>
 
-              <p data-reveal className="t-accent text-[0.62rem] text-fg-muted sm:text-[0.72rem] md:text-[0.78rem]">
+              <p data-reveal className="t-accent text-[0.72rem] text-fg-muted sm:text-[0.78rem] md:text-[0.84rem]">
                 {opening.eyebrow}
               </p>
               <p data-reveal className="t-accent mt-3 text-kicker text-primary md:mt-4">
@@ -217,7 +220,7 @@ export function Hero({ booted }: HeroProps) {
                 <Flourish />
               </div>
 
-              <p data-reveal className="t-accent mt-4 text-[0.68rem] tracking-[0.24em] text-fg sm:text-[0.8rem] sm:tracking-[0.3em] md:text-[0.88rem]">
+              <p data-reveal className="t-accent mt-4 text-[0.76rem] tracking-[0.24em] text-fg sm:text-[0.84rem] sm:tracking-[0.3em] md:text-[0.92rem]">
                 {brand.tagline}
               </p>
 
@@ -234,14 +237,14 @@ export function Hero({ booted }: HeroProps) {
                 <Flourish center="dot" className="w-28" />
               </div>
 
-              <p data-reveal className="t-accent mt-4 text-[0.62rem] text-fg-muted sm:text-[0.7rem] md:text-[0.76rem]">
+              <p data-reveal className="t-accent mt-4 text-[0.72rem] text-fg-muted sm:text-[0.78rem] md:text-[0.82rem]">
                 {hero.saveTheDate}
               </p>
               <p data-reveal className="t-display mt-0.5 text-[1.4rem] leading-tight text-fg sm:text-[1.7rem] md:text-[1.9rem]">
                 {dateLine()}
               </p>
-              <p data-reveal className="t-accent mt-1.5 text-[0.66rem] text-fg sm:text-[0.76rem] md:text-[0.82rem]">
-                {event.venue.name} · {event.venue.city}
+              <p data-reveal className="t-accent mt-1.5 text-[0.74rem] text-fg sm:text-[0.8rem] md:text-[0.86rem]">
+                {hero.venueLabel}: {event.venue.name} · {event.venue.city}
               </p>
 
               <div data-reveal className="mt-5 flex flex-wrap items-center justify-center gap-2.5 max-[420px]:flex-col max-[420px]:items-stretch sm:gap-3 md:mt-6">

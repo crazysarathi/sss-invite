@@ -2,8 +2,10 @@ import { useMemo } from "react";
 import { cn } from "@/lib/utils";
 
 /**
- * A pickleball court in soft perspective — the hero's backdrop. Hairlines
- * in `--c-line-strong`, the net in the primary colour. Every stroke carries
+ * A pickleball court in soft perspective — the hero's backdrop, coloured
+ * like the client's reference photo: service courts and kitchens checker
+ * between the two site colours (sage / lavender), hairlines in
+ * `--c-line-strong`, the net in the primary colour. Every stroke carries
  * `data-court-line` so GSAP can draw the court in (DrawSVG) on boot.
  *
  * Geometry: t = 0 at the far baseline, 1 at the near one. y and the
@@ -56,12 +58,54 @@ function buildLines(): CourtLine[] {
   ];
 }
 
+/**
+ * A filled quarter-panel between two baselines (t0 → t1) on one side of the
+ * centre line. The outer edge follows the perspective curve (stepped), so
+ * the fill hugs the stroked sideline.
+ */
+function panel(t0: number, t1: number, side: "left" | "right"): string {
+  const steps = 8;
+  const outer = (t: number) => (side === "left" ? CX - hw(t) : CX + hw(t));
+  const pts = [`M${outer(t0)} ${ty(t0)}`, `L${CX} ${ty(t0)}`, `L${CX} ${ty(t1)}`, `L${outer(t1)} ${ty(t1)}`];
+  for (let i = 1; i <= steps; i++) {
+    const t = t1 + ((t0 - t1) * i) / steps;
+    pts.push(`L${outer(t)} ${ty(t)}`);
+  }
+  return pts.join(" ") + " Z";
+}
+
+/** The photo's checkerboard: rows are the four bands, columns the two halves. */
+function buildPanels(): Array<{ key: string; d: string; tone: "sage" | "lavender" }> {
+  const K0 = 0.5 - KITCHEN;
+  const K1 = 0.5 + KITCHEN;
+  const rows: Array<[number, number, string]> = [
+    [0, K0, "far"],
+    [K0, 0.5, "kitchen-far"],
+    [0.5, K1, "kitchen-near"],
+    [K1, 1, "near"],
+  ];
+  return rows.flatMap(([t0, t1, name], row) =>
+    (["left", "right"] as const).map((side, col) => ({
+      key: `${name}-${side}`,
+      d: panel(t0, t1, side),
+      tone: (row + col) % 2 === 0 ? ("lavender" as const) : ("sage" as const),
+    }))
+  );
+}
+
+/** Lavender = the deep primary kept airy; sage = the lighter secondary. */
+const PANEL_FILL = {
+  lavender: "rgb(var(--c-primary) / 0.13)",
+  sage: "rgb(var(--c-secondary) / 0.3)",
+} as const;
+
 interface CourtProps {
   className?: string;
 }
 
 export function Court({ className }: CourtProps) {
   const lines = useMemo(buildLines, []);
+  const panels = useMemo(buildPanels, []);
   return (
     <svg
       viewBox={`0 0 ${W} ${H}`}
@@ -81,12 +125,12 @@ export function Court({ className }: CourtProps) {
         </mask>
       </defs>
       <g mask="url(#pnp-court-mask)" fill="none" strokeLinecap="round" strokeLinejoin="round">
-        {/* the playing surface, barely tinted */}
-        <path
-          data-court-surface
-          d={`M${CX - hw(0)} ${ty(0)} L${CX + hw(0)} ${ty(0)} L${CX + hw(1)} ${ty(1)} L${CX - hw(1)} ${ty(1)} Z`}
-          fill="rgb(var(--c-secondary) / 0.12)"
-        />
+        {/* the playing surface — the photo's sage/lavender panel checker */}
+        <g data-court-surface>
+          {panels.map((p) => (
+            <path key={p.key} d={p.d} fill={PANEL_FILL[p.tone]} />
+          ))}
+        </g>
         {lines
           .filter((l) => l.kind === "line")
           .map((l) => (

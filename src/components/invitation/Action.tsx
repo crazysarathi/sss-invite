@@ -1,7 +1,7 @@
 import { useRef } from "react";
 import { ArrowUpRight, Instagram } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
-import { prefersReducedMotion } from "@/lib/utils";
+import { cn, prefersReducedMotion } from "@/lib/utils";
 import { action, brand } from "@/data/siteData";
 import { useThemeMotion } from "@/components/theme/ThemeProvider";
 import { AnimatedText } from "@/components/shared/AnimatedText";
@@ -65,10 +65,10 @@ export function Action() {
                 src={brand.hostCrest}
                 alt=""
                 width={56}
-                height={56}
+                height={64}
                 loading="lazy"
                 decoding="async"
-                className="h-12 w-12 rounded-md bg-surface object-contain p-1 shadow-card md:h-14 md:w-14"
+                className="h-12 w-12 object-contain md:h-14 md:w-14"
               />
               <p className="t-accent text-kicker text-primary">{action.kicker}</p>
             </ScrollReveal>
@@ -95,7 +95,7 @@ export function Action() {
           </div>
 
           {/* the storyboard print */}
-          <div data-rally className="opacity-0 lg:col-span-7">
+          <div data-rally className={cn("opacity-0 lg:col-span-7", prefersReducedMotion() && "opacity-100")}>
             <div className="relative mx-auto max-w-2xl">
               <div className="t-surface relative px-4 pb-14 pt-4 !rounded-[3px] md:px-6 md:pb-16 md:pt-6">
                 <div className="relative overflow-hidden rounded-[2px] border border-line bg-page-alt/60 p-3 md:p-5">

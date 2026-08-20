@@ -36,10 +36,10 @@ export function Footer() {
               src={brand.hostCrest}
               alt={brand.host}
               width={72}
-              height={72}
+              height={83}
               loading="lazy"
               decoding="async"
-              className="h-16 w-16 rounded-md bg-surface object-contain p-1.5 shadow-card md:h-[4.5rem] md:w-[4.5rem]"
+              className="h-16 w-16 object-contain md:h-[4.5rem] md:w-[4.5rem]"
             />
             <p className="t-accent text-[0.78rem] text-fg-muted">
               {footer.hostedBy} {brand.host}
@@ -76,7 +76,7 @@ export function Footer() {
             className="text-fg transition-opacity hover:opacity-70"
             aria-label="Back to top"
           >
-            <BrandMark variant="lockup" markClassName="h-7 w-7 text-primary" textClassName="text-base" />
+            <BrandMark variant="lockup" markClassName="h-8 w-8" textClassName="text-base" />
           </button>
           <p>{footer.copyright}</p>
           <p className="t-accent text-[0.7rem] text-primary">{social.hashtag}</p>

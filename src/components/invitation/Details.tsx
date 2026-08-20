@@ -87,7 +87,11 @@ export function Details() {
 
           <DetailCard seed={8} icon={<CalendarDays aria-hidden="true" className="h-5 w-5" />} label={details.date.label} pulse={event.dateStatus === "tba"}>
             <p className="t-display text-[1.4rem] leading-tight text-fg md:text-[1.7rem]">{dateLine()}</p>
-            <p className="mt-2 text-balance text-sm text-fg-muted">{event.dateStatus === "tba" ? event.dateTbaNote : event.timeLabel}</p>
+            {(event.dateStatus === "tba" ? event.dateTbaNote : event.timeLabel) && (
+              <p className="mt-2 text-balance text-sm text-fg-muted">
+                {event.dateStatus === "tba" ? event.dateTbaNote : event.timeLabel}
+              </p>
+            )}
           </DetailCard>
 
           <DetailCard seed={12} label={details.what.label}>
@@ -124,7 +128,7 @@ interface DetailCardProps {
 
 function DetailCard({ icon, label, seed, pulse, children }: DetailCardProps) {
   return (
-    <TornCard seed={seed} className="opacity-0" data-detail-card>
+    <TornCard seed={seed} className={cn("opacity-0", prefersReducedMotion() && "opacity-100")} data-detail-card>
       <div className="flex flex-col items-center px-5 py-8 text-center md:px-7 md:py-10">
         {icon && <span className="mb-4 grid h-11 w-11 place-items-center rounded-full border border-accent/60 text-primary">{icon}</span>}
         <p className="t-accent mb-3 inline-flex items-center gap-2 text-[0.74rem] text-fg-muted">

@@ -1,12 +1,16 @@
-import { useId } from "react";
 import { cn } from "@/lib/utils";
+import washA from "@/assets/watercolor/wash-a.webp";
+import washB from "@/assets/watercolor/wash-b.webp";
+import washC from "@/assets/watercolor/wash-c.webp";
 
 /**
  * A soft watercolour wash — the backdrop behind every "card" section.
- * Procedural (no artwork): a few tinted blobs pushed through turbulence +
- * displacement + blur, multiplied onto the page. Painted from tokens, so a
- * palette switch re-tints it. Static (no animation) — SVG filters are
- * rasterised once per paint.
+ *
+ * Pre-baked to WebP by `node scripts/watercolor.mjs` (the palette is fixed,
+ * so the turbulence/displacement/blur filter is rendered once at build time
+ * instead of live in the browser — the live SVG filter was the single
+ * biggest paint cost on mobile, re-rasterised while the gate doors moved).
+ * Still multiplied onto the page, so it sits in the paper exactly as before.
  *
  * `variant` shifts the composition so neighbouring sections don't repeat.
  */
@@ -15,68 +19,33 @@ interface WatercolorProps {
   variant?: "a" | "b" | "c";
   /** Overall strength, 0–1. */
   opacity?: number;
+  /**
+   * First-viewport washes (the gate doors, the hero) — fetched eagerly at
+   * high priority, since the doors' wash is the page's LCP element.
+   * Below-fold sections leave this off and lazy-load.
+   */
+  eager?: boolean;
 }
 
-const BLOBS: Record<NonNullable<WatercolorProps["variant"]>, Array<{ cx: number; cy: number; rx: number; ry: number; fill: string; o: number; rot?: number }>> = {
-  a: [
-    { cx: 10, cy: 16, rx: 30, ry: 22, fill: "secondary", o: 0.3, rot: -12 },
-    { cx: 22, cy: 30, rx: 18, ry: 14, fill: "secondary", o: 0.18, rot: 30 },
-    { cx: 90, cy: 12, rx: 26, ry: 18, fill: "primary", o: 0.2, rot: 10 },
-    { cx: 78, cy: 26, rx: 16, ry: 12, fill: "accent", o: 0.16, rot: -20 },
-    { cx: 84, cy: 86, rx: 32, ry: 20, fill: "secondary", o: 0.26, rot: 18 },
-    { cx: 12, cy: 90, rx: 26, ry: 16, fill: "accent", o: 0.22, rot: -8 },
-    { cx: 30, cy: 78, rx: 14, ry: 10, fill: "primary", o: 0.14, rot: 12 },
-  ],
-  b: [
-    { cx: 92, cy: 20, rx: 30, ry: 24, fill: "secondary", o: 0.26, rot: 14 },
-    { cx: 76, cy: 10, rx: 16, ry: 12, fill: "accent", o: 0.18, rot: -10 },
-    { cx: 6, cy: 42, rx: 24, ry: 30, fill: "primary", o: 0.16, rot: -20 },
-    { cx: 20, cy: 60, rx: 14, ry: 10, fill: "secondary", o: 0.16, rot: 25 },
-    { cx: 42, cy: 98, rx: 34, ry: 18, fill: "accent", o: 0.22, rot: 6 },
-    { cx: 72, cy: 72, rx: 28, ry: 20, fill: "secondary", o: 0.2, rot: -30 },
-  ],
-  c: [
-    { cx: 18, cy: 8, rx: 32, ry: 20, fill: "primary", o: 0.16, rot: 8 },
-    { cx: 36, cy: 20, rx: 14, ry: 10, fill: "accent", o: 0.16, rot: -18 },
-    { cx: 86, cy: 40, rx: 26, ry: 30, fill: "secondary", o: 0.18, rot: -14 },
-    { cx: 24, cy: 82, rx: 30, ry: 22, fill: "accent", o: 0.2, rot: 22 },
-    { cx: 78, cy: 94, rx: 26, ry: 14, fill: "primary", o: 0.18, rot: -6 },
-    { cx: 60, cy: 80, rx: 14, ry: 10, fill: "secondary", o: 0.16, rot: 40 },
-  ],
+const SRC: Record<NonNullable<WatercolorProps["variant"]>, string> = {
+  a: washA,
+  b: washB,
+  c: washC,
 };
 
-export function Watercolor({ className, variant = "a", opacity = 1 }: WatercolorProps) {
-  const id = useId().replace(/:/g, "");
-  const filterId = `wc-${id}`;
+export function Watercolor({ className, variant = "a", opacity = 1, eager = false }: WatercolorProps) {
   return (
-    <svg
+    <img
+      src={SRC[variant]}
+      alt=""
       aria-hidden="true"
-      focusable="false"
-      viewBox="0 0 100 100"
-      preserveAspectRatio="none"
-      className={cn("pointer-events-none absolute inset-0 h-full w-full", className)}
+      draggable={false}
+      loading={eager ? "eager" : "lazy"}
+      decoding="async"
+      // lowercase: React 18 doesn't know the camelCase fetchPriority prop yet
+      {...(eager ? ({ fetchpriority: "high" } as Record<string, string>) : null)}
+      className={cn("pointer-events-none absolute inset-0 h-full w-full select-none object-fill", className)}
       style={{ opacity, mixBlendMode: "multiply" }}
-    >
-      <defs>
-        <filter id={filterId} x="-30%" y="-30%" width="160%" height="160%" colorInterpolationFilters="sRGB">
-          <feTurbulence type="fractalNoise" baseFrequency="0.035 0.045" numOctaves="4" seed="7" result="noise" />
-          <feDisplacementMap in="SourceGraphic" in2="noise" scale="26" xChannelSelector="R" yChannelSelector="G" result="disp" />
-          <feGaussianBlur in="disp" stdDeviation="2.6" />
-        </filter>
-      </defs>
-      <g filter={`url(#${filterId})`}>
-        {BLOBS[variant].map((b, i) => (
-          <ellipse
-            key={i}
-            cx={b.cx}
-            cy={b.cy}
-            rx={b.rx}
-            ry={b.ry}
-            transform={b.rot ? `rotate(${b.rot} ${b.cx} ${b.cy})` : undefined}
-            fill={`rgb(var(--c-${b.fill}) / ${b.o})`}
-          />
-        ))}
-      </g>
-    </svg>
+    />
   );
 }

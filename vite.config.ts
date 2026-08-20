@@ -12,6 +12,16 @@ export default defineConfig({
   build: {
     target: "es2020",
     chunkSizeWarningLimit: 1100,
-    // No manualChunks: the three.js ecosystem must stay behind the lazy
+    rollupOptions: {
+      output: {
+        // Stable vendor chunks so a content edit doesn't re-download React
+        // or GSAP. The three.js ecosystem is NOT listed here: it must stay
+        // behind the lazy import(BallCanvas) so first paint never pays for it.
+        manualChunks: {
+          react: ["react", "react-dom"],
+          gsap: ["gsap", "@gsap/react"],
+        },
+      },
+    },
   },
 });

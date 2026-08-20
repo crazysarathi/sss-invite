@@ -39,10 +39,6 @@ async function warmFonts(theme: ThemeDefinition): Promise<void> {
 const isNativeControl = (t: EventTarget | null) =>
   t instanceof HTMLElement && /^(BUTTON|A|INPUT|TEXTAREA|SELECT)$/.test(t.tagName);
 
-/** The colour picker is up (or still closing) over this screen — its modal
- *  must swallow every open/skip gesture, not just Escape. */
-const pickerIsUp = () => document.documentElement.dataset.pickerOpen === "true";
-
 interface OpeningScreenProps {
   /** The exit begins — start the hero + nav entrances so they overlap it. */
   onOpen?: () => void;
@@ -148,17 +144,16 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
     };
   }, [reduced, theme]);
 
-  // Focus the seal once it's on stage — unless the user is in the
-  // colour picker, which this must not yank focus out of.
+  // Focus the seal once it's on stage.
   useEffect(() => {
-    if (ready && !pickerIsUp()) sealButtonRef.current?.focus({ preventScroll: true });
+    if (ready) sealButtonRef.current?.focus({ preventScroll: true });
   }, [ready]);
 
   // Keyboard: Enter / Space open (unless a control handles it natively), Escape skips.
   useEffect(() => {
     if (reduced) return;
     const onKey = (e: KeyboardEvent) => {
-      if (doneRef.current || pickerIsUp()) return;
+      if (doneRef.current) return;
       if (e.key === "Escape") {
         e.preventDefault();
         skip();
@@ -184,11 +179,8 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
       className="fixed inset-0 z-[100] cursor-pointer select-none overflow-hidden touch-none [overscroll-behavior:none]"
       style={hidden ? { display: "none" } : undefined}
       // Buttons inside have no handlers of their own: their clicks bubble here,
-      // so a first tap anywhere opens and a second one skips. Guarded against
-      // the picker: with no focus trap, Tab can reach the seal button under
-      // the picker's backdrop, and Enter would click it natively.
+      // so a first tap anywhere opens and a second one skips.
       onClick={() => {
-        if (pickerIsUp()) return;
         if (startedRef.current) skip();
         else open();
       }}

@@ -7,8 +7,9 @@ import type { ThemeDefinition } from "./types";
  * paper surfaces with hairline frames, watercolour/botanical decor, and
  * springy, sporty motion.
  *
- * Colours here are only the pre-palette fallback — every palette in
- * `palettes.ts` replaces them in full. The default palette is Blush.
+ * Colours here are only the pre-palette fallback — the wisteria palette in
+ * `palettes.ts` (the site's fixed lavender/sage/lime scheme) replaces them
+ * in full at boot.
  */
 export const base: ThemeDefinition = {
   id: "pnp",
@@ -16,21 +17,21 @@ export const base: ThemeDefinition = {
   scheme: "light",
 
   colors: {
-    bg: "#fbf3f1",
-    bgAlt: "#f6e5e1",
-    surface: "#fffaf8",
-    surface2: "#f8ebe7",
-    fg: "#3a2a2c",
-    fgMuted: "#7a6266",
-    fgSubtle: "#a89094",
-    primary: "#c4737f",
-    primaryFg: "#fff8f6",
-    secondary: "#a4b3a0",
-    secondaryFg: "#26302a",
-    accent: "#d9a37a",
-    line: "#ecd9d5",
-    lineStrong: "#d8bdb8",
-    overlay: "#3a2a2c",
+    bg: "#f2f0f6",
+    bgAlt: "#e6e2ee",
+    surface: "#fcfbfe",
+    surface2: "#edeaf3",
+    fg: "#282334",
+    fgMuted: "#544d63",
+    fgSubtle: "#7f7791",
+    primary: "#75689f",
+    primaryFg: "#f7f5fc",
+    secondary: "#8fa184",
+    secondaryFg: "#242d1e",
+    accent: "#c3d64b",
+    line: "#e1dcea",
+    lineStrong: "#c4bcd5",
+    overlay: "#282334",
     destructive: "#c25a4e",
   },
 
@@ -59,7 +60,7 @@ export const base: ThemeDefinition = {
       md: "clamp(1.6rem, 3.4vw + 0.5rem, 3.5rem)",
       sm: "clamp(1.3rem, 2vw + 0.5rem, 2.25rem)",
     },
-    kickerSize: "clamp(0.68rem, 0.55vw + 0.55rem, 0.82rem)",
+    kickerSize: "clamp(0.74rem, 0.55vw + 0.6rem, 0.88rem)",
     load: () =>
       Promise.all([
         import("@fontsource-variable/cormorant/wght.css"),
@@ -113,12 +114,12 @@ export const base: ThemeDefinition = {
 
   three: {
     palette: {
-      primary: "#c4737f",
-      secondary: "#a4b3a0",
-      ball: "#fffaf8",
-      holes: "#7a6266",
+      primary: "#75689f",
+      secondary: "#8fa184",
+      ball: "#c3d64b",
+      holes: "#6e743e",
       light: "#ffffff",
-      particle: "#d9a37a",
+      particle: "#c3d64b",
     },
   },
 };

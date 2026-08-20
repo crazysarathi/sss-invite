@@ -1,28 +1,25 @@
-import { lazy, Suspense, useEffect, useLayoutEffect, useState } from "react";
+import { useEffect, useLayoutEffect, useState } from "react";
 import { ScrollSmoother, ScrollTrigger } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
+import { sound } from "@/lib/audio";
 import { useIsMobile } from "@/hooks/useMediaQuery";
 import { ThemeProvider, useTheme } from "@/components/theme/ThemeProvider";
 import { OpeningScreen } from "@/components/invitation/OpeningScreen";
 import { Invitation } from "@/components/invitation/Invitation";
 import { TopBar } from "@/components/layout/TopBar";
 import { BackToTop } from "@/components/layout/BackToTop";
+import { SoundToggle } from "@/components/shared/SoundToggle";
 import { Toaster } from "@/components/ui/sonner";
-
-// Lazy: the colour picker isn't needed for LCP.
-const PalettePicker = lazy(() =>
-  import("@/components/theme/PalettePicker").then((m) => ({ default: m.PalettePicker }))
-);
 
 /**
  * App shell.
  *   - ScrollSmoother on desktop fine pointers only; touch scrolls natively.
  *   - Sections mount only after the smoother exists (pins/fixed inside a
  *     transformed wrapper break otherwise).
- *   - Anything `position: fixed` (opening screen, top bar, colour picker,
- *     back-to-top, toasts) lives OUTSIDE #smooth-content.
- *   - Palette switches only rewrite colour tokens — nothing here remounts.
+ *   - Anything `position: fixed` (opening screen, top bar, back-to-top,
+ *     toasts) lives OUTSIDE #smooth-content.
+ *   - Colours are fixed to the single court palette (sage/lavender/lime).
  */
 function AppShell() {
   const { theme } = useTheme();
@@ -61,6 +58,12 @@ function AppShell() {
     window.scrollTo(0, 0);
   }, []);
 
+  // Ambient music: starts as soon as the browser allows (autoplay where
+  // trusted, otherwise the first tap / key — the opening's own gesture).
+  useEffect(() => {
+    sound.boot();
+  }, []);
+
   return (
     <>
       <a
@@ -77,7 +80,13 @@ function AppShell() {
 
       {!opened && (
         <OpeningScreen
-          onOpen={() => setBooted(true)}
+          onOpen={() => {
+            setBooted(true);
+            // The seal serves off — whoosh, then settle the bed to its
+            // milder "inside" level for the scroll.
+            sound.serve();
+            sound.setScene("inside");
+          }}
           onComplete={() => {
             setBooted(true);
             setOpened(true);
@@ -91,11 +100,7 @@ function AppShell() {
       </div>
 
       <BackToTop />
-      {/* Mounted from the very first frame so the client can recolour the
-          opening doors too — its trigger sits above the opening overlay. */}
-      <Suspense fallback={null}>
-        <PalettePicker />
-      </Suspense>
+      <SoundToggle />
       <Toaster position="bottom-center" />
     </>
   );

@@ -3,86 +3,21 @@ import { cn } from "@/lib/utils";
 import { brand } from "@/data/siteData";
 
 /* ------------------------------------------------------------------ */
-/* Monogram — "P & P" in a leaf wreath, a pickleball at the crown       */
+/* Monogram — the hosts' crest, transparent (no card, no border)       */
 /* ------------------------------------------------------------------ */
 interface MonogramProps {
   className?: string;
-  /** Ink colour class for the letters (defaults to text-fg). */
-  inkClassName?: string;
 }
 
 /**
- * The invitation's monogram: the two initials with the italic ampersand,
- * ringed by a laurel wreath, crowned by a tiny pickleball — the stationery
- * version of the brand. Pure SVG + tokens.
+ * The invitation's monogram spot: the hosts' actual crest, cut out to a
+ * transparent SVG so it sits straight on the paper — no background card,
+ * no border.
  */
-export function Monogram({ className, inkClassName }: MonogramProps) {
-  const [a, amp, b] = brand.nameParts;
-  const leaves = useMemo(() => {
-    const out: Array<{ angle: number; side: 1 | -1 }> = [];
-    // two arcs of leaves, left and right, leaving the crown (top) and the foot open
-    // SVG angles: 0° = right, 90° = bottom, 180° = left, 270° = top.
-    for (let i = 0; i < 9; i++) {
-      const t = i / 8;
-      out.push({ angle: 102 + t * 104, side: 1 }); // left arc: bottom → upper-left
-      out.push({ angle: 78 - t * 104, side: -1 }); // right arc: bottom → upper-right
-    }
-    return out;
-  }, []);
+export function Monogram({ className }: MonogramProps) {
   return (
     <span className={cn("relative inline-block", className)} aria-hidden="true">
-      <svg viewBox="0 0 200 200" className="block h-full w-full" focusable="false">
-        {/* wreath */}
-        <g fill="none" stroke="rgb(var(--c-accent) / 0.9)" strokeWidth="1.2" strokeLinecap="round">
-          <path d="M100 186 A 86 86 0 0 1 26 52" />
-          <path d="M100 186 A 86 86 0 0 0 174 52" />
-        </g>
-        {leaves.map((l, i) => {
-          const r = 85;
-          const rad = (l.angle * Math.PI) / 180;
-          const cx = 100 + r * Math.cos(rad);
-          const cy = 100 + r * Math.sin(rad);
-          // leaves lean "up" the wreath toward the crown, pointing outward
-          const rot = l.angle + l.side * 55;
-          return (
-            <g key={i} transform={`translate(${cx} ${cy}) rotate(${rot}) scale(1.35)`}>
-              <path
-                d="M0 0 C 5 -5, 13 -5, 17 0 C 13 5, 5 5, 0 0 Z"
-                fill="rgb(var(--c-secondary) / 0.55)"
-                stroke="rgb(var(--c-accent) / 0.9)"
-                strokeWidth="0.9"
-              />
-            </g>
-          );
-        })}
-        {/* crown: a small pickleball */}
-        <g transform="translate(100 14)">
-          <circle r="9" fill="rgb(var(--c-surface))" stroke="rgb(var(--c-accent))" strokeWidth="1.2" />
-          <g fill="rgb(var(--c-accent))">
-            <circle cx="0" cy="-4" r="1.2" />
-            <circle cx="-3.8" cy="-0.8" r="1.2" />
-            <circle cx="3.8" cy="-0.8" r="1.2" />
-            <circle cx="-2.2" cy="3.6" r="1.2" />
-            <circle cx="2.2" cy="3.6" r="1.2" />
-          </g>
-        </g>
-        {/* initials */}
-        <text
-          x="100"
-          y="118"
-          textAnchor="middle"
-          className={cn("t-display fill-current", inkClassName ?? "text-fg")}
-          style={{ fontSize: 74, fontWeight: 500 }}
-        >
-          {a[0]}
-          <tspan style={{ fontStyle: "italic", fontWeight: 400 }} className="fill-primary" dx="2" dy="-2">
-            {amp}
-          </tspan>
-          <tspan dx="2" dy="2">
-            {b[0]}
-          </tspan>
-        </text>
-      </svg>
+      <img src={brand.hostCrest} alt="" className="block h-full w-full object-contain" decoding="async" />
     </span>
   );
 }

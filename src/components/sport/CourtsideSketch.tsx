@@ -1,63 +1,41 @@
 import { cn } from "@/lib/utils";
+import { PaddleSvg } from "./PaddleSvg";
+import { BALL_HOLES, holeSquash } from "./PickleballSvg";
 
 /**
- * Courtside line-art for the hero's flanks — a sketched paddle swaying on
- * the left, wiffle balls drifting along dotted flight trails on the right —
- * the sport drawn in the stationery's hairline style, painted from tokens.
- * Motion is pure CSS (sway / float / slow spin / trail dashes drifting), so
- * the global reduced-motion rule stills everything.
+ * Courtside art for the hero's flanks — the reference paddle swaying on
+ * the left, wiffle balls drifting along dotted flight trails on the
+ * right — painted from tokens. Motion is pure CSS (sway / float / slow
+ * spin / trail dashes drifting), so the global reduced-motion rule stills
+ * everything.
  */
 
 const INK = "rgb(var(--c-primary) / 0.5)";
 const INK_SOFT = "rgb(var(--c-primary) / 0.35)";
-const WASH = "rgb(var(--c-primary) / 0.05)";
+/** Chartreuse wash — the reference photo's ball colour, kept airy. */
+const BALL_WASH = "rgb(var(--c-accent) / 0.28)";
 
 function SketchBall({ className }: { className?: string }) {
   return (
     <svg viewBox="0 0 100 100" aria-hidden="true" focusable="false" className={cn("block h-auto w-full", className)}>
-      <circle cx="50" cy="50" r="46" fill={WASH} stroke={INK} strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
-      {/* wiffle holes — outlined, squashing toward the rim for roundness */}
-      <g fill="none" stroke={INK} strokeWidth="1.3">
-        <circle cx="50" cy="26" r="6" vectorEffect="non-scaling-stroke" />
-        <circle cx="31" cy="37" r="5" vectorEffect="non-scaling-stroke" />
-        <circle cx="69" cy="37" r="5" vectorEffect="non-scaling-stroke" />
-        <circle cx="50" cy="50" r="6.4" vectorEffect="non-scaling-stroke" />
-        <circle cx="29" cy="60" r="4.6" vectorEffect="non-scaling-stroke" />
-        <circle cx="71" cy="60" r="4.6" vectorEffect="non-scaling-stroke" />
-        <circle cx="40" cy="73" r="4.8" vectorEffect="non-scaling-stroke" />
-        <circle cx="60" cy="73" r="4.8" vectorEffect="non-scaling-stroke" />
-        <circle cx="50" cy="86" r="3.4" vectorEffect="non-scaling-stroke" />
-        <ellipse cx="16" cy="46" rx="2.6" ry="4" vectorEffect="non-scaling-stroke" />
-        <ellipse cx="84" cy="46" rx="2.6" ry="4" vectorEffect="non-scaling-stroke" />
-        <ellipse cx="19" cy="72" rx="2.2" ry="3" vectorEffect="non-scaling-stroke" />
-        <ellipse cx="81" cy="72" rx="2.2" ry="3" vectorEffect="non-scaling-stroke" />
+      <circle cx="50" cy="50" r="46" fill={BALL_WASH} stroke={INK} strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
+      {/* wiffle holes — outlined, foreshortened along the sphere's curve like the solid ball's */}
+      <g fill={INK_SOFT} stroke={INK} strokeWidth="1.3">
+        {BALL_HOLES.map(({ x, y, r }) => {
+          const { k, angle } = holeSquash(x, y);
+          return (
+            <ellipse
+              key={`${x}-${y}`}
+              cx={x}
+              cy={y}
+              rx={r * 1.15 * k}
+              ry={r * 1.15}
+              transform={`rotate(${angle.toFixed(1)} ${x} ${y})`}
+              vectorEffect="non-scaling-stroke"
+            />
+          );
+        })}
       </g>
-    </svg>
-  );
-}
-
-function SketchPaddle({ className }: { className?: string }) {
-  return (
-    <svg viewBox="0 0 220 452" aria-hidden="true" focusable="false" className={cn("block h-auto w-full", className)}>
-      {/* face — outer edge + inner rim */}
-      <path
-        d="M110 14 C164 14 198 62 198 130 C198 198 168 248 132 262 L88 262 C52 248 22 198 22 130 C22 62 56 14 110 14 Z"
-        fill={WASH}
-        stroke={INK}
-        strokeWidth="1.7"
-        vectorEffect="non-scaling-stroke"
-      />
-      <path
-        d="M110 28 C156 28 184 72 184 130 C184 192 158 236 126 248 L94 248 C62 236 36 192 36 130 C36 72 64 28 110 28 Z"
-        fill="none"
-        stroke={INK_SOFT}
-        strokeWidth="1.1"
-        vectorEffect="non-scaling-stroke"
-      />
-      {/* handle + cap */}
-      <rect x="93" y="262" width="34" height="158" rx="8" fill={WASH} stroke={INK} strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
-      <line x1="110" y1="272" x2="110" y2="410" stroke={INK_SOFT} strokeWidth="1" vectorEffect="non-scaling-stroke" />
-      <rect x="87" y="418" width="46" height="24" rx="12" fill={WASH} stroke={INK} strokeWidth="1.6" vectorEffect="non-scaling-stroke" />
     </svg>
   );
 }
@@ -105,9 +83,9 @@ export function CourtsideSketches({ flip = false, density = "full" }: CourtsideS
           flip ? "right-0 -scale-x-100" : "left-0"
         )}
       >
-        <div className="absolute -left-[16%] top-1/2 w-[88%] -translate-y-1/2 -rotate-[22deg]">
+        <div className="absolute -left-[16%] top-1/2 w-[78%] -translate-y-1/2 -rotate-[22deg]">
           <div className="origin-[50%_78%] animate-sway [animation-duration:9s]">
-            <SketchPaddle />
+            <PaddleSvg className="opacity-80" />
           </div>
         </div>
         <svg viewBox="0 0 140 60" aria-hidden="true" focusable="false" className="absolute bottom-[4%] left-[4%] w-[70%] overflow-visible">
