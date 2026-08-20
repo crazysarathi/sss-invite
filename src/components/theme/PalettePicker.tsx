@@ -16,7 +16,7 @@ const COPY = {
   active: "Selected",
 } as const;
 
-const GROUP_ORDER = ["pink", "ivory", "logo"] as const;
+const GROUP_ORDER = ["pink", "ivory", "logo", "court"] as const;
 
 /**
  * The client's colour picker: a floating pill (bottom-left) that opens a
