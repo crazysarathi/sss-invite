@@ -237,7 +237,7 @@ export const paletteById: Record<PaletteId, PaletteDefinition> = Object.fromEntr
 ) as Record<PaletteId, PaletteDefinition>;
 
 export const PALETTE_IDS = palettes.map((p) => p.id) as PaletteId[];
-export const DEFAULT_PALETTE: PaletteId = "blush";
+export const DEFAULT_PALETTE: PaletteId = "wisteria";
 
 export function isPaletteId(value: unknown): value is PaletteId {
   return typeof value === "string" && (PALETTE_IDS as string[]).includes(value);
