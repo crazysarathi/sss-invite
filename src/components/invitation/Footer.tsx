@@ -59,9 +59,9 @@ export function Footer() {
                   {footer.directionsCta}
                 </a>
               </Button>
-              <Button asChild variant="outline">
+              <Button asChild aria-label={social.follow.ariaLabel}>
                 <a href={social.instagram.url} target="_blank" rel="noopener noreferrer">
-                  <Instagram aria-hidden="true" className="text-primary" />
+                  <Instagram aria-hidden="true" />
                   {social.instagram.handle}
                 </a>
               </Button>

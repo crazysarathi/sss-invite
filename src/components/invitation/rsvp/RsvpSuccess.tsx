@@ -1,7 +1,8 @@
 import { useRef } from "react";
+import { Instagram } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { prefersReducedMotion } from "@/lib/utils";
-import { rsvp } from "@/data/siteData";
+import { rsvp, social } from "@/data/siteData";
 import { useThemeMotion } from "@/components/theme/ThemeProvider";
 import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/shared/Kicker";
@@ -114,7 +115,16 @@ export function RsvpSuccess({ onAnother }: RsvpSuccessProps) {
       <p data-reveal data-success-part className="mt-4 max-w-md text-pretty text-base text-fg-muted">
         {rsvp.successBody}
       </p>
-      <div data-reveal data-success-part className="mt-8">
+      <p data-reveal data-success-part className="mt-6 max-w-md text-pretty text-sm text-fg-muted">
+        {social.follow.success.lead}
+      </p>
+      <div data-reveal data-success-part className="mt-6 flex flex-wrap items-center justify-center gap-3">
+        <Button asChild>
+          <a href={social.instagram.url} target="_blank" rel="noopener noreferrer" aria-label={social.follow.ariaLabel}>
+            <Instagram aria-hidden="true" />
+            {social.follow.success.cta}
+          </a>
+        </Button>
         <Button type="button" variant="outline" onClick={onAnother} className="border-[length:var(--border-w)]">
           {rsvp.anotherCta}
         </Button>

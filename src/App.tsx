@@ -4,6 +4,7 @@ import { prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
 import { sound } from "@/lib/audio";
 import { useIsMobile } from "@/hooks/useMediaQuery";
+import { useScrollCrackle } from "@/hooks/useScrollCrackle";
 import { ThemeProvider, useTheme } from "@/components/theme/ThemeProvider";
 import { OpeningScreen } from "@/components/invitation/OpeningScreen";
 import { Invitation } from "@/components/invitation/Invitation";
@@ -62,6 +63,9 @@ function AppShell() {
   useEffect(() => {
     sound.boot();
   }, []);
+
+  // The paper crackle under the reader's scroll, once the gates are gone.
+  useScrollCrackle(opened);
 
   return (
     <>

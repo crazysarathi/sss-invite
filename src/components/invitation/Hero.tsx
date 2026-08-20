@@ -1,8 +1,10 @@
 import { lazy, Suspense, useRef } from "react";
+import { Instagram } from "lucide-react";
 import { gsap, SplitText, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
-import { brand, dateLine, event, hero, opening } from "@/data/siteData";
+import { sound } from "@/lib/audio";
+import { brand, dateLine, event, hero, opening, social } from "@/data/siteData";
 import { useTheme, useThemeMotion } from "@/components/theme/ThemeProvider";
 import { useIdleReady } from "@/hooks/useIdleReady";
 import { useInViewport } from "@/hooks/useInViewport";
@@ -91,6 +93,16 @@ export function Hero({ booted }: HeroProps) {
           )
           .to(ball, { scaleY: 0.84, scaleX: 1.1, duration: 0.08, ease: "power2.in", transformOrigin: "50% 100%" }, t0 + base * 1.5 * 0.36)
           .to(ball, { scaleY: 1, scaleX: 1, duration: 0.32, ease: "elastic.out(1, 0.45)" }, t0 + base * 1.5 * 0.36 + 0.08);
+
+        /* bounce.out touches the floor at p = 1/2.75, 2/2.75, 2.5/2.75 and 1
+           of the drop — a "pock" per impact, each softer as the ball settles. */
+        const drop = base * 1.5;
+        [
+          { p: 1 / 2.75, s: 1 },
+          { p: 2 / 2.75, s: 0.5 },
+          { p: 2.5 / 2.75, s: 0.28 },
+          { p: 1, s: 0.16 },
+        ].forEach(({ p, s }) => tl.call(() => sound.floorBounce(s), [], t0 + drop * p));
       }
 
       /* 3. the title springs up, character by character */
@@ -260,6 +272,21 @@ export function Hero({ booted }: HeroProps) {
                     {hero.secondaryCta.label}
                   </a>
                 </Button>
+              </div>
+
+              <div data-reveal className="mt-4 md:mt-5">
+                <a
+                  href={social.instagram.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  aria-label={social.follow.ariaLabel}
+                  className="t-accent inline-flex max-w-full items-center gap-2 rounded-full border border-primary/40 bg-primary/[0.07] px-4 py-1.5 text-[0.68rem] text-primary transition-colors duration-micro ease-theme hover:border-primary hover:bg-primary hover:text-primary-foreground sm:text-[0.72rem]"
+                >
+                  <Instagram aria-hidden="true" className="size-[1.25em] shrink-0" />
+                  <span className="truncate">
+                    {social.follow.hero} · {social.instagram.handle}
+                  </span>
+                </a>
               </div>
             </Frame>
           </Surface>

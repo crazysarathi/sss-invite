@@ -83,7 +83,7 @@ export function Action() {
             </ScrollReveal>
             <ScrollReveal delay={0.25} className="mt-8">
               <MagneticButton>
-                <Button asChild size="lg" variant="outline">
+                <Button asChild size="lg">
                   <a href={action.cta.href} target="_blank" rel="noopener noreferrer">
                     <Instagram aria-hidden="true" />
                     {action.cta.label}

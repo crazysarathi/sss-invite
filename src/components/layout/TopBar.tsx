@@ -1,8 +1,9 @@
 import { useEffect, useRef, useState } from "react";
+import { Instagram } from "lucide-react";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { scrollToSection } from "@/lib/scroll";
-import { brand, navCta } from "@/data/siteData";
+import { brand, navCta, social } from "@/data/siteData";
 import { useThemeMotion } from "@/components/theme/ThemeProvider";
 import { BrandMark } from "@/components/shared/Glyphs";
 import { Button } from "@/components/ui/button";
@@ -70,17 +71,25 @@ export function TopBar({ booted }: TopBarProps) {
         >
           <BrandMark variant="lockup" markClassName="h-8 w-8 md:h-9 md:w-9" textClassName="text-[0.95rem] md:text-[1.15rem]" />
         </a>
-        <Button asChild size="sm" className="px-5">
-          <a
-            href={navCta.href}
-            onClick={(e) => {
-              e.preventDefault();
-              scrollToSection(navCta.href);
-            }}
-          >
-            {navCta.label}
-          </a>
-        </Button>
+        <div className="flex items-center gap-1.5 sm:gap-2">
+          <Button asChild size="sm" variant="ghost" className="px-3" aria-label={social.follow.ariaLabel}>
+            <a href={social.instagram.url} target="_blank" rel="noopener noreferrer">
+              <Instagram aria-hidden="true" className="!size-[1.3em] text-primary" />
+              <span className="hidden md:inline">{social.instagram.handle}</span>
+            </a>
+          </Button>
+          <Button asChild size="sm" className="px-5">
+            <a
+              href={navCta.href}
+              onClick={(e) => {
+                e.preventDefault();
+                scrollToSection(navCta.href);
+              }}
+            >
+              {navCta.label}
+            </a>
+          </Button>
+        </div>
       </div>
     </header>
   );

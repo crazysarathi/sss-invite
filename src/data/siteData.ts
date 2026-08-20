@@ -137,7 +137,7 @@ export const action = {
   /** Script caption under the rally "print". */
   caption: "Salem super smashers on the court",
   cta: { label: "Follow the Smashers", href: "https://www.instagram.com/salemsupersmashers?igsh=d2l6YmlhMGZpM3hn" },
-  ticker: "SEE OUR SMASHERS IN ACTION ✦ PICKLE & PILATES ✦ WITH MATCHA & UBE BAR ✦ 29TH AUGUST, SATURDAY ✦ FOREST HILLS COUNTRY CLUB ✦ ",
+  ticker: "SEE OUR SMASHERS IN ACTION ✦ FOLLOW @SALEMSUPERSMASHERS ✦ PICKLE & PILATES ✦ WITH MATCHA & UBE BAR ✦ 29TH AUGUST, SATURDAY ✦ FOREST HILLS COUNTRY CLUB ✦ ",
 } as const;
 
 /* ------------------------------------------------------------------ */
@@ -197,6 +197,20 @@ export const social = {
   instagram: {
     handle: "@salemsupersmashers",
     url: "https://www.instagram.com/salemsupersmashers?igsh=d2l6YmlhMGZpM3hn",
+  },
+  /**
+   * The follow ask, everywhere it appears — always in the invitation's
+   * voice ("Follow the Smashers"), never a bare "Follow us on Instagram".
+   */
+  follow: {
+    ariaLabel: "Follow Salem Super Smashers on Instagram",
+    /** Small pill on the hero card, right under the CTAs. */
+    hero: "Follow along",
+    /** After a guest saves their spot — the warmest moment to ask. */
+    success: {
+      lead: "The buildup, the courts, the day itself — it all plays out on Instagram.",
+      cta: "Follow the buildup",
+    },
   },
   hashtag: brand.hashtag,
 } as const;

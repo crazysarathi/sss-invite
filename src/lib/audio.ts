@@ -2,9 +2,13 @@
  * Procedural sound effects for the invitation — synthesised live with the
  * Web Audio API. No audio files: nothing to license, nothing to download.
  *
- * No ambient music — the page is silent except for two moments:
+ * No ambient music — the page is silent except for four moments:
  *   - `serve()` — the whoosh + pop when the seal ball serves off the gates;
- *   - `paddleHit()` — the pickleball "pock", fired by the rally at contact.
+ *   - `paddleHit()` — the pickleball "pock", fired by the rally at contact;
+ *   - `floorBounce()` — the duller court-floor bounce, fired once per impact
+ *     while the hero ball drops and settles on the card;
+ *   - `scrollCrackle()` — a faint paper "crick-crack" as the reader scrolls,
+ *     the stationery moving under their fingers (see useScrollCrackle).
  *
  * Browsers only allow audible playback after a user gesture. `boot()` arms
  * one-shot listeners so the very first tap / key press unlocks the context —
@@ -34,6 +38,20 @@ class SoundEngine {
 
   /** The seal ball serving off the gates: a rising whoosh into a pop. */
   serve(): void {
+    if (this.running()) {
+      this.playServe();
+      return;
+    }
+    // The Esc-skip path fires serve() in the same gesture task that is still
+    // unlocking the context — resume() resolves a beat later, so retry once
+    // then (dropped if it resolves too late to feel attached to the doors).
+    const asked = performance.now();
+    void this.ctx?.resume().then(() => {
+      if (performance.now() - asked < 600 && this.running()) this.playServe();
+    });
+  }
+
+  private playServe(): void {
     const ctx = this.running();
     if (!ctx || !this.master) return;
     const t = ctx.currentTime;
@@ -84,6 +102,66 @@ class SoundEngine {
     click.connect(band).connect(clickGain).connect(this.master);
     click.start(t);
     click.stop(t + 0.06);
+  }
+
+  /** The ball meeting the court floor — deeper and duller than a paddle hit. */
+  floorBounce(strength = 1): void {
+    const ctx = this.running();
+    if (!ctx || !this.master) return;
+    const t = ctx.currentTime;
+    const wobble = 0.94 + Math.random() * 0.12;
+    // the hollow thump
+    const osc = ctx.createOscillator();
+    osc.type = "sine";
+    osc.frequency.setValueAtTime(210 * wobble, t);
+    osc.frequency.exponentialRampToValueAtTime(85 * wobble, t + 0.13);
+    const oscGain = ctx.createGain();
+    oscGain.gain.setValueAtTime(0.28 * strength, t);
+    oscGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.16);
+    osc.connect(oscGain).connect(this.master);
+    osc.start(t);
+    osc.stop(t + 0.18);
+    // a soft plastic tap on top — quieter and lower than the paddle click
+    const tap = ctx.createBufferSource();
+    tap.buffer = this.noise(ctx);
+    const band = ctx.createBiquadFilter();
+    band.type = "bandpass";
+    band.frequency.value = 1300 * wobble;
+    band.Q.value = 1.3;
+    const tapGain = ctx.createGain();
+    tapGain.gain.setValueAtTime(0.07 * strength, t);
+    tapGain.gain.exponentialRampToValueAtTime(0.0001, t + 0.045);
+    tap.connect(band).connect(tapGain).connect(this.master);
+    tap.start(t);
+    tap.stop(t + 0.05);
+  }
+
+  /** A tiny paper "crick" — sometimes doubled into a "crick-crack". */
+  scrollCrackle(strength = 1): void {
+    const ctx = this.running();
+    if (!ctx || !this.master) return;
+    const t = ctx.currentTime;
+    this.crack(ctx, t, strength);
+    // roughly every third crackle gets a softer echo right behind it
+    if (Math.random() < 0.35) this.crack(ctx, t + 0.05 + Math.random() * 0.04, strength * 0.55);
+  }
+
+  /** One paper crack: a short bright noise burst, pitch varied per shot. */
+  private crack(ctx: AudioContext, t: number, strength: number): void {
+    if (!this.master) return;
+    const wobble = 0.8 + Math.random() * 0.5;
+    const burst = ctx.createBufferSource();
+    burst.buffer = this.noise(ctx);
+    const band = ctx.createBiquadFilter();
+    band.type = "bandpass";
+    band.frequency.value = 3100 * wobble;
+    band.Q.value = 2.4;
+    const gain = ctx.createGain();
+    gain.gain.setValueAtTime(0.055 * strength, t);
+    gain.gain.exponentialRampToValueAtTime(0.0001, t + 0.035);
+    burst.connect(band).connect(gain).connect(this.master);
+    burst.start(t, Math.random() * 0.9);
+    burst.stop(t + 0.04);
   }
 
   /* ---------------------------------------------------------------- */
