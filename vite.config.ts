@@ -13,6 +13,5 @@ export default defineConfig({
     target: "es2020",
     chunkSizeWarningLimit: 1100,
     // No manualChunks: the three.js ecosystem must stay behind the lazy
-    // scene imports (object-form manualChunks hoists it into the entry).
   },
 });
