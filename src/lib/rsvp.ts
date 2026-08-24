@@ -7,7 +7,7 @@ export interface RsvpPayload {
   phone: string;
   attendance: string;
   guests: number;
-  /** Which time slot the guest picked (e.g. "4-7"). */
+  /** Which time slot the guest picked (e.g. "630-730am"). */
   slot: string;
   message: string;
   /** Which colour palette the guest submitted from — handy analytics for the client. */

@@ -5,7 +5,7 @@
  *
  *   Pickle & Pilates with Matcha & Ube bar
  *   A wellness experience
- *   Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Cha Wellness
+ *   Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Wellness Bar
  *   Location: Forest Hills Country Club
  *   Date: 29th August, Saturday
  *   "See our Smashers in action"
@@ -34,7 +34,7 @@ export const brand = {
     { name: "Salem Super Smashers", role: "Pickleball" },
     { name: "Gurkha Life", role: "Lifestyle" },
     { name: "The Tens Movement Lab", role: "Pilates" },
-    { name: "Cha Wellness", role: "Matcha & Ube bar" },
+    { name: "Wellness Bar", role: "Matcha & Ube workshop" },
   ] as const,
   hashtag: "#PickleAndPilates",
 } as const;
@@ -42,7 +42,7 @@ export const brand = {
 export const meta = {
   title: "Pickle & Pilates — You're Invited | Salem Super Smashers",
   description:
-    "Pickle & Pilates with Matcha & Ube bar — a wellness experience by Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Cha Wellness at Forest Hills Country Club, Salem — 29th August, Saturday.",
+    "Pickle & Pilates with Matcha & Ube bar — a wellness experience by Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Wellness Bar at Forest Hills Country Club, Salem — 29th August, Saturday.",
   url: "https://sss.botify.in/pickle-and-pilates/",
 } as const;
 
@@ -120,7 +120,7 @@ export const details = {
     items: [
       { key: "pickleball", title: "Pickleball", note: "Indoor courts" },
       { key: "pilates", title: "Mat Pilates", note: "Guided session" },
-      { key: "matcha", title: "Matcha & Ube bar", note: "By Cha Wellness" },
+      { key: "matcha", title: "Matcha & Ube bar", note: "Hands on experience workshop" },
     ],
   },
   hostedBy: "Hosted by",
@@ -161,12 +161,13 @@ export const rsvp = {
       ],
     },
     guests: { label: "Guests (including you)", min: 1, max: 4 },
-    /** TODO: sample slots — swap in the final timings once the hosts confirm. */
+    /** Confirmed by the hosts on 2026-08-24. */
     slot: {
       label: "Time slot",
       options: [
-        { value: "4-7", label: "4 pm to 7 pm" },
-        { value: "5-8", label: "5 pm to 8 pm" },
+        { value: "630-730am", label: "6:30 am to 7:30 am" },
+        { value: "8-9am", label: "8 am to 9 am" },
+        { value: "530-630pm", label: "5:30 pm to 6:30 pm" },
       ],
     },
     message: { label: "A note for the hosts", placeholder: "Questions, or just say hi" },
