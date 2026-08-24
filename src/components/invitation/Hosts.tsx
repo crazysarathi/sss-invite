@@ -10,7 +10,7 @@ import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish, TornCard } from "@/components/stationery/Ornaments";
 
 /**
- * Hosts — "Four partners. One experience." The four names presented like a
+ * Hosts — "Four collaborations. One experience." The four names presented like a
  * family card: a torn-paper ledger with each host and what they bring.
  * Names stagger in one by one.
  */
@@ -57,23 +57,26 @@ export function Hosts() {
 
           <TornCard seed={3} className="mt-8 md:mt-12">
             <div data-ledger className="grid grid-cols-1 gap-x-6 gap-y-7 px-4 py-8 sm:grid-cols-2 sm:px-6 sm:py-10 md:px-12 md:py-12">
-              {brand.partners.map((p, i) => (
-                <div key={p.name} data-host className="relative text-center">
+              {brand.partners.map((p) => (
+                <div key={p.name} data-host className="relative flex flex-col items-center justify-center text-center">
                   <span aria-hidden="true" className="t-accent mb-2 block text-[0.7rem] text-accent">
                     ✦
                   </span>
-                  <p className="t-display text-[1.3rem] leading-tight text-fg sm:text-[1.5rem] md:text-[1.7rem]">{p.name}</p>
-                  <p className="t-accent mt-1.5 text-[0.66rem] text-fg-muted sm:text-[0.72rem] md:text-[0.78rem]">{p.role}</p>
-                  {i === 0 && (
+                  {p.logo ? (
                     <img
-                      src={brand.hostCrest}
-                      alt=""
-                      width={40}
-                      height={46}
+                      src={p.logo}
+                      alt={p.name}
+                      width={96}
+                      height={54}
                       loading="lazy"
                       decoding="async"
-                      className="mx-auto mt-3 h-10 w-10 object-contain"
+                      className="h-14 w-auto max-w-[9rem] object-contain sm:h-16"
                     />
+                  ) : (
+                    <>
+                      <p className="t-display text-[1.3rem] leading-tight text-fg sm:text-[1.5rem] md:text-[1.7rem]">{p.name}</p>
+                      <p className="t-accent mt-1.5 text-[0.66rem] text-fg-muted sm:text-[0.72rem] md:text-[0.78rem]">{p.role}</p>
+                    </>
                   )}
                 </div>
               ))}

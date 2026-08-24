@@ -224,7 +224,7 @@ export function Hero({ booted }: HeroProps) {
               >
                 {a} <em className="text-primary">{amp}</em> {b}
               </h1>
-              <p data-reveal className="t-script -mt-0.5 text-[1.65rem] leading-none text-primary sm:text-[2.1rem] md:text-[2.6rem]">
+              <p data-reveal className="t-script mt-1.5 text-[1.65rem] leading-none text-primary sm:mt-2 sm:text-[2.1rem] md:mt-3 md:text-[2.6rem]">
                 {brand.subline}
               </p>
 

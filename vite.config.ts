@@ -9,6 +9,15 @@ export default defineConfig({
       "@": path.resolve(__dirname, "./src"),
     },
   },
+  server: {
+    // The admin panel UI is this same React app (src/admin) — only its JSON
+    // API is PHP. Vite can't execute PHP, so during dev/preview forward just
+    // the API calls to the local PHP server (see sss-admin/README.md); the
+    // bare /sss-admin route itself is handled client-side, same as production.
+    proxy: {
+      "/sss-admin/api": "http://localhost:8080",
+    },
+  },
   build: {
     target: "es2020",
     chunkSizeWarningLimit: 1100,

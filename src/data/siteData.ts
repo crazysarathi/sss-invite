@@ -15,6 +15,8 @@
  * placeholders awaiting confirmation from the hosts.
  */
 import crest from "@/assets/logos/sss-crest.svg";
+import gurkhaLogo from "@/assets/logos/gurkha-logo.svg";
+import tensLogo from "@/assets/logos/tens-logo.svg";
 
 /* ------------------------------------------------------------------ */
 /* Brand & hosts                                                       */
@@ -31,10 +33,10 @@ export const brand = {
   hostCrest: crest,
   /** Shown in order, joined with "×" — exactly as the hosts wrote it. */
   partners: [
-    { name: "Salem Super Smashers", role: "Pickleball" },
-    { name: "Gurkha Life", role: "Lifestyle" },
-    { name: "The Tens Movement Lab", role: "Pilates" },
-    { name: "Wellness Bar", role: "Matcha & Ube workshop" },
+    { name: "Salem Super Smashers", role: "Pickleball", logo: crest },
+    { name: "Gurkha Life", role: "Lifestyle", logo: gurkhaLogo },
+    { name: "The Tens Movement Lab", role: "Pilates", logo: tensLogo },
+    { name: "Wellness Bar", role: "Matcha & Ube workshop", logo: undefined },
   ] as const,
   hashtag: "#PickleAndPilates",
 } as const;
@@ -76,7 +78,7 @@ export const event = {
 /* ------------------------------------------------------------------ */
 export const opening = {
   eyebrow: "Salem Super Smashers presents",
-  invitedLine: "You're invited",
+  invitedLine: "You're specially handpicked to experience our",
   cta: "Open invitation",
   hint: "Tap to open",
   skipHint: "Press Esc to skip",
@@ -86,7 +88,7 @@ export const opening = {
 /* Hero                                                                */
 /* ------------------------------------------------------------------ */
 export const hero = {
-  eyebrow: "You're invited to",
+  eyebrow: "You're specially handpicked to experience our",
   saveTheDate: "Save the date",
   /** Small-caps prefix before the venue line. */
   venueLabel: "Venue",
@@ -98,9 +100,25 @@ export const hero = {
 /* Hosts — the four names, introduced like a family card               */
 /* ------------------------------------------------------------------ */
 export const hosts = {
-  kicker: "Four partners. One experience.",
+  kicker: "Four collaborations. One experience.",
   /** Sign-off under the names. */
   line: "Moving well, gathering often — together.",
+} as const;
+
+/* ------------------------------------------------------------------ */
+/* Partners reveal — right after "Four collaborations. One experience.": a    */
+/* plain card grid (no slider) with four set pieces — logo, jersey,     */
+/* partners, and a gift that opens on a callback to the invitation.     */
+/* ------------------------------------------------------------------ */
+export const partnersReveal = {
+  id: "partners-reveal",
+  kicker: "A closer look",
+  logoKicker: "Logo launch",
+  jerseyKicker: "Jersey launch",
+  partnersKicker: "Player launch",
+  surpriseKicker: "Surprise element",
+  openHint: "Tap to open",
+  replayCta: "Replay",
 } as const;
 
 /** The small button in the top bar. */
@@ -152,7 +170,7 @@ export const rsvp = {
   fields: {
     name: { label: "Full name", placeholder: "Your name" },
     email: { label: "Email", placeholder: "you@example.com" },
-    phone: { label: "Phone", placeholder: "+91 98765 43210" },
+    phone: { label: "WhatsApp number", placeholder: "+91 98765 43210" },
     attendance: {
       label: "Will you be joining us?",
       options: [
@@ -161,13 +179,23 @@ export const rsvp = {
       ],
     },
     guests: { label: "Guests (including you)", min: 1, max: 4 },
-    /** Confirmed by the hosts on 2026-08-24. */
+    /** Confirmed by the hosts on 2026-08-24. Each slot caps at 15 registrations — see sss-admin/config.php's SLOT_CAPACITY. */
     slot: {
       label: "Time slot",
+      soldOutLabel: "Sold out",
       options: [
         { value: "630-730am", label: "6:30 am to 7:30 am" },
         { value: "8-9am", label: "8 am to 9 am" },
         { value: "530-630pm", label: "5:30 pm to 6:30 pm" },
+      ],
+    },
+    interest: {
+      label: "I'm here for",
+      options: [
+        { value: "pickle", label: "Pickle" },
+        { value: "pilates", label: "Pilates" },
+        { value: "both", label: "Want to try both" },
+        { value: "matcha", label: "Just matcha" },
       ],
     },
     message: { label: "A note for the hosts", placeholder: "Questions, or just say hi" },
@@ -186,8 +214,8 @@ export const rsvp = {
    *   mode "endpoint"   — POSTs JSON to `endpoint`
    */
   submission: {
-    mode: "mock" as "mock" | "formsubmit" | "endpoint",
-    endpoint: "",
+    mode: "endpoint" as "mock" | "formsubmit" | "endpoint",
+    endpoint: "/sss-admin/api/rsvp_submit.php",
   },
 } as const;
 
@@ -233,5 +261,5 @@ export function dateLine(): string {
   return event.dateStatus === "confirmed" && event.dateLabel ? event.dateLabel : event.dateTbaLabel;
 }
 
-export const siteData = { brand, meta, event, opening, hero, navCta, hosts, details, action, rsvp, social, footer } as const;
+export const siteData = { brand, meta, event, opening, hero, navCta, hosts, partnersReveal, details, action, rsvp, social, footer } as const;
 export type SiteData = typeof siteData;

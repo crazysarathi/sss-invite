@@ -1,9 +1,9 @@
-import { useCallback, useId, useRef, useState, type FormEvent } from "react";
+import { useCallback, useEffect, useId, useRef, useState, type FormEvent } from "react";
 import { Loader2 } from "lucide-react";
 import { toast } from "sonner";
 import { gsap, ScrollTrigger, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
-import { submitRsvp, type RsvpPayload } from "@/lib/rsvp";
+import { fetchSlotAvailability, submitRsvp, type RsvpPayload } from "@/lib/rsvp";
 import { rsvp } from "@/data/siteData";
 import { useTheme, useThemeMotion } from "@/components/theme/ThemeProvider";
 import { Button } from "@/components/ui/button";
@@ -28,6 +28,7 @@ interface FormValues {
   attendance: string;
   guests: number;
   slot: string;
+  interest: string;
   message: string;
 }
 
@@ -40,6 +41,7 @@ const initialValues = (): FormValues => ({
   attendance: fields.attendance.options[0].value,
   guests: fields.guests.min,
   slot: fields.slot.options[0].value,
+  interest: fields.interest.options[0].value,
   message: "",
 });
 
@@ -50,7 +52,7 @@ const FIELD_ORDER: readonly FieldKey[] = ["name", "email", "phone"];
 const COPY = {
   nameError: "Please enter your name (at least 2 characters).",
   emailError: "Please enter a valid email address.",
-  phoneError: "Please enter a valid phone number (7–15 digits).",
+  phoneError: "Please enter a valid WhatsApp number (7–15 digits).",
   fewer: "Fewer guests",
   more: "More guests",
 } as const;
@@ -96,6 +98,31 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
   const [errors, setErrors] = useState<Errors>({});
   const [submitting, setSubmitting] = useState(false);
   const [phase, setPhase] = useState<Phase>("form");
+  const [fullSlots, setFullSlots] = useState<Set<string>>(new Set());
+
+  // Re-run after every submission too — the guest can "Add another guest"
+  // without a page reload, and the slot they just filled may now be full.
+  const refreshAvailability = useCallback(async () => {
+    const data = await fetchSlotAvailability();
+    if (!data) return null;
+    const full = new Set<string>(
+      fields.slot.options.filter((o) => (data.counts[o.value] ?? 0) >= data.capacity).map((o) => o.value)
+    );
+    setFullSlots(full);
+    return full;
+  }, []);
+
+  useEffect(() => {
+    let cancelled = false;
+    refreshAvailability().then((full) => {
+      if (cancelled || !full) return;
+      // Don't default the reader into a slot that's already full.
+      setValues((v) => (full.has(v.slot) ? { ...v, slot: fields.slot.options.find((o) => !full.has(o.value))?.value ?? v.slot } : v));
+    });
+    return () => {
+      cancelled = true;
+    };
+  }, [refreshAvailability]);
 
   const update = useCallback(<K extends keyof FormValues>(key: K, value: FormValues[K]) => {
     setValues((v) => ({ ...v, [key]: value }));
@@ -149,6 +176,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
       attendance: values.attendance,
       guests: values.guests,
       slot: values.slot,
+      interest: values.interest,
       message: values.message.trim(),
       theme: palette.id,
     };
@@ -158,15 +186,23 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
       // still-visible form can't be re-submitted during the fade-out.
       swapToSuccess();
       toast.success(rsvp.successToast);
-    } catch {
+      // No page reload — refresh in the background so "Add another guest"
+      // sees the slot they just filled reflected, without the reader asking.
+      refreshAvailability();
+    } catch (err) {
       setSubmitting(false);
-      toast.error(rsvp.errorToast);
+      toast.error(err instanceof Error && err.message ? err.message : rsvp.errorToast);
     }
   };
 
   const reset = () => {
     reentryRef.current = true;
-    setValues(initialValues());
+    setValues(() => {
+      const iv = initialValues();
+      if (!fullSlots.has(iv.slot)) return iv;
+      const firstOpen = fields.slot.options.find((o) => !fullSlots.has(o.value));
+      return firstOpen ? { ...iv, slot: firstOpen.value } : iv;
+    });
     setErrors({});
     setSubmitting(false);
     setPhase("form");
@@ -209,7 +245,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
     <div ref={rootRef} className={cn("relative flex flex-col", className)}>
       {phase === "form" ? (
         <form ref={formRef} onSubmit={onSubmit} noValidate className="space-y-4 sm:space-y-5">
-          <Field id={id("name")} label={fields.name.label} error={errors.name}>
+          <Field id={id("name")} label={fields.name.label} required error={errors.name}>
             <Input
               ref={nameRef}
               id={id("name")}
@@ -226,7 +262,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
           </Field>
 
           <div className="grid gap-4 sm:grid-cols-2 sm:gap-4">
-            <Field id={id("email")} label={fields.email.label} error={errors.email}>
+            <Field id={id("email")} label={fields.email.label} required error={errors.email}>
               <Input
                 ref={emailRef}
                 id={id("email")}
@@ -243,7 +279,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
                 required
               />
             </Field>
-            <Field id={id("phone")} label={fields.phone.label} error={errors.phone}>
+            <Field id={id("phone")} label={fields.phone.label} required error={errors.phone}>
               <Input
                 ref={phoneRef}
                 id={id("phone")}
@@ -268,6 +304,7 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
             options={fields.attendance.options}
             value={values.attendance}
             onChange={(v) => update("attendance", v)}
+            required
           />
 
           <div className="grid gap-4 sm:grid-cols-[auto_1fr] sm:gap-4">
@@ -280,22 +317,44 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
               onChange={(v) => update("guests", v)}
               decrementLabel={COPY.fewer}
               incrementLabel={COPY.more}
+              required
             />
-            <Field id={id("slot")} label={fields.slot.label}>
+            <Field id={id("slot")} label={fields.slot.label} required>
               <Select value={values.slot} onValueChange={(v) => update("slot", v)}>
                 <SelectTrigger id={id("slot")} aria-label={fields.slot.label} className={control}>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  {fields.slot.options.map((o) => (
-                    <SelectItem key={o.value} value={o.value}>
-                      {o.label}
-                    </SelectItem>
-                  ))}
+                  {fields.slot.options.map((o) => {
+                    const full = fullSlots.has(o.value);
+                    return (
+                      <SelectItem key={o.value} value={o.value} disabled={full}>
+                        <span className="flex w-full items-center justify-between gap-3">
+                          <span>{o.label}</span>
+                          {full && <span className="text-[0.7em] font-normal text-red-400">{fields.slot.soldOutLabel}</span>}
+                        </span>
+                      </SelectItem>
+                    );
+                  })}
                 </SelectContent>
               </Select>
             </Field>
           </div>
+
+          <Field id={id("interest")} label={fields.interest.label} required>
+            <Select value={values.interest} onValueChange={(v) => update("interest", v)}>
+              <SelectTrigger id={id("interest")} aria-label={fields.interest.label} className={control}>
+                <SelectValue />
+              </SelectTrigger>
+              <SelectContent>
+                {fields.interest.options.map((o) => (
+                  <SelectItem key={o.value} value={o.value}>
+                    {o.label}
+                  </SelectItem>
+                ))}
+              </SelectContent>
+            </Select>
+          </Field>
 
           <Field id={id("message")} label={fields.message.label}>
             <Textarea

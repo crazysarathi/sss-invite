@@ -18,16 +18,30 @@ interface FieldProps {
   label: string;
   /** Small trailing note in the label (e.g. "Optional"). */
   note?: string;
+  /** Marks the label with a red asterisk. */
+  required?: boolean;
   error?: string;
   children: ReactNode;
   className?: string;
 }
 
-export function Field({ id, label, note, error, children, className }: FieldProps) {
+/** Red asterisk marking a required field's label — visual only, `aria-hidden` since the input itself carries `required`/`aria-required`. */
+export function RequiredMark() {
+  return (
+    <span aria-hidden="true" className="ml-0.5 text-destructive">
+      *
+    </span>
+  );
+}
+
+export function Field({ id, label, note, required, error, children, className }: FieldProps) {
   return (
     <div className={cn("space-y-2", className)}>
       <Label htmlFor={id} className="flex items-baseline gap-2">
-        <span>{label}</span>
+        <span>
+          {label}
+          {required && <RequiredMark />}
+        </span>
         {note && <span className="font-body text-xs normal-case tracking-normal text-fg-subtle">{note}</span>}
       </Label>
       {children}
@@ -54,13 +68,17 @@ interface SegmentedRadioProps {
   options: readonly Option[];
   value: string;
   onChange: (value: string) => void;
+  required?: boolean;
 }
 
-export function SegmentedRadio({ name, label, options, value, onChange }: SegmentedRadioProps) {
+export function SegmentedRadio({ name, label, options, value, onChange, required }: SegmentedRadioProps) {
   return (
     <fieldset className="min-w-0">
-      <legend className="t-accent mb-2 block text-[0.68rem] text-fg-muted">{label}</legend>
-      <div className="grid grid-cols-3 gap-1.5 sm:gap-2">
+      <legend className="t-accent mb-2 block text-[0.68rem] text-fg-muted">
+        {label}
+        {required && <RequiredMark />}
+      </legend>
+      <div className={cn("grid gap-1.5 sm:gap-2", options.length === 2 ? "grid-cols-2" : "grid-cols-3")}>
         {options.map((o) => (
           <label key={o.value} className="relative block cursor-pointer">
             <input
@@ -102,10 +120,11 @@ interface StepperProps {
   onChange: (value: number) => void;
   decrementLabel: string;
   incrementLabel: string;
+  required?: boolean;
 }
 
 export const Stepper = forwardRef<HTMLDivElement, StepperProps>(function Stepper(
-  { id, label, value, min, max, onChange, decrementLabel, incrementLabel },
+  { id, label, value, min, max, onChange, decrementLabel, incrementLabel, required },
   ref
 ) {
   const btn =
@@ -114,6 +133,7 @@ export const Stepper = forwardRef<HTMLDivElement, StepperProps>(function Stepper
     <div className="min-w-0">
       <span id={`${id}-label`} className="t-accent mb-2 block text-[0.68rem] text-fg-muted">
         {label}
+        {required && <RequiredMark />}
       </span>
       <div
         ref={ref}

@@ -9,6 +9,8 @@ export interface RsvpPayload {
   guests: number;
   /** Which time slot the guest picked (e.g. "630-730am"). */
   slot: string;
+  /** Which activity the guest is here for (e.g. "pickle", "pilates", "both", "matcha"). */
+  interest: string;
   message: string;
   /** Which colour palette the guest submitted from — handy analytics for the client. */
   theme?: string;
@@ -50,5 +52,32 @@ export async function submitRsvp(payload: RsvpPayload): Promise<void> {
     headers: { "Content-Type": "application/json", Accept: "application/json" },
     body: JSON.stringify(payload),
   });
-  if (!res.ok) throw new Error(`Guest endpoint ${res.status}`);
+  if (!res.ok) {
+    const data = await res.json().catch(() => null);
+    throw new Error((data && typeof data.error === "string" && data.error) || `Guest endpoint ${res.status}`);
+  }
+}
+
+/** Per-slot registration counts, for greying out full slots in the form. */
+export interface SlotAvailability {
+  capacity: number;
+  counts: Record<string, number>;
+}
+
+/**
+ * Reads how full each time slot is from the same PHP endpoint `submitRsvp`
+ * posts to (mode "endpoint" only — mock/formsubmit modes have no backend to ask).
+ */
+export async function fetchSlotAvailability(): Promise<SlotAvailability | null> {
+  const { mode, endpoint } = rsvp.submission;
+  if (mode !== "endpoint" || !endpoint) return null;
+
+  try {
+    const url = endpoint.replace(/rsvp_submit\.php$/, "slot_availability.php");
+    const res = await fetch(url, { headers: { Accept: "application/json" } });
+    if (!res.ok) return null;
+    return (await res.json()) as SlotAvailability;
+  } catch {
+    return null;
+  }
 }
