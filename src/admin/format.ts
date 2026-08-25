@@ -5,10 +5,10 @@ export const SLOT_LABELS: Record<string, string> = {
 };
 
 export const INTEREST_LABELS: Record<string, string> = {
-  pickle: "Pickle",
-  pilates: "Pilates",
-  both: "Want to try both",
-  matcha: "Just matcha",
+  pickle: "For pickleball",
+  pilates: "For Pilates",
+  both: "To try both",
+  matcha: "Just for matcha and Ube",
 };
 
 export const METHOD_LABELS: Record<string, string> = {

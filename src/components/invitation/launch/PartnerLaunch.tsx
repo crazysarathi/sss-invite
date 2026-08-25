@@ -308,11 +308,14 @@ export function PartnerLaunch() {
   return (
     <div ref={ref} className="mt-8 grid gap-5 sm:grid-cols-2 md:mt-12 md:gap-6">
       <LaunchCard seed={4} kicker={partnersReveal.logoKicker} className="relative overflow-hidden">
-        {/* Just the crest — the hosts asked for the logo alone, nothing written under it. */}
+        {/* Just the crest — the hosts asked for the logo alone, nothing written
+            under it, and re-inked in the site's colours rather than its own. */}
         <img
           data-crest
-          src={brand.hostCrest}
+          src={brand.hostCrestTinted}
           alt={brand.host}
+          width={352}
+          height={405}
           decoding="async"
           className="h-36 w-36 object-contain [filter:drop-shadow(0_10px_12px_rgb(var(--c-overlay)/0.18))] sm:h-40 sm:w-40"
         />

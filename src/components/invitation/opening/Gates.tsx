@@ -5,6 +5,7 @@ import { cn } from "@/lib/utils";
 import { BallGlyph } from "@/components/shared/Glyphs";
 import { Watercolor } from "@/components/stationery/Watercolor";
 import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
+import { opening } from "@/data/siteData";
 import type { ThemeThree } from "@/themes/types";
 
 /* The 3D seal is code-split: the SVG glyph stands in until three loads. */
@@ -80,26 +81,33 @@ interface SealProps {
 
 /**
  * The pickleball seal — the 3D ball held in an engraved ring medallion,
- * sitting on the seam like a wax seal. The timeline pops the ring away
- * ([data-ring]) and serves the ball off ([data-ball]) on open.
+ * sitting on the seam like a wax seal. "Open invitation" runs along the
+ * lower arc of the ring, medallion-style, so the seal is its own call to
+ * action. The timeline pops the ring away ([data-ring]) and serves the
+ * ball off ([data-ball]) on open.
  */
 export function SealBall({ palette }: SealProps) {
   // Don't even start fetching three.js until the main thread is idle — the
   // glyph opens the show, the 3D ball takes over as soon as it's cheap to.
   const enhanced = useIdleReady();
   return (
-    <span className="relative block h-[5.25rem] w-[5.25rem] sm:h-28 sm:w-28 md:h-32 md:w-32">
-      {/* engraved ring */}
+    <span className="relative block h-24 w-24 sm:h-28 sm:w-28 md:h-32 md:w-32">
+      {/* engraved ring — outer hairline, the "Open invitation" band, inner hairline */}
       <svg
         data-ring
         aria-hidden="true"
         focusable="false"
         viewBox="0 0 100 100"
-        className="absolute -inset-2 h-[calc(100%+1rem)] w-[calc(100%+1rem)] text-accent"
+        className="absolute -inset-4 h-[calc(100%+2rem)] w-[calc(100%+2rem)] text-accent"
       >
-        <circle cx="50" cy="50" r="48" fill="none" stroke="currentColor" strokeOpacity="0.7" vectorEffect="non-scaling-stroke" />
-        <circle cx="50" cy="50" r="42.5" fill="none" stroke="currentColor" strokeOpacity="0.32" vectorEffect="non-scaling-stroke" />
-        {[0, 90, 180, 270].map((deg) => (
+        <defs>
+          {/* left → bottom → right, so the label reads upright along the lower arc */}
+          <path id="seal-arc" d="M 8 50 A 42 42 0 0 0 92 50" />
+        </defs>
+        <circle cx="50" cy="50" r="48.5" fill="none" stroke="currentColor" strokeOpacity="0.7" vectorEffect="non-scaling-stroke" />
+        <circle cx="50" cy="50" r="35.5" fill="none" stroke="currentColor" strokeOpacity="0.32" vectorEffect="non-scaling-stroke" />
+        {/* studs at top, left and right — the label takes the bottom */}
+        {[0, 90, 270].map((deg) => (
           <rect
             key={deg}
             x="47.8"
@@ -111,6 +119,20 @@ export function SealBall({ palette }: SealProps) {
             transform={`rotate(45 50 4.8) rotate(${deg} 50 50)`}
           />
         ))}
+        <text
+          fill="rgb(var(--c-primary))"
+          dominantBaseline="central"
+          style={{
+            fontFamily: "var(--font-accent)",
+            fontWeight: "var(--accent-weight)" as never,
+            fontSize: "7px",
+            letterSpacing: "0.22em",
+          }}
+        >
+          <textPath href="#seal-arc" startOffset="50%" textAnchor="middle">
+            {opening.cta.toUpperCase()}
+          </textPath>
+        </text>
       </svg>
 
       {/* the ball itself (flies off on open) */}

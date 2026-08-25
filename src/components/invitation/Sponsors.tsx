@@ -23,6 +23,27 @@ const AUTOPLAY_MS = 3500;
  * on hover/touch and while off-screen. A sponsor without a logo file yet
  * falls back to its name.
  */
+/**
+ * Pages are measured, not counted: CSS decides how many medallions fit per
+ * view. CEIL, not round — with 17 partners at four per page the last page
+ * is a quarter full, and rounding 4.25 down to 4 dropped Yococo (the last
+ * one) off the end of the slider entirely.
+ */
+function pageCountOf(el: HTMLElement): number {
+  return Math.max(1, Math.ceil(el.scrollWidth / el.clientWidth - 0.05));
+}
+
+/**
+ * The page the track is showing. The scroll range clamps short of a full
+ * last page (see above), so "at the end" counts as the last page rather than
+ * rounding back to the previous one — otherwise the last dot never lights and
+ * autoplay gets stuck trying to advance from a page it can never reach.
+ */
+function pageOf(el: HTMLElement, count: number): number {
+  if (el.scrollLeft >= el.scrollWidth - el.clientWidth - 2) return count - 1;
+  return Math.min(count - 1, Math.round(el.scrollLeft / el.clientWidth));
+}
+
 export function Sponsors() {
   const sectionRef = useRef<HTMLElement>(null);
   const trackRef = useRef<HTMLDivElement>(null);
@@ -34,11 +55,9 @@ export function Sponsors() {
   const updateState = useCallback(() => {
     const el = trackRef.current;
     if (!el || el.clientWidth === 0) return;
-    const count = Math.max(1, Math.round(el.scrollWidth / el.clientWidth));
+    const count = pageCountOf(el);
     setPageCount(count);
-    setActivePage(
-      Math.min(count - 1, Math.round(el.scrollLeft / el.clientWidth)),
-    );
+    setActivePage(pageOf(el, count));
   }, []);
 
   useEffect(() => {
@@ -73,7 +92,7 @@ export function Sponsors() {
     const t = window.setInterval(() => {
       const el = trackRef.current;
       if (!el) return;
-      const next = (Math.round(el.scrollLeft / el.clientWidth) + 1) % pageCount;
+      const next = (pageOf(el, pageCount) + 1) % pageCount;
       el.scrollTo({
         left: next * el.clientWidth,
         behavior: next === 0 ? "auto" : "smooth",

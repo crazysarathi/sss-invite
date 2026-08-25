@@ -2,7 +2,6 @@ import { useCallback, useEffect, useLayoutEffect, useRef, useState } from "react
 import { brand, dateLine, event, footer, opening } from "@/data/siteData";
 import { prefersReducedMotion } from "@/lib/utils";
 import { useTheme } from "@/components/theme/ThemeProvider";
-import { Button } from "@/components/ui/button";
 import { Kicker } from "@/components/shared/Kicker";
 import type { ThemeDefinition } from "@/themes/types";
 import { GateDoors, SealBall } from "./opening/Gates";
@@ -55,7 +54,8 @@ interface OpeningScreenProps {
  * Contract:
  *   - locks document scroll while up (restored on finish / unmount);
  *   - reduced motion → renders nothing, `onOpen()` + `onComplete()` at once;
- *   - the seal itself is the gate (a real button), plus the text button;
+ *   - the seal itself is the gate (a real button; "Open invitation" runs
+ *     around its ring), and a tap anywhere on the doors opens too;
  *     Enter / Space open, Escape (or a second tap) skips to the end;
  *   - `onOpen()` fires once when the exit begins, `onComplete()` once when it
  *     has finished — never the other way round.
@@ -204,7 +204,7 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
             type="button"
             aria-label="Open the invitation"
             // Focus lands here on mount: a hairline ring well outside the medallion.
-            className="relative block cursor-pointer rounded-full focus-visible:outline-1 focus-visible:outline-primary/70 focus-visible:[outline-offset:12px]"
+            className="relative my-3 block cursor-pointer rounded-full focus-visible:outline-1 focus-visible:outline-primary/70 focus-visible:[outline-offset:22px]"
             onPointerEnter={(e) => e.pointerType === "mouse" && stage.hover(true)}
             onPointerLeave={(e) => e.pointerType === "mouse" && stage.hover(false)}
           >
@@ -225,16 +225,6 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
             <span className="t-label block text-[0.62rem] leading-relaxed md:text-[0.7rem]">
               {dateLine()} · {event.venue.name}
             </span>
-          </div>
-
-          <div data-gate className="flex flex-col items-center gap-3 text-center sm:gap-4">
-            <Button type="button" variant="outline" className="min-w-44">
-              {opening.cta}
-            </Button>
-            <p data-hint className="t-label">
-              <span>{opening.hint}</span>
-              <span className="hidden md:inline"> · {opening.skipHint}</span>
-            </p>
           </div>
 
           <p data-host className="t-label">

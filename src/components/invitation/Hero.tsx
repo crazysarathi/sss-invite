@@ -280,7 +280,7 @@ export function Hero({ booted }: HeroProps) {
                   target="_blank"
                   rel="noopener noreferrer"
                   aria-label={social.follow.ariaLabel}
-                  className="t-accent inline-flex max-w-full items-center gap-2 rounded-full border border-primary/40 bg-primary/[0.07] px-4 py-1.5 text-[0.68rem] text-primary transition-colors duration-micro ease-theme hover:border-primary hover:bg-primary hover:text-primary-foreground sm:text-[0.72rem]"
+                  className="t-accent inline-flex max-w-full items-center gap-2 rounded-full border border-primary bg-primary/[0.18] px-4 py-1.5 text-[0.68rem] text-fg transition-colors duration-micro ease-theme hover:border-primary hover:bg-primary hover:text-primary-foreground sm:text-[0.72rem]"
                 >
                   <Instagram aria-hidden="true" className="size-[1.25em] shrink-0" />
                   <span className="truncate">

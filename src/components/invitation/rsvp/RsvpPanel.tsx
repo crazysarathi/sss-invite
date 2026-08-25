@@ -354,14 +354,21 @@ export function RsvpPanel({ onSuccess, className }: RsvpPanelProps) {
                 ))}
               </SelectContent>
             </Select>
+            {/* The client's rule, kept in the reader's eye-line — a highlighted, bold strip under the select. */}
+            <p
+              id={id("interest-note")}
+              className="rounded-field border-l-[3px] border-accent bg-accent/25 px-3 py-2 text-[0.82rem] font-semibold leading-snug text-fg"
+            >
+              {fields.interest.note}
+            </p>
           </Field>
 
           <Field id={id("message")} label={fields.message.label}>
             <Textarea
               id={id("message")}
-              className={cn(FIELD_BORDER, "min-h-[5.25rem]")}
+              className={cn(FIELD_BORDER, "min-h-0 py-2.5")}
               name="message"
-              rows={3}
+              rows={2}
               placeholder={fields.message.placeholder}
               value={values.message}
               onChange={(e) => update("message", e.target.value)}

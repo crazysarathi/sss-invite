@@ -182,11 +182,14 @@
     font-weight: calc(var(--display-weight) - 100);
   }
 
-  /* Calligraphic accent — "with Matcha & Ube bar", sign-offs. Never for labels. */
+  /* Calligraphic accent — "with Matcha & Ube Bar", sign-offs. Never for labels.
+     The swash capitals (M, U) reach back over the word before them, so words
+     get extra air to keep "with" and "&" clear. */
   .t-script {
     font-family: var(--font-script);
     font-weight: var(--script-weight);
     letter-spacing: 0;
+    word-spacing: 0.32em;
     text-transform: none;
     line-height: 1.15;
   }

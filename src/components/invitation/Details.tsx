@@ -10,6 +10,7 @@ import { MatchaGlyph, MatGlyph, PaddleGlyph } from "@/components/shared/Glyphs";
 import { Watercolor } from "@/components/stationery/Watercolor";
 import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 import { Flourish, TornCard } from "@/components/stationery/Ornaments";
+import { Button } from "@/components/ui/button";
 
 /**
  * Details — where, when, what — three pieces of torn paper on a
@@ -74,15 +75,13 @@ export function Details() {
           <DetailCard seed={4} icon={<MapPin aria-hidden="true" className="h-5 w-5" />} label={details.location.label}>
             <p className="t-display text-[1.4rem] leading-tight text-fg md:text-[1.7rem]">{event.venue.name}</p>
             <p className="t-accent mt-1.5 text-[0.7rem] text-fg-muted md:text-[0.76rem]">{event.venue.city}</p>
-            <a
-              href={event.venue.mapsUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="t-accent group/link mt-5 inline-flex items-center gap-1.5 text-[0.76rem] text-primary"
-            >
-              <span className="t-underline">{details.location.cta}</span>
-              <ArrowUpRight aria-hidden="true" className="h-3.5 w-3.5 transition-transform duration-micro ease-theme group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
-            </a>
+            {/* a real button, not a text link — the client wants it seen at a glance */}
+            <Button asChild size="sm" className="group/link mt-5 min-w-[11rem] font-semibold">
+              <a href={event.venue.mapsUrl} target="_blank" rel="noopener noreferrer">
+                {details.location.cta}
+                <ArrowUpRight aria-hidden="true" className="transition-transform duration-micro ease-theme group-hover/link:-translate-y-0.5 group-hover/link:translate-x-0.5" />
+              </a>
+            </Button>
           </DetailCard>
 
           <DetailCard seed={8} icon={<CalendarDays aria-hidden="true" className="h-5 w-5" />} label={details.date.label} pulse={event.dateStatus === "tba"}>

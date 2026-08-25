@@ -27,11 +27,9 @@ export function Footer() {
           <ScrollReveal delay={0.1}>
             <Flourish className="mt-5" />
           </ScrollReveal>
-          <AnimatedText as="p" className="t-display mt-6 text-display-md text-fg">
-            {footer.lines[0]} <em className="text-primary">{footer.lines[1]}</em>
-          </AnimatedText>
-
-          <ScrollReveal delay={0.2} className="mt-10 flex flex-col items-center gap-5 md:mt-14">
+          {/* The crest and "Hosted by" lead, straight under the script — the
+              client dropped the "See you on the court" lines in their favour. */}
+          <ScrollReveal delay={0.2} className="mt-8 flex flex-col items-center gap-4 md:mt-10">
             <img
               src={brand.hostCrest}
               alt={brand.host}
@@ -39,19 +37,21 @@ export function Footer() {
               height={83}
               loading="lazy"
               decoding="async"
-              className="h-16 w-16 object-contain md:h-[4.5rem] md:w-[4.5rem]"
+              className="h-[4.5rem] w-[4.5rem] object-contain md:h-20 md:w-20"
             />
             <p className="t-accent text-[0.78rem] text-fg-muted">
               {footer.hostedBy} {brand.host}
             </p>
+            <p className="t-display max-w-md text-balance text-[1.35rem] font-semibold leading-snug text-primary md:text-[1.6rem]">
+              {footer.secureLine}
+            </p>
             {/* the goodie-bag / QR note — the client's closing message */}
-            <div className="max-w-md">
-              <p className="t-display text-[1.05rem] text-fg md:text-[1.15rem]">{footer.goodieBag.title}</p>
-              {footer.goodieBag.lines.map((line) => (
-                <p key={line} className="mt-1.5 text-balance text-sm text-fg-muted md:text-[0.95rem]">
-                  {line}
-                </p>
-              ))}
+            <div className="mt-2 max-w-md">
+              <p className="t-display text-[1.35rem] font-bold leading-tight text-fg md:text-[1.5rem]">{footer.goodieBag.title}</p>
+              <p className="mt-2 text-balance text-sm text-fg-muted md:text-[0.95rem]">
+                <strong className="font-semibold text-fg">{footer.goodieBag.line.lead}</strong>
+                {footer.goodieBag.line.rest}
+              </p>
             </div>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <Button asChild variant="outline">

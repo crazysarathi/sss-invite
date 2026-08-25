@@ -62,7 +62,7 @@ const html = `<!doctype html>
     <div class="left">
       <p class="kicker">YOU'RE INVITED</p>
       <h1>Pickle <em>&amp;</em> Pilates</h1>
-      <p class="script">with Matcha &amp; Ube bar</p>
+      <p class="script">with Matcha &amp; Ube Bar</p>
       <div class="rule"></div>
       <p class="facts">A WELLNESS EXPERIENCE<br>
         <span class="date">29TH AUGUST, SATURDAY</span><br>
