@@ -1,4 +1,5 @@
 import { lazy, Suspense, useCallback, useRef, useState, type CSSProperties, type ReactNode } from "react";
+import { Lock } from "lucide-react";
 import { gsap, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { sound } from "@/lib/audio";
@@ -309,16 +310,26 @@ export function PartnerLaunch() {
     <div ref={ref} className="mt-8 grid gap-5 sm:grid-cols-2 md:mt-12 md:gap-6">
       <LaunchCard seed={4} kicker={partnersReveal.logoKicker} className="relative overflow-hidden">
         {/* Just the crest — the hosts asked for the logo alone, nothing written
-            under it, and re-inked in the site's colours rather than its own. */}
-        <img
-          data-crest
-          src={brand.hostCrestTinted}
-          alt={brand.host}
-          width={352}
-          height={405}
-          decoding="async"
-          className="h-36 w-36 object-contain [filter:drop-shadow(0_10px_12px_rgb(var(--c-overlay)/0.18))] sm:h-40 sm:w-40"
-        />
+            under it, re-inked in the site's colours rather than its own, and
+            (client, 2026-08-25) BLURRED under a bright lock: the real logo is
+            revealed on launch day. The float tween targets the wrapper so the
+            lock rides with the crest. */}
+        <div data-crest className="relative h-36 w-36 sm:h-40 sm:w-40">
+          <img
+            src={brand.hostCrestTinted}
+            alt={brand.host}
+            width={352}
+            height={405}
+            decoding="async"
+            className="h-full w-full object-contain opacity-90 [filter:blur(5px)_drop-shadow(0_10px_12px_rgb(var(--c-overlay)/0.18))]"
+          />
+          <span
+            aria-hidden="true"
+            className="absolute left-1/2 top-1/2 flex h-16 w-16 -translate-x-1/2 -translate-y-1/2 items-center justify-center rounded-full bg-accent text-fg shadow-[0_0_0_5px_rgb(var(--c-bg)/0.9),0_10px_24px_rgb(var(--c-overlay)/0.25)] sm:h-[4.5rem] sm:w-[4.5rem]"
+          >
+            <Lock strokeWidth={2.4} className="h-8 w-8 sm:h-9 sm:w-9" />
+          </span>
+        </div>
 
         {/* The curtains: a pelmet across the top with a scalloped hem, and
             two pleated panels in the house wisteria that gather to each

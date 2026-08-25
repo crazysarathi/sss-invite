@@ -23,6 +23,7 @@ import mahendraLogo from "@/assets/partners/mahendra.png";
 import megawinLogo from "@/assets/partners/megawin.webp";
 import venusEstatesLogo from "@/assets/partners/venus-estates.webp";
 import technosportLogo from "@/assets/partners/technosport.png";
+import elbritLogo from "@/assets/partners/elbrit.webp";
 import yabaLogo from "@/assets/partners/yaba.webp";
 import armoraaLogo from "@/assets/partners/armoraa.png";
 import gurkhaSponsorLogo from "@/assets/partners/gurkha.svg";
@@ -189,6 +190,7 @@ export const sponsors: readonly Sponsor[] = [
   { name: "Megawin", role: "Official Energy Partner", logo: megawinLogo },
   { name: "Venus Estates", role: "Official Lifestyle Properties Partner", logo: venusEstatesLogo, scale: 0.68 },
   { name: "Technosport", role: "Official Activewear Partner", logo: technosportLogo },
+  { name: "Elbrit", role: "Official Performance Partner", logo: elbritLogo },
   { name: "Yaba", role: "Official Paddle Partner", logo: yabaLogo, scale: 0.8 },
   { name: "Armoraa", role: "Official Skin & Wellness Partner", logo: armoraaLogo },
   { name: "Gurkha", role: "Official Fitness Gear Partner", logo: gurkhaSponsorLogo },
