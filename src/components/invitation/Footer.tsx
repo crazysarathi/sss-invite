@@ -33,11 +33,11 @@ export function Footer() {
             <img
               src={brand.hostCrest}
               alt={brand.host}
-              width={72}
-              height={83}
+              width={352}
+              height={405}
               loading="lazy"
               decoding="async"
-              className="h-[4.5rem] w-[4.5rem] object-contain md:h-20 md:w-20"
+              className="h-28 w-28 object-contain md:h-36 md:w-36"
             />
             <p className="t-accent text-[0.78rem] text-fg-muted">
               {footer.hostedBy} {brand.host}
