@@ -4,7 +4,7 @@
  * This mirrors the content the hosts sent (and nothing more):
  *
  *   Pickle & Pilates with Matcha & Ube bar
- *   A wellness experience
+ *   A Private, Ticketed Experience
  *   Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Wellness Bar
  *   Location: Forest Hills Country Club
  *   Date: 29th August, Saturday
@@ -42,7 +42,7 @@ export const brand = {
   /** Split for display type: ["Pickle", "&", "Pilates"]. */
   nameParts: ["Pickle", "&", "Pilates"] as const,
   subline: "with Matcha & Ube bar",
-  tagline: "A wellness experience",
+  tagline: "A Private, Ticketed Experience",
   host: "Salem Super Smashers",
   hostShort: "SSS",
   /** The hosts' crest, cut out to a transparent SVG (no card, no border). */
@@ -60,7 +60,7 @@ export const brand = {
 export const meta = {
   title: "Pickle & Pilates — You're Invited | Salem Super Smashers",
   description:
-    "Pickle & Pilates with Matcha & Ube bar — a wellness experience by Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Wellness Bar at Forest Hills Country Club, Salem — 29th August, Saturday.",
+    "Pickle & Pilates with Matcha & Ube bar — a private, ticketed experience by Salem Super Smashers × Gurkha Life × The Tens Movement Lab × Wellness Bar at Forest Hills Country Club, Salem — 29th August, Saturday.",
   url: "https://sss.botify.in/pickle-and-pilates/",
 } as const;
 
@@ -162,6 +162,12 @@ export interface Sponsor {
    * inside the inscribed circle.
    */
   fill?: true;
+  /**
+   * Shrink the artwork inside its slot (1 = fill the slot). For marks that
+   * read too large next to their neighbours — client asked for Venus
+   * Estates to sit smaller.
+   */
+  scale?: number;
 }
 
 export const sponsorsSection = {
@@ -173,7 +179,7 @@ export const sponsors: readonly Sponsor[] = [
   { name: "SKS Hospital", role: "Official Health Care Partner", logo: sksHospitalLogo },
   { name: "Mahendra", role: "Official Education Partner", logo: mahendraLogo },
   { name: "Megawin", role: "Official Energy Partner", logo: megawinLogo },
-  { name: "Venus Estates", role: "Official Lifestyle Properties Partner", logo: venusEstatesLogo },
+  { name: "Venus Estates", role: "Official Lifestyle Properties Partner", logo: venusEstatesLogo, scale: 0.68 },
   { name: "Technosport", role: "Official Activewear Partner", logo: technosportLogo },
   { name: "Armoraa", role: "Official Skin & Wellness Partner", logo: armoraaLogo },
   { name: "Gurkha", role: "Official Fitness Gear Partner", logo: gurkhaSponsorLogo },
@@ -233,7 +239,8 @@ export const rsvp = {
   id: "register",
   kicker: "Join us",
   title: "Save your spot",
-  lead: "Leave your details — we'll share everything you need to know with you first.",
+  /** Client's wording, 2026-08-25. */
+  lead: "If you'd like to attend, express your interest below and we'll share the details with you personally.",
   fields: {
     name: { label: "Full name", placeholder: "Your name" },
     email: { label: "Email", placeholder: "you@example.com" },
@@ -316,6 +323,17 @@ export const footer = {
   /** Script sign-off. */
   script: "Celebrate this experience with us",
   lines: ["See you on the court.", "And on the mat."],
+  /**
+   * Client's wording, 2026-08-25 — replaces the "host × partners" line
+   * under the crest (that list still heads the hero).
+   */
+  goodieBag: {
+    title: "Your Goodie Bag Awaits 🎁",
+    lines: [
+      "Register for the event and receive your personal QR code.",
+      "Simply present your QR code at the Registration Desk on the day of the event to collect yours.",
+    ],
+  },
   directionsCta: "Get directions",
   copyright: "© 2026 Salem Super Smashers · Pickle & Pilates",
 } as const;

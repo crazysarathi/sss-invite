@@ -1,7 +1,7 @@
 # Pickle & Pilates — Digital Invitation
 
 A simple, animated, single-page invitation for **Pickle & Pilates with Matcha
-& Ube bar** — a wellness experience by **Salem Super Smashers × Gurkha Life ×
+& Ube bar** — a private, ticketed experience by **Salem Super Smashers × Gurkha Life ×
 The Tens Movement Lab × Cha Wellness** at Forest Hills Country Club, Salem, on
 **29th August, Saturday**.
 
@@ -25,7 +25,7 @@ the theme tokens (the crest is the one fixed image asset, a transparent SVG).
    with a spin and the doors swing apart to reveal the page.
 2. **Hero — the invitation card** — a framed paper card: the hosts' crest,
    "You're invited to", *Pickle & Pilates*, "with Matcha & Ube bar" in script,
-   flourish, "A wellness experience", the four hosts, "Save the date · 29th
+   flourish, "A Private, Ticketed Experience", the four hosts, "Save the date · 29th
    August, Saturday", venue, buttons. Behind it the court lines draw themselves
    in; a 3D pickleball drops and bounces to rest on the card's corner; the
    title springs up letter by letter. On scroll the ball rolls away and the

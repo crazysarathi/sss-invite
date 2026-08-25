@@ -202,6 +202,13 @@ export function Sponsors() {
                                 "absolute inset-0 h-full w-full object-cover"
                               : "max-h-full max-w-full object-contain",
                           )}
+                          style={
+                            // per-logo shrink (siteData `scale`) — sizes the box
+                            // rather than transforming, so hover scale still works
+                            sponsor.scale && !sponsor.fill
+                              ? { maxWidth: `${sponsor.scale * 100}%`, maxHeight: `${sponsor.scale * 100}%` }
+                              : undefined
+                          }
                         />
                       ) : (
                         <p className="t-accent text-center text-[0.78rem] leading-snug text-fg-muted">

@@ -44,14 +44,15 @@ export function Footer() {
             <p className="t-accent text-[0.78rem] text-fg-muted">
               {footer.hostedBy} {brand.host}
             </p>
-            <p className="max-w-xl text-balance">
-              {brand.partners.map((p, i) => (
-                <span key={p.name} className="inline-block whitespace-nowrap">
-                  {i > 0 && <span className="mx-2 text-primary">×</span>}
-                  <span className="t-display text-[0.98rem] text-fg md:text-[1.1rem]">{p.name}</span>
-                </span>
+            {/* the goodie-bag / QR note — the client's closing message */}
+            <div className="max-w-md">
+              <p className="t-display text-[1.05rem] text-fg md:text-[1.15rem]">{footer.goodieBag.title}</p>
+              {footer.goodieBag.lines.map((line) => (
+                <p key={line} className="mt-1.5 text-balance text-sm text-fg-muted md:text-[0.95rem]">
+                  {line}
+                </p>
               ))}
-            </p>
+            </div>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <Button asChild variant="outline">
                 <a href={event.venue.mapsUrl} target="_blank" rel="noopener noreferrer">
