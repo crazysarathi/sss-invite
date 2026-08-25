@@ -9,7 +9,7 @@ import { cn } from "@/lib/utils";
  */
 
 /* ------------------------------------------------------------------ */
-/* Jersey — a sleeveless court jersey with a v-neck and a crest badge   */
+/* Jersey — a sleeveless court jersey with a v-neck                     */
 /* ------------------------------------------------------------------ */
 export function JerseyMark({ className, ...props }: SVGProps<SVGSVGElement>) {
   return (
@@ -45,17 +45,6 @@ export function JerseyMark({ className, ...props }: SVGProps<SVGSVGElement>) {
       {/* sleeve + hem trim */}
       <path d="M168 58 L188 70 M32 58 L12 70" stroke="rgb(var(--c-secondary))" strokeWidth="5" strokeLinecap="round" fill="none" />
       <path d="M40 196 L160 196" stroke="rgb(var(--c-secondary))" strokeWidth="5" strokeLinecap="round" />
-      {/* crest badge — the same five-dot motif as the invitation's flourish */}
-      <g transform="translate(100 108)">
-        <circle r="17" fill="rgb(var(--c-surface))" stroke="rgb(var(--c-accent))" strokeWidth="3" />
-        <g fill="rgb(var(--c-accent))">
-          <circle cx="0" cy="-7" r="2.1" />
-          <circle cx="-6.5" cy="-1" r="2.1" />
-          <circle cx="6.5" cy="-1" r="2.1" />
-          <circle cx="-3.8" cy="6.5" r="2.1" />
-          <circle cx="3.8" cy="6.5" r="2.1" />
-        </g>
-      </g>
     </svg>
   );
 }

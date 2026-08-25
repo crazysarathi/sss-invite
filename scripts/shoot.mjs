@@ -18,7 +18,7 @@ const DESKTOP_ONLY = flags.includes("--desktop");
 const BASE = process.env.SHOOT_URL || "http://localhost:4173/";
 const ALL = ["wisteria"];
 const PALETTES = paletteArg === "all" ? ALL : [paletteArg];
-const SECTIONS = ["hero", "hosts", "partners-reveal", "details", "action", "register", "footer"];
+const SECTIONS = ["hero", "hosts", "partners-reveal", "details", "action", "sponsors", "register", "footer"];
 
 const sleep = (ms) => new Promise((r) => setTimeout(r, ms));
 

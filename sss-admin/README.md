@@ -25,10 +25,11 @@ panel share one URL — the panel lives at `/sss-admin`, its API at
    - Real files under `sss-admin/api/*.php` execute as PHP, as normal.
    - Everything else that isn't a real file (`/sss-admin`, `/sss-admin/`,
      any client-side path) must fall back to the built `index.html`, same
-     as every other route on the site — there's no `sss-admin/index.php`
-     any more, the React app owns that route. This is the standard SPA
-     "try_files" rewrite most static hosts already do by default; just
-     make sure it isn't only scoped to the site root.
+     as every other route on the site — the React app owns that route, not
+     `sss-admin/index.php` (which exists only as a manual diagnostic page,
+     see below — it's never reached by normal navigation). This is the
+     standard SPA "try_files" rewrite most static hosts already do by
+     default; just make sure it isn't only scoped to the site root.
 
    For local testing, see "Local dev" below instead.
 
@@ -81,11 +82,23 @@ and `POST api/login.php` returns the same shape on success. The app sends
 that token back as `X-CSRF-Token` on every state-changing call
 (`*_save.php`, `*_delete.php`, `logout.php`) — see `src/admin/api.ts`.
 
+## Troubleshooting
+
+If API calls 500 in production (check the Network tab — a blank 500 body
+usually means the DB connection failed before any JSON could be sent),
+visit `/sss-admin/index.php` directly in the browser. It reports the PHP
+version, whether the `pdo_mysql` extension is loaded, and whether the DB
+credentials in `config.php` actually connect — with the real error message
+if not. The most common cause is `config.php` still having the local-dev
+placeholder credentials (`root`/`password`) instead of the real ones from
+your host's control panel. Delete `index.php` once things are working.
+
 ## Structure
 
 ```
 sss-admin/
   config.php          DB credentials + PDO connection + session bootstrap
+  index.php             Manual diagnostic page (PHP/DB status) — not app routing
   schema.sql           Tables: admin_users, users, payments
   includes/auth.php      current_admin() / require_api_auth() / require_csrf()
   api/

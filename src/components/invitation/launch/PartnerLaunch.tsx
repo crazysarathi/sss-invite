@@ -2,7 +2,8 @@ import { lazy, Suspense, useCallback, useRef, useState, type CSSProperties, type
 import { gsap, useGSAP } from "@/lib/gsap";
 import { cn, prefersReducedMotion } from "@/lib/utils";
 import { sound } from "@/lib/audio";
-import { brand, opening, partnersReveal } from "@/data/siteData";
+import { brand, partnersReveal } from "@/data/siteData";
+import technosportMark from "@/assets/partners/technosport-mark.png";
 import { useTheme, useThemeMotion } from "@/components/theme/ThemeProvider";
 import { useIdleReady } from "@/hooks/useIdleReady";
 import { useInViewport } from "@/hooks/useInViewport";
@@ -10,13 +11,27 @@ import { TornCard } from "@/components/stationery/Ornaments";
 import { Button } from "@/components/ui/button";
 import { MagneticButton } from "@/components/shared/MagneticButton";
 import { LazyBoundary } from "@/components/shared/LazyBoundary";
-import { PaddleSvg } from "@/components/sport/PaddleSvg";
 import { PickleballSvg } from "@/components/sport/PickleballSvg";
 import { GiftBoxMark, JerseyMark, SparkleMark } from "./GiftGlyphs";
+import { PlayersScene } from "./PlayersScene";
 
 const BallCanvas = lazy(() => import("@/components/three/BallCanvas"));
 
 const SLATS = 6;
+
+/** Curtain fabric: fine vertical pleats — a shadow fold and a lit fold per repeat. */
+const PLEATS: CSSProperties = {
+  backgroundImage:
+    "repeating-linear-gradient(90deg, rgb(var(--c-overlay) / 0.22) 0 3px, transparent 3px 8px, rgb(255 255 255 / 0.18) 8px 11px, transparent 11px 20px)",
+};
+/** The pelmet's scalloped hem — one half-disc per repeat. */
+const SCALLOPS: CSSProperties = {
+  backgroundImage: "radial-gradient(circle at 50% 0, rgb(var(--c-primary)) 0 62%, transparent 64%)",
+  backgroundSize: "22px 100%",
+};
+/** How far the ball flies between the two paddles, in ball widths. */
+const RALLY_X_PERCENT = 218;
+const RALLY_HALF = 0.5;
 const SPARKLE_SPOTS: readonly CSSProperties[] = [
   { top: "-8%", left: "8%" },
   { top: "-4%", right: "4%" },
@@ -29,9 +44,9 @@ const SPARKLE_SPOTS: readonly CSSProperties[] = [
 /**
  * The section that follows "Four collaborations. One experience." — the same
  * kind of plain card grid as the rest of the invitation (no slider, no
- * tap-through), just four set pieces: the host's crest, the team on court,
- * the four partners again up close, and a gift that opens on a callback to
- * the invitation itself. The cards rise in together on scroll; the gift is
+ * tap-through), just four set pieces: the host's crest behind a pair of
+ * curtains, the jersey, two players rallying on court, and a gift that
+ * opens on a callback to the invitation itself. The cards rise in together on scroll; the gift is
  * the one piece that stays interactive — tap it to open.
  */
 export function PartnerLaunch() {
@@ -54,33 +69,66 @@ export function PartnerLaunch() {
       if (!root || prefersReducedMotion()) return;
       const blocks = gsap.utils.toArray<HTMLElement>("[data-block]", root);
       if (!blocks.length) return;
-      const contents = gsap.utils.toArray<HTMLElement>("[data-content]", root);
 
-      gsap.fromTo(
-        blocks,
-        { autoAlpha: 0, y: motion.distance, scale: 0.92, rotate: (i: number) => (i % 2 === 0 ? -4 : 4) },
-        {
-          autoAlpha: 1,
-          y: 0,
-          scale: 1,
-          rotate: 0,
-          duration: motion.duration.base,
-          ease: motion.ease,
-          stagger: motion.stagger.items * 1.4,
-          clearProps: "transform",
-          scrollTrigger: { trigger: root, start: "top 75%", once: true },
-          onStart: () => {
-            if (contents.length) gsap.fromTo(contents, { scale: 0.9 }, { scale: 1, duration: motion.duration.base * 0.7, ease: "back.out(2.4)", stagger: motion.stagger.items * 1.4, delay: motion.duration.base * 0.35, clearProps: "transform" });
-          },
-          onComplete: () => {
-            const slats = gsap.utils.toArray<HTMLElement>("[data-slat]", root);
-            if (slats.length) gsap.to(slats, { scaleX: 0, duration: motion.duration.slow, ease: "power3.inOut", stagger: 0.08 });
-          },
+      // Each card gets its OWN tween (same stagger timing as before, via a
+      // per-index delay) so its door/slat reveal fires off ITS OWN landing —
+      // not the whole group's. Batching every card into one gsap.fromTo with
+      // stagger meant onComplete only fired once, after the LAST card
+      // finished, so an early card (e.g. the first) sat fully landed but
+      // inert for a beat before its doors even started moving — read as lag.
+      blocks.forEach((block, i) => {
+        const delay = i * motion.stagger.items * 1.4;
+
+        gsap.fromTo(
+          block,
+          { autoAlpha: 0, y: motion.distance, scale: 0.92, rotate: i % 2 === 0 ? -4 : 4 },
+          {
+            autoAlpha: 1,
+            y: 0,
+            scale: 1,
+            rotate: 0,
+            duration: motion.duration.base,
+            ease: motion.ease,
+            delay,
+            clearProps: "transform",
+            scrollTrigger: { trigger: root, start: "top 75%", once: true },
+            onComplete: () => {
+              const slats = gsap.utils.toArray<HTMLElement>("[data-slat]", block);
+              if (slats.length) gsap.to(slats, { scaleX: 0, duration: motion.duration.slow, ease: "power3.inOut", stagger: 0.08 });
+
+              // Curtains don't slide off — they gather: each panel squeezes
+              // toward its own edge (the pleats bunch up as scaleX drops)
+              // and stays there as a tied-back drape framing the crest.
+              const curtainLeft = block.querySelector<HTMLElement>("[data-curtain-left]");
+              const curtainRight = block.querySelector<HTMLElement>("[data-curtain-right]");
+              if (curtainLeft && curtainRight) {
+                const open = { scaleX: 0.13, duration: motion.duration.slow * 1.2, ease: "power3.inOut" };
+                gsap.to(curtainLeft, { ...open, transformOrigin: "left center" });
+                gsap.to(curtainRight, { ...open, transformOrigin: "right center" });
+              }
+            },
+          }
+        );
+
+        const content = block.querySelector<HTMLElement>("[data-content]");
+        if (content) {
+          gsap.fromTo(
+            content,
+            { scale: 0.9 },
+            {
+              scale: 1,
+              duration: motion.duration.base * 0.7,
+              ease: "back.out(2.4)",
+              delay: delay + motion.duration.base * 0.35,
+              clearProps: "transform",
+              scrollTrigger: { trigger: root, start: "top 75%", once: true },
+            }
+          );
         }
-      );
+      });
 
-      const watermark = root.querySelector("[data-watermark]");
-      if (watermark) gsap.to(watermark, { rotation: 4, scale: 1.05, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1 });
+      const crest = root.querySelector("[data-crest]");
+      if (crest) gsap.to(crest, { y: -6, duration: 2.6, ease: "sine.inOut", yoyo: true, repeat: -1 });
 
       const jerseyWrap = root.querySelector("[data-jersey-wrap]");
       if (jerseyWrap) gsap.to(jerseyWrap, { rotation: 3, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1, transformOrigin: "50% 100%" });
@@ -91,48 +139,65 @@ export function PartnerLaunch() {
     { scope: ref }
   );
 
-  // The "Player launch" card: instead of a static paddle-and-ball tableau,
-  // the paddle keeps bouncing the ball off its face — a solo warm-up drill,
-  // forever. One timeline owns the entrance *and* the loop so nothing fights
-  // over the same transforms; play/pause is driven by ballInView below.
+  // The "Player launch" card: two players rally the ball back and forth
+  // over the net, forever. One timeline owns the entrance *and* the loop so
+  // nothing fights over the same transforms; play/pause is driven by
+  // ballInView below. The ball is a separate element layered over the
+  // PlayersScene SVG; it flies between the two paddle faces in ball widths
+  // (xPercent), so the same numbers hold at every card size.
   useGSAP(
     () => {
       const root = ref.current;
       if (!root || prefersReducedMotion()) return;
-      const paddle = root.querySelector<HTMLElement>("[data-player-paddle]");
+      const left = root.querySelector<HTMLElement>("[data-player-left]");
+      const right = root.querySelector<HTMLElement>("[data-player-right]");
+      const paddleLeft = root.querySelector<HTMLElement>("[data-paddle-left]");
+      const paddleRight = root.querySelector<HTMLElement>("[data-paddle-right]");
       const ball = root.querySelector<HTMLElement>("[data-player-ball]");
-      const impactRing = root.querySelector<HTMLElement>("[data-player-impact]");
-      if (!paddle || !ball) return;
+      const ringLeft = root.querySelector<HTMLElement>("[data-player-impact-left]");
+      const ringRight = root.querySelector<HTMLElement>("[data-player-impact-right]");
+      if (!left || !right || !paddleLeft || !paddleRight || !ball) return;
 
-      gsap.set(paddle, { autoAlpha: 0, x: -26, rotate: -50 });
+      gsap.set(left, { autoAlpha: 0, x: -24 });
+      gsap.set(right, { autoAlpha: 0, x: 24 });
+      // Paddles pivot about the grip (bottom-centre of their own box).
+      gsap.set(paddleLeft, { rotation: 35, transformOrigin: "50% 100%" });
+      gsap.set(paddleRight, { rotation: -35, transformOrigin: "50% 100%" });
       gsap.set(ball, { autoAlpha: 0, y: -20, scale: 0.4 });
-      if (impactRing) gsap.set(impactRing, { autoAlpha: 0, scale: 0.3 });
+      for (const ring of [ringLeft, ringRight]) if (ring) gsap.set(ring, { autoAlpha: 0, scale: 0.3 });
 
       const tl = gsap.timeline({ paused: true, delay: motion.duration.base * 0.75 });
-      tl.to(paddle, { autoAlpha: 1, x: 0, rotate: -12, duration: 0.55, ease: "back.out(2)" }, 0).to(
-        ball,
-        { autoAlpha: 1, y: 0, scale: 1, duration: 0.5, ease: "bounce.out" },
-        0.3
-      );
+      tl.to(left, { autoAlpha: 1, x: 0, duration: 0.55, ease: "back.out(2)" }, 0)
+        .to(right, { autoAlpha: 1, x: 0, duration: 0.55, ease: "back.out(2)" }, 0.1)
+        .to(ball, { autoAlpha: 1, y: 0, scale: 1, duration: 0.5, ease: "bounce.out" }, 0.35);
 
-      // The bounce: a quick push off the paddle face sends the ball up,
-      // gravity brings it back down, and the paddle draws back just before
-      // the next hit — like warming up alone on court.
-      const loop = gsap.timeline({ repeat: -1, repeatDelay: 0.1 });
-      loop
-        .to(paddle, { rotate: -4, duration: 0.12, ease: "power2.out" }, 0)
-        .to(paddle, { rotate: -12, duration: 0.3, ease: motion.ease }, 0.12)
-        .to(paddle, { rotate: -16, duration: 0.3, ease: "power1.in" }, 0.6)
-        .to(ball, { y: -15, duration: 0.4, ease: "power2.out" }, 0)
-        .to(ball, { y: 0, duration: 0.5, ease: "power1.in" }, 0.4)
-        .set(ball, { scale: 0.85 }, 0)
-        .to(ball, { scale: 1, duration: 0.25, ease: "elastic.out(1, 0.5)" }, 0.02)
-        .call(() => sound.paddleHit(0.75), [], 0.001);
-      if (impactRing) {
+      // The rally: a forehand sends the ball in an arc over the net, the
+      // receiver blocks it straight back, and each player draws the paddle
+      // back while the ball is on its way over.
+      const H = RALLY_HALF;
+      const hit = (paddle: HTMLElement, player: HTMLElement, ring: HTMLElement | null, rest: number, at: number) => {
         loop
-          .set(impactRing, { autoAlpha: 0.6, scale: 0.3 }, 0)
-          .to(impactRing, { autoAlpha: 0, scale: 1.5, duration: 0.4, ease: "power2.out" }, 0.001);
-      }
+          .call(() => sound.paddleHit(0.7), [], at + 0.001)
+          .to(paddle, { rotation: rest * 0.55, duration: 0.16, ease: "power3.out" }, at)
+          .to(paddle, { rotation: rest, duration: 0.34, ease: "sine.inOut" }, at + 0.16)
+          .to(paddle, { rotation: rest * 1.7, duration: 0.3, ease: "power1.in" }, at + H + 0.15)
+          .to(player, { rotation: rest > 0 ? -4 : 4, transformOrigin: "50% 100%", duration: 0.14, ease: "power2.out" }, at)
+          .to(player, { rotation: 0, duration: 0.45, ease: "sine.inOut" }, at + 0.14);
+        if (ring) {
+          loop.set(ring, { autoAlpha: 0.6, scale: 0.3 }, at).to(ring, { autoAlpha: 0, scale: 1.5, duration: 0.4, ease: "power2.out" }, at + 0.001);
+        }
+      };
+      const loop = gsap.timeline({ repeat: -1 });
+      hit(paddleLeft, left, ringLeft, 35, 0);
+      loop
+        .to(ball, { xPercent: RALLY_X_PERCENT, duration: H, ease: "none" }, 0)
+        .to(ball, { y: -16, duration: H / 2, ease: "power2.out" }, 0)
+        .to(ball, { y: 3, duration: H / 2, ease: "power2.in" }, H / 2);
+      hit(paddleRight, right, ringRight, -35, H);
+      loop
+        .to(ball, { xPercent: 0, duration: H, ease: "none" }, H)
+        .to(ball, { y: -16, duration: H / 2, ease: "power2.out" }, H)
+        .to(ball, { y: 0, duration: H / 2, ease: "power2.in" }, H * 1.5);
       tl.add(loop, ">");
       playerLoopRef.current = tl;
 
@@ -238,21 +303,55 @@ export function PartnerLaunch() {
   return (
     <div ref={ref} className="mt-8 grid gap-5 sm:grid-cols-2 md:mt-12 md:gap-6">
       <LaunchCard seed={4} kicker={partnersReveal.logoKicker} className="relative overflow-hidden">
+        {/* Just the crest — the hosts asked for the logo alone, nothing written under it. */}
         <img
-          data-watermark
+          data-crest
           src={brand.hostCrest}
-          alt=""
-          aria-hidden="true"
+          alt={brand.host}
           decoding="async"
-          className="pointer-events-none absolute left-1/2 top-1/2 h-40 w-40 -translate-x-1/2 -translate-y-1/2 object-contain opacity-[0.12]"
+          className="h-36 w-36 object-contain [filter:drop-shadow(0_10px_12px_rgb(var(--c-overlay)/0.18))] sm:h-40 sm:w-40"
         />
-        <p className="t-display relative text-[1.7rem] leading-tight text-fg sm:text-[2rem]">{brand.host}</p>
-        <p className="t-accent relative text-[0.75rem] text-fg-muted">{brand.tagline}</p>
+
+        {/* The curtains: a pelmet across the top with a scalloped hem, and
+            two pleated panels in the house wisteria that gather to each
+            side once the card lands (see the open tween above). A chartreuse
+            trim runs along every hem. */}
+        <div aria-hidden="true" className="pointer-events-none absolute inset-x-0 top-0 z-20">
+          <div className="h-4 bg-primary" style={PLEATS} />
+          <div className="h-3 w-full" style={SCALLOPS} />
+          <span className="absolute inset-x-0 top-4 h-px bg-accent/80" />
+        </div>
+        <div
+          data-curtain-left
+          aria-hidden="true"
+          className={cn("pointer-events-none absolute inset-y-0 left-0 z-10 w-1/2 bg-primary", prefersReducedMotion() && "hidden")}
+          style={PLEATS}
+        >
+          <span className="pointer-events-none absolute inset-y-0 right-0 w-10 bg-gradient-to-l from-overlay/[0.2] to-transparent" />
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1.5 bg-accent" />
+        </div>
+        <div
+          data-curtain-right
+          aria-hidden="true"
+          className={cn("pointer-events-none absolute inset-y-0 right-0 z-10 w-1/2 bg-primary", prefersReducedMotion() && "hidden")}
+          style={PLEATS}
+        >
+          <span className="pointer-events-none absolute inset-y-0 left-0 w-10 bg-gradient-to-r from-overlay/[0.2] to-transparent" />
+          <span className="pointer-events-none absolute inset-x-0 bottom-0 h-1.5 bg-accent" />
+        </div>
       </LaunchCard>
 
       <LaunchCard seed={7} kicker={partnersReveal.jerseyKicker}>
         <div data-jersey-wrap className="relative h-32 w-24 sm:h-36 sm:w-28">
           <JerseyMark className="h-full w-full" />
+          {/* Kit sponsor mark — printed straight on the fabric, no patch/badge behind it. */}
+          <img
+            src={technosportMark}
+            alt="Technosport"
+            loading="lazy"
+            decoding="async"
+            className="pointer-events-none absolute left-1/2 top-[52%] w-[38%] -translate-x-1/2 -translate-y-1/2 object-contain [filter:drop-shadow(0_1px_1px_rgb(var(--c-overlay)/0.4))]"
+          />
           <div aria-hidden="true" className="pointer-events-none absolute inset-0 flex overflow-hidden rounded-[2px]">
             {Array.from({ length: SLATS }).map((_, i) => (
               <span
@@ -264,23 +363,30 @@ export function PartnerLaunch() {
             ))}
           </div>
         </div>
-        <p className="t-accent text-[0.75rem] text-fg-muted">{brand.host}</p>
       </LaunchCard>
 
       <LaunchCard seed={11} kicker={partnersReveal.partnersKicker}>
-        <div className="relative flex h-28 w-28 items-center justify-center sm:h-32 sm:w-32">
+        {/* Two players, a net, and the ball rallying between them. The ball
+            and the two impact rings sit over the SVG at the paddle faces
+            (percentages of the scene box, offset by half their own size). */}
+        <div className="relative w-56 sm:w-64">
+          <PlayersScene />
+          {[
+            { key: "left", cls: "left-[41%] top-[31%]", attr: { "data-player-impact-left": true } },
+            { key: "right", cls: "left-[61%] top-[35%]", attr: { "data-player-impact-right": true } },
+          ].map(({ key, cls, attr }) => (
+            <span
+              key={key}
+              {...attr}
+              aria-hidden="true"
+              className={cn("pointer-events-none absolute -ml-3.5 -mt-3.5 h-7 w-7 rounded-full border-2 border-accent opacity-0", cls)}
+            />
+          ))}
           <div
-            data-player-paddle
-            className="absolute left-1 top-1/2 h-20 w-14 -translate-y-1/2 -rotate-12 [filter:drop-shadow(0_6px_6px_rgb(var(--c-overlay)/0.18))] sm:h-24 sm:w-16"
+            ref={ballRef}
+            data-player-ball
+            className="absolute left-[41%] top-[31%] -ml-2.5 -mt-2.5 h-5 w-5 sm:-ml-3 sm:-mt-3 sm:h-6 sm:w-6"
           >
-            <PaddleSvg className="h-full w-full" />
-          </div>
-          <span
-            data-player-impact
-            aria-hidden="true"
-            className="pointer-events-none absolute right-2 top-2 h-9 w-9 rounded-full border-2 border-accent opacity-0 sm:h-10 sm:w-10"
-          />
-          <div ref={ballRef} data-player-ball className="absolute right-2 top-2 h-9 w-9 sm:h-10 sm:w-10">
             {prefersReducedMotion() || !enhanced ? (
               <PickleballSvg className="h-full w-full" />
             ) : (
@@ -292,7 +398,6 @@ export function PartnerLaunch() {
             )}
           </div>
         </div>
-        <p className="t-accent text-[0.75rem] text-fg-muted">{brand.host}</p>
       </LaunchCard>
 
       <LaunchCard seed={15} kicker={partnersReveal.surpriseKicker}>
@@ -328,7 +433,7 @@ export function PartnerLaunch() {
         </div>
         {giftOpened ? (
           <div className="flex flex-col items-center gap-3">
-            <p className="t-display text-balance text-[1.25rem] italic leading-snug text-fg sm:text-[1.4rem]">{opening.invitedLine}</p>
+            <p className="t-display text-balance text-[1.25rem] italic leading-snug text-fg sm:text-[1.4rem]">{partnersReveal.surpriseTeaser}</p>
             <MagneticButton>
               <Button type="button" size="sm" onClick={replay}>
                 {partnersReveal.replayCta}

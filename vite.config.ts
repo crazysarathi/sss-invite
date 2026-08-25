@@ -10,6 +10,12 @@ export default defineConfig({
     },
   },
   server: {
+    // Bind to 0.0.0.0 so the dev server is reachable from other devices on
+    // the LAN (e.g. testing on a phone) via this machine's IP, not just
+    // localhost. The proxy below still runs server-side regardless of which
+    // IP the browser used to reach Vite, so no separate "dev API host" is
+    // needed the way a standalone backend would require.
+    host: true,
     // The admin panel UI is this same React app (src/admin) — only its JSON
     // API is PHP. Vite can't execute PHP, so during dev/preview forward just
     // the API calls to the local PHP server (see sss-admin/README.md); the

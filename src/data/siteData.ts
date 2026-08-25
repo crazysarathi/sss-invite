@@ -17,6 +17,22 @@
 import crest from "@/assets/logos/sss-crest.svg";
 import gurkhaLogo from "@/assets/logos/gurkha-logo.svg";
 import tensLogo from "@/assets/logos/tens-logo.svg";
+import sksHospitalLogo from "@/assets/partners/sks-hospital.jpeg";
+import mahendraLogo from "@/assets/partners/mahendra.png";
+import megawinLogo from "@/assets/partners/megawin.jpeg";
+import venusEstatesLogo from "@/assets/partners/venus-estates.jpg";
+import technosportLogo from "@/assets/partners/technosport.png";
+import armoraaLogo from "@/assets/partners/armoraa.png";
+import gurkhaSponsorLogo from "@/assets/partners/gurkha.svg";
+import iaMotorsLogo from "@/assets/partners/ia-motors.jpg";
+import grandEstanciaLogo from "@/assets/partners/grand-estancia.png";
+import tabInfinityLogo from "@/assets/partners/tab-infinity.png";
+import weddingWhisperersLogo from "@/assets/partners/wedding-whisperers.jpg";
+import ecoWellLogo from "@/assets/partners/eco-well.jpg";
+import tailoredLuxuryLogo from "@/assets/partners/tailored-luxury.jpeg";
+import yococoLogo from "@/assets/partners/yococo.png";
+import narasusCoffeeLogo from "@/assets/partners/narasus-coffee.jpg";
+import farmHarvestLogo from "@/assets/partners/farm-harvest.jpg";
 
 /* ------------------------------------------------------------------ */
 /* Brand & hosts                                                       */
@@ -36,7 +52,7 @@ export const brand = {
     { name: "Salem Super Smashers", role: "Pickleball", logo: crest },
     { name: "Gurkha Life", role: "Lifestyle", logo: gurkhaLogo },
     { name: "The Tens Movement Lab", role: "Pilates", logo: tensLogo },
-    { name: "Wellness Bar", role: "Matcha & Ube workshop", logo: undefined },
+    { name: "Wellness Bar", role: "Matcha & Ube", logo: undefined },
   ] as const,
   hashtag: "#PickleAndPilates",
 } as const;
@@ -118,8 +134,54 @@ export const partnersReveal = {
   partnersKicker: "Player launch",
   surpriseKicker: "Surprise element",
   openHint: "Tap to open",
+  /** Shown once the gift is opened — a tease, not the actual reveal. */
+  surpriseTeaser: "Curious? Find it on our launch day 😉",
   replayCta: "Replay",
 } as const;
+
+/* ------------------------------------------------------------------ */
+/* Sponsors — the wider sponsor roster (distinct from the four hosting */
+/* partners above), shown as a logo slider right before "Save your     */
+/* spot". Roster and display order confirmed by the hosts on            */
+/* 2026-08-25; Narasus Coffee and Farm Harvest are two separate         */
+/* sponsors (their logos arrived the same day).                          */
+/* ------------------------------------------------------------------ */
+export interface Sponsor {
+  name: string;
+  logo?: string;
+  /**
+   * Let the artwork fill the whole medallion (object-cover, no paper
+   * margin) — for logos that come on their own full-bleed background,
+   * so the circle takes that background instead of showing a square
+   * sitting on paper. Only for square art whose lettering sits well
+   * inside the inscribed circle.
+   */
+  fill?: true;
+}
+
+export const sponsorsSection = {
+  id: "sponsors",
+  kicker: "Sponsors & partners",
+} as const;
+
+export const sponsors: readonly Sponsor[] = [
+  { name: "SKS Hospital", logo: sksHospitalLogo },
+  { name: "Mahendra", logo: mahendraLogo },
+  { name: "Megawin", logo: megawinLogo },
+  { name: "Venus Estates", logo: venusEstatesLogo },
+  { name: "Technosport", logo: technosportLogo },
+  { name: "Armoraa", logo: armoraaLogo },
+  { name: "Gurkha", logo: gurkhaSponsorLogo },
+  { name: "IA Motors", logo: iaMotorsLogo },
+  { name: "Grand Estancia", logo: grandEstanciaLogo },
+  { name: "Tab Infinity", logo: tabInfinityLogo },
+  { name: "Wedding Whisperers", logo: weddingWhisperersLogo, fill: true },
+  { name: "Eco Well", logo: ecoWellLogo },
+  { name: "Tailored Luxury For You", logo: tailoredLuxuryLogo },
+  { name: "Narasus Coffee", logo: narasusCoffeeLogo },
+  { name: "Farm Harvest", logo: farmHarvestLogo },
+  { name: "Yococo", logo: yococoLogo },
+] as const;
 
 /** The small button in the top bar. */
 export const navCta = { label: "Join us", href: "#register" } as const;
@@ -138,7 +200,7 @@ export const details = {
     items: [
       { key: "pickleball", title: "Pickleball", note: "Indoor courts" },
       { key: "pilates", title: "Mat Pilates", note: "Guided session" },
-      { key: "matcha", title: "Matcha & Ube bar", note: "Hands on experience workshop" },
+      { key: "matcha", title: "Wellness Bar", note: "Matcha & Ube" },
     ],
   },
   hostedBy: "Hosted by",
@@ -261,5 +323,5 @@ export function dateLine(): string {
   return event.dateStatus === "confirmed" && event.dateLabel ? event.dateLabel : event.dateTbaLabel;
 }
 
-export const siteData = { brand, meta, event, opening, hero, navCta, hosts, partnersReveal, details, action, rsvp, social, footer } as const;
+export const siteData = { brand, meta, event, opening, hero, navCta, hosts, partnersReveal, details, action, sponsorsSection, sponsors, rsvp, social, footer } as const;
 export type SiteData = typeof siteData;

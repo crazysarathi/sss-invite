@@ -102,7 +102,7 @@ export function UsersTab({ onGuestsChanged }: UsersTabProps) {
         <select
           value={attendanceFilter}
           onChange={(e) => onAttendanceFilter(e.target.value)}
-          className={`w-auto ${inputClass}`}
+          className={`!w-auto ${inputClass}`}
           aria-label="Filter by attendance"
         >
           <option value="">Will you be joining us? (all)</option>
@@ -112,7 +112,7 @@ export function UsersTab({ onGuestsChanged }: UsersTabProps) {
         <select
           value={slotFilter}
           onChange={(e) => onSlotFilter(e.target.value)}
-          className={`w-auto ${inputClass}`}
+          className={`!w-auto ${inputClass}`}
           aria-label="Filter by time slot"
         >
           <option value="">All slots</option>
@@ -125,7 +125,7 @@ export function UsersTab({ onGuestsChanged }: UsersTabProps) {
         <select
           value={interestFilter}
           onChange={(e) => onInterestFilter(e.target.value)}
-          className={`w-auto ${inputClass}`}
+          className={`!w-auto ${inputClass}`}
           aria-label="Filter by I'm here for"
         >
           <option value="">All interests</option>

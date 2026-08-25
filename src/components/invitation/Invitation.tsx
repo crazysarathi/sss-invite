@@ -4,6 +4,7 @@ import { Hosts } from "./Hosts";
 import { PartnersReveal } from "./PartnersReveal";
 import { Details } from "./Details";
 import { Action } from "./Action";
+import { Sponsors } from "./Sponsors";
 import { RSVP } from "./RSVP";
 import { Footer } from "./Footer";
 
@@ -41,7 +42,8 @@ function useProgressiveMount(steps: number): number {
  * The invitation, card by card — only what the hosts asked for:
  * hero (the card) → hosts (the four names) → the partners launch (a
  * tap-through reveal) → details (where / when / what) → "See our Smashers
- * in action" → save your spot (collect database) → footer.
+ * in action" → sponsors & partners (a logo slider) → save your spot
+ * (collect database) → footer.
  *
  * Only the hero renders up front (it's what the gate doors reveal); the
  * sections below the fold stream in during idle time so the first paint on
@@ -49,7 +51,7 @@ function useProgressiveMount(steps: number): number {
  * form — behind closed doors.
  */
 export function Invitation({ booted }: InvitationProps) {
-  const stage = useProgressiveMount(6);
+  const stage = useProgressiveMount(7);
   return (
     <>
       <main id="main-content" tabIndex={-1} className="outline-none">
@@ -58,9 +60,10 @@ export function Invitation({ booted }: InvitationProps) {
         {stage > 1 && <PartnersReveal />}
         {stage > 2 && <Details />}
         {stage > 3 && <Action />}
-        {stage > 4 && <RSVP />}
+        {stage > 4 && <Sponsors />}
+        {stage > 5 && <RSVP />}
       </main>
-      {stage > 5 && <Footer />}
+      {stage > 6 && <Footer />}
     </>
   );
 }

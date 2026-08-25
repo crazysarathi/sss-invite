@@ -1,0 +1,16 @@
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+
+  # Real files (sss-admin/api/*.php, assets/*.js, favicon.png, ...) — serve as-is.
+  RewriteCond %{REQUEST_FILENAME} -f
+  RewriteRule ^ - [L]
+
+  # Everything else, including bare /sss-admin and /sss-admin/, falls back to
+  # the SPA shell — React reads the path client-side (see src/main.tsx).
+  RewriteRule ^ index.html [L]
+</IfModule>
+
+# Belt-and-suspenders: never show a raw directory listing even if mod_rewrite
+# is unavailable (e.g. sss-admin/includes/, sss-admin/api/ browsed directly).
+Options -Indexes

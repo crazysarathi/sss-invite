@@ -44,12 +44,12 @@ export function AdminDashboard({ session, onLogout }: AdminDashboardProps) {
         </div>
       </header>
 
-      <section className="mx-auto mt-6 grid max-w-[1600px] grid-cols-2 gap-4 px-6 sm:max-w-xs sm:grid-cols-2">
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+      <section className="mx-auto mt-6 flex max-w-[1600px] flex-wrap gap-4 px-6">
+        <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-4">
           <div className="text-2xl font-semibold text-gray-900">{stats?.totalGuests ?? "—"}</div>
           <div className="text-xs text-gray-500">Total submissions</div>
         </div>
-        <div className="rounded-lg border border-gray-200 bg-white p-4">
+        <div className="min-w-[160px] rounded-lg border border-gray-200 bg-white p-4">
           <div className="text-2xl font-semibold text-gray-900">
             {stats ? formatCurrency(stats.totalCollected) : "—"}
           </div>
