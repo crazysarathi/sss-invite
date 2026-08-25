@@ -42,7 +42,7 @@ function useProgressiveMount(steps: number): number {
  * The invitation, card by card — only what the hosts asked for:
  * hero (the card) → hosts (the four names) → the partners launch (a
  * tap-through reveal) → details (where / when / what) → "See our Smashers
- * in action" → sponsors & partners (a logo slider) → save your spot
+ * in action" → our partners (a logo slider) → save your spot
  * (collect database) → footer.
  *
  * Only the hero renders up front (it's what the gate doors reveal); the

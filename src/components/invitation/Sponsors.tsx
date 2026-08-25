@@ -11,8 +11,9 @@ import { CourtsideSketches } from "@/components/sport/CourtsideSketch";
 const AUTOPLAY_MS = 3500;
 
 /**
- * Sponsors & partners — a testimonial-style slider right before "Save your
- * spot": each logo held in a round paper medallion, the medallions strung
+ * "Our partners" — a testimonial-style slider right before "Save your
+ * spot": each logo held in a round paper medallion (lavender half-ring over
+ * the top, lavender title segment across the bottom), the medallions strung
  * on a hairline vine that curves through a small chartreuse bud at each
  * joint (the client's reference). One per view on phones, two from sm, three from md,
  * four from xl — CSS decides, no JS re-measuring. Native scroll-snap
@@ -149,40 +150,75 @@ export function Sponsors() {
                   />
                 )}
 
-                {/* the medallion — a round paper frame holding the logo, with
-                    a bud on the rim where the vine meets it on either side.
-                    Big on phones (the hosts found the first cut hard to
-                    read); wider screens fit 2–4 per row so it eases back. */}
+                {/* the medallion — the client's pick from six mock-ups
+                    (2026-08-25): a paper disc with a lavender half-ring
+                    arcing over its top from rim-dot to rim-dot (the dots
+                    double as the points where the vine meets the disc), the
+                    logo in the upper disc, and a solid lavender segment
+                    across the bottom carrying the "Official … Partner" title
+                    in white bold caps. Big on phones (the hosts found the
+                    first cut hard to read); wider screens fit 2–4 per row. */}
                 <div className="relative">
                   <span
                     aria-hidden="true"
-                    className="absolute left-0 top-1/2 z-10 h-2 w-2 -translate-x-1/2 -translate-y-1/2 rounded-full bg-accent"
+                    className="absolute left-0 top-1/2 z-20 h-2.5 w-2.5 -translate-x-1/2 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_0_2px_rgb(var(--c-surface))]"
                   />
                   <span
                     aria-hidden="true"
-                    className="absolute right-0 top-1/2 z-10 h-2 w-2 translate-x-1/2 -translate-y-1/2 rounded-full bg-accent"
+                    className="absolute right-0 top-1/2 z-20 h-2.5 w-2.5 translate-x-1/2 -translate-y-1/2 rounded-full bg-primary shadow-[0_0_0_2px_rgb(var(--c-surface))]"
                   />
-                  <div className="group relative flex h-64 w-64 items-center justify-center overflow-hidden rounded-full border border-accent/70 bg-surface p-9 shadow-[var(--shadow-card),inset_0_3px_12px_rgb(var(--c-overlay)/0.08)] sm:h-52 sm:w-52 sm:p-7 lg:h-60 lg:w-60 lg:p-8">
-                    {sponsor.logo ? (
-                      <img
-                        src={sponsor.logo}
-                        alt={sponsor.name}
-                        loading="lazy"
-                        decoding="async"
-                        onLoad={updateState}
-                        className={cn(
-                          "transition-transform duration-300 ease-out group-hover:scale-[1.06]",
-                          sponsor.fill
-                            ? // full-bleed art: the medallion IS the logo's background
-                              "absolute inset-0 h-full w-full object-cover"
-                            : "max-h-full max-w-full object-contain",
-                        )}
-                      />
-                    ) : (
-                      <p className="t-accent text-center text-[0.78rem] leading-snug text-fg-muted">
-                        {sponsor.name}
+                  {/* the half-ring: a hairline arc a few px outside the disc,
+                      from the left dot over the top to the right dot */}
+                  <svg
+                    aria-hidden="true"
+                    focusable="false"
+                    viewBox="0 0 100 100"
+                    className="pointer-events-none absolute -inset-1.5 z-10 h-[calc(100%+0.75rem)] w-[calc(100%+0.75rem)]"
+                  >
+                    <path
+                      d="M1 50 A49 49 0 0 1 99 50"
+                      fill="none"
+                      stroke="rgb(var(--c-primary))"
+                      strokeWidth="1.5"
+                      strokeLinecap="round"
+                      vectorEffect="non-scaling-stroke"
+                    />
+                  </svg>
+                  <div className="group relative h-64 w-64 overflow-hidden rounded-full bg-surface shadow-[var(--shadow-card),inset_0_3px_12px_rgb(var(--c-overlay)/0.08)] sm:h-52 sm:w-52 lg:h-60 lg:w-60">
+                    {/* the logo — the upper 70% of the disc, padded in from
+                        the curve so wide marks don't touch the rim */}
+                    <div className="absolute inset-x-0 top-0 flex h-[70%] items-center justify-center px-[15%] pb-[3%] pt-[12%]">
+                      {sponsor.logo ? (
+                        <img
+                          src={sponsor.logo}
+                          alt={sponsor.name}
+                          loading="lazy"
+                          decoding="async"
+                          onLoad={updateState}
+                          className={cn(
+                            "transition-transform duration-300 ease-out group-hover:scale-[1.06]",
+                            sponsor.fill
+                              ? // full-bleed art: the medallion IS the logo's background
+                                "absolute inset-0 h-full w-full object-cover"
+                              : "max-h-full max-w-full object-contain",
+                          )}
+                        />
+                      ) : (
+                        <p className="t-accent text-center text-[0.78rem] leading-snug text-fg-muted">
+                          {sponsor.name}
+                        </p>
+                      )}
+                    </div>
+                    {/* the title segment — a lavender band across the lower
+                        30%, clipped into a chord by the disc's rounded
+                        overflow. Side padding keeps a two-line title inside
+                        the narrowing curve; a touch more padding below than
+                        above lifts the text to where the chord is widest. */}
+                    <div className="absolute inset-x-0 bottom-0 z-10 flex h-[30%] items-center justify-center bg-primary px-[16%] pb-[3%]">
+                      <p className="font-body text-center text-[0.66rem] font-bold uppercase leading-snug tracking-[0.08em] text-page sm:text-[0.56rem] lg:text-[0.62rem]">
+                        {sponsor.role}
                       </p>
-                    )}
+                    </div>
                   </div>
                 </div>
               </div>

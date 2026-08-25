@@ -66,6 +66,7 @@ export const base: ThemeDefinition = {
         import("@fontsource-variable/cormorant/wght.css"),
         import("@fontsource-variable/cormorant/wght-italic.css"),
         import("@fontsource/cormorant-sc/600.css"),
+        import("@fontsource/cormorant-sc/700.css"), // partner titles are set bold
         import("@fontsource/great-vibes/400.css"),
         import("@fontsource-variable/jost/wght.css"),
         import("@fontsource-variable/jost/wght-italic.css"),

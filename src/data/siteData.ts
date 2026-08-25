@@ -17,22 +17,22 @@
 import crest from "@/assets/logos/sss-crest.svg";
 import gurkhaLogo from "@/assets/logos/gurkha-logo.svg";
 import tensLogo from "@/assets/logos/tens-logo.svg";
-import sksHospitalLogo from "@/assets/partners/sks-hospital.jpeg";
+import sksHospitalLogo from "@/assets/partners/sks-hospital.webp";
 import mahendraLogo from "@/assets/partners/mahendra.png";
-import megawinLogo from "@/assets/partners/megawin.jpeg";
-import venusEstatesLogo from "@/assets/partners/venus-estates.jpg";
+import megawinLogo from "@/assets/partners/megawin.webp";
+import venusEstatesLogo from "@/assets/partners/venus-estates.webp";
 import technosportLogo from "@/assets/partners/technosport.png";
 import armoraaLogo from "@/assets/partners/armoraa.png";
 import gurkhaSponsorLogo from "@/assets/partners/gurkha.svg";
-import iaMotorsLogo from "@/assets/partners/ia-motors.jpg";
+import iaMotorsLogo from "@/assets/partners/ia-motors.webp";
 import grandEstanciaLogo from "@/assets/partners/grand-estancia.png";
 import tabInfinityLogo from "@/assets/partners/tab-infinity.png";
 import weddingWhisperersLogo from "@/assets/partners/wedding-whisperers.webp";
 import ecoWellLogo from "@/assets/partners/eco-well.jpg";
-import tailoredLuxuryLogo from "@/assets/partners/tailored-luxury.jpeg";
+import tailoredLuxuryLogo from "@/assets/partners/tailored-luxury.webp";
 import yococoLogo from "@/assets/partners/yococo.png";
-import narasusCoffeeLogo from "@/assets/partners/narasus-coffee.jpg";
-import farmHarvestLogo from "@/assets/partners/farm-harvest.jpg";
+import narasusCoffeeLogo from "@/assets/partners/narasus-coffee.webp";
+import farmHarvestLogo from "@/assets/partners/farm-harvest.webp";
 
 /* ------------------------------------------------------------------ */
 /* Brand & hosts                                                       */
@@ -144,10 +144,15 @@ export const partnersReveal = {
 /* partners above), shown as a logo slider right before "Save your     */
 /* spot". Roster and display order confirmed by the hosts on            */
 /* 2026-08-25; Narasus Coffee and Farm Harvest are two separate         */
-/* sponsors (their logos arrived the same day).                          */
+/* sponsors (their logos arrived the same day) sharing one partnership   */
+/* title. Partnership titles from the hosts' sheet, 2026-08-25. Logos    */
+/* that arrived on a white box were knocked out to transparent           */
+/* (scripts/partners-knockout.py) so they sit on the medallion's paper.  */
 /* ------------------------------------------------------------------ */
 export interface Sponsor {
   name: string;
+  /** "Official … Partner" — set in bold under the logo, inside the medallion. */
+  role: string;
   logo?: string;
   /**
    * Let the artwork fill the whole medallion (object-cover, no paper
@@ -161,26 +166,26 @@ export interface Sponsor {
 
 export const sponsorsSection = {
   id: "sponsors",
-  kicker: "Sponsors & partners",
+  kicker: "Our partners",
 } as const;
 
 export const sponsors: readonly Sponsor[] = [
-  { name: "SKS Hospital", logo: sksHospitalLogo },
-  { name: "Mahendra", logo: mahendraLogo },
-  { name: "Megawin", logo: megawinLogo },
-  { name: "Venus Estates", logo: venusEstatesLogo },
-  { name: "Technosport", logo: technosportLogo },
-  { name: "Armoraa", logo: armoraaLogo },
-  { name: "Gurkha", logo: gurkhaSponsorLogo },
-  { name: "IA Motors", logo: iaMotorsLogo },
-  { name: "Grand Estancia", logo: grandEstanciaLogo },
-  { name: "Tab Infinity", logo: tabInfinityLogo },
-  { name: "Wedding Whisperers", logo: weddingWhisperersLogo },
-  { name: "Eco Well", logo: ecoWellLogo },
-  { name: "Tailored Luxury For You", logo: tailoredLuxuryLogo },
-  { name: "Narasus Coffee", logo: narasusCoffeeLogo },
-  { name: "Farm Harvest", logo: farmHarvestLogo },
-  { name: "Yococo", logo: yococoLogo },
+  { name: "SKS Hospital", role: "Official Health Care Partner", logo: sksHospitalLogo },
+  { name: "Mahendra", role: "Official Education Partner", logo: mahendraLogo },
+  { name: "Megawin", role: "Official Energy Partner", logo: megawinLogo },
+  { name: "Venus Estates", role: "Official Lifestyle Properties Partner", logo: venusEstatesLogo },
+  { name: "Technosport", role: "Official Activewear Partner", logo: technosportLogo },
+  { name: "Armoraa", role: "Official Skin & Wellness Partner", logo: armoraaLogo },
+  { name: "Gurkha", role: "Official Fitness Gear Partner", logo: gurkhaSponsorLogo },
+  { name: "IA Motors", role: "Official Automobile Partner", logo: iaMotorsLogo },
+  { name: "Grand Estancia", role: "Official Salem Hospitality Partner", logo: grandEstanciaLogo },
+  { name: "Tab Infinity", role: "Official Creative Partner", logo: tabInfinityLogo },
+  { name: "Wedding Whisperers", role: "Official Photography Partner", logo: weddingWhisperersLogo },
+  { name: "Eco Well", role: "Official Eco-Wellness Partner", logo: ecoWellLogo },
+  { name: "Tailored Luxury For You", role: "Official Luxury Gifting Partner", logo: tailoredLuxuryLogo },
+  { name: "Narasus Coffee", role: "Official Goodie Bag Partner", logo: narasusCoffeeLogo },
+  { name: "Farm Harvest", role: "Official Goodie Bag Partner", logo: farmHarvestLogo },
+  { name: "Yococo", role: "Official Refreshment Partner", logo: yococoLogo },
 ] as const;
 
 /** The small button in the top bar. */
