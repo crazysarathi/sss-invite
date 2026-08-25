@@ -15,9 +15,13 @@ export function AdminDashboard({ session, onLogout }: AdminDashboardProps) {
   const [stats, setStats] = useState<{ totalGuests: number; totalCollected: number } | null>(null);
   const [guests, setGuests] = useState<Guest[]>([]);
 
-  useEffect(() => {
+  const loadStats = useCallback(() => {
     adminApi<{ totalGuests: number; totalCollected: number }>("stats.php").then(setStats);
   }, []);
+
+  useEffect(() => {
+    loadStats();
+  }, [loadStats]);
 
   const onGuestsChanged = useCallback((list: Guest[]) => setGuests(list), []);
 
@@ -77,7 +81,7 @@ export function AdminDashboard({ session, onLogout }: AdminDashboardProps) {
         {/* Both tabs stay mounted (just hidden) so the guest list is ready for the
             Payments picker even if that tab is opened before Users ever loads. */}
         <div hidden={tab !== "users"}>
-          <UsersTab onGuestsChanged={onGuestsChanged} />
+          <UsersTab session={session} onGuestsChanged={onGuestsChanged} onGuestDeleted={loadStats} />
         </div>
         <div hidden={tab !== "payments"}>
           <PaymentsTab session={session} guests={guests} />

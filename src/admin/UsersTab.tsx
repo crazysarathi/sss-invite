@@ -1,12 +1,14 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { adminApi } from "./api";
-import { inputClass } from "./Modal";
+import { ConfirmDialog, inputClass } from "./Modal";
 import { INTEREST_LABELS, SLOT_LABELS, formatCurrency, formatDate } from "./format";
-import type { Guest } from "./types";
+import type { Guest, Session } from "./types";
 
 const SLOTS = Object.entries(SLOT_LABELS);
 const INTERESTS = Object.entries(INTEREST_LABELS);
 const ATTENDANCE_LABELS: Record<string, string> = { yes: "Count me in", no: "Can't make it" };
+/** Only this admin account gets the Delete action on the Users tab (front-end gate only). */
+const SUPERADMIN_USERNAME = "superadmin";
 
 function paymentBadge(status: string | null, amount: string | null) {
   if (!status) {
@@ -30,12 +32,18 @@ function attendanceBadge(attendance: string) {
 }
 
 interface UsersTabProps {
+  session: Session;
   /** Called after every successful load so the Payments tab's guest picker stays fresh. */
   onGuestsChanged: (guests: Guest[]) => void;
+  /** Called after a guest is deleted so the dashboard stats can refresh. */
+  onGuestDeleted?: () => void;
 }
 
-export function UsersTab({ onGuestsChanged }: UsersTabProps) {
+export function UsersTab({ session, onGuestsChanged, onGuestDeleted }: UsersTabProps) {
+  const canDelete = session.username === SUPERADMIN_USERNAME;
   const [guests, setGuests] = useState<Guest[]>([]);
+  const [pendingDelete, setPendingDelete] = useState<Guest | null>(null);
+  const [deleteError, setDeleteError] = useState("");
   const [query, setQuery] = useState("");
   const [attendanceFilter, setAttendanceFilter] = useState("");
   const [slotFilter, setSlotFilter] = useState("");
@@ -87,6 +95,20 @@ export function UsersTab({ onGuestsChanged }: UsersTabProps) {
   const onInterestFilter = (value: string) => {
     setInterestFilter(value);
     load(query.trim(), attendanceFilter, slotFilter, value);
+  };
+
+  const confirmDelete = async () => {
+    if (!pendingDelete) return;
+    const id = pendingDelete.id;
+    setPendingDelete(null);
+    setDeleteError("");
+    try {
+      await adminApi("users_delete.php", { method: "POST", csrf: session.csrf, body: { id } });
+      await load(query.trim(), attendanceFilter, slotFilter, interestFilter);
+      onGuestDeleted?.();
+    } catch (err) {
+      setDeleteError(err instanceof Error ? err.message : "Could not delete this submission.");
+    }
   };
 
   return (
@@ -151,6 +173,7 @@ export function UsersTab({ onGuestsChanged }: UsersTabProps) {
               <th className="w-full px-4 py-2.5">Message</th>
               <th className="whitespace-nowrap px-4 py-2.5">Payment</th>
               <th className="whitespace-nowrap px-4 py-2.5">Submitted</th>
+              {canDelete && <th className="px-4 py-2.5" />}
             </tr>
           </thead>
           <tbody className="divide-y divide-gray-100">
@@ -166,12 +189,39 @@ export function UsersTab({ onGuestsChanged }: UsersTabProps) {
                 <td className="whitespace-pre-wrap break-words px-4 py-2.5">{g.message || "—"}</td>
                 <td className="whitespace-nowrap px-4 py-2.5">{paymentBadge(g.payment_status, g.payment_amount)}</td>
                 <td className="whitespace-nowrap px-4 py-2.5 text-gray-500">{formatDate(g.created_at)}</td>
+                {canDelete && (
+                  <td className="whitespace-nowrap px-4 py-2.5 text-right">
+                    <button
+                      type="button"
+                      onClick={() => setPendingDelete(g)}
+                      className="text-red-500 hover:text-red-700"
+                    >
+                      Delete
+                    </button>
+                  </td>
+                )}
               </tr>
             ))}
           </tbody>
         </table>
         {!loading && guests.length === 0 && <p className="px-4 py-6 text-center text-sm text-gray-400">No submissions match.</p>}
       </div>
+
+      {deleteError && <p className="mt-3 text-sm text-red-600">{deleteError}</p>}
+
+      {canDelete && pendingDelete && (
+        <ConfirmDialog
+          title="Delete submission?"
+          body={
+            <>
+              This removes <strong className="text-gray-900">{pendingDelete.name}</strong> ({pendingDelete.email}) and any
+              payment records linked to them. This can't be undone.
+            </>
+          }
+          onConfirm={confirmDelete}
+          onCancel={() => setPendingDelete(null)}
+        />
+      )}
     </div>
   );
 }

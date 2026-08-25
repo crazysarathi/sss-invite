@@ -103,6 +103,7 @@ export function PartnerLaunch() {
               const curtainRight = block.querySelector<HTMLElement>("[data-curtain-right]");
               if (curtainLeft && curtainRight) {
                 const open = { scaleX: 0.13, duration: motion.duration.slow * 1.2, ease: "power3.inOut" };
+                sound.curtainOpen(open.duration);
                 gsap.to(curtainLeft, { ...open, transformOrigin: "left center" });
                 gsap.to(curtainRight, { ...open, transformOrigin: "right center" });
               }
@@ -236,6 +237,10 @@ export function PartnerLaunch() {
       const glow = root.querySelector<HTMLElement>("[data-glow]");
       const burst = root.querySelector<HTMLElement>("[data-burst]");
       const giftWrap = root.querySelector<HTMLElement>("[data-gift-wrap]");
+
+      // Rattle → pop → sparkle chime, scheduled on the audio clock to the
+      // same offsets as the timeline below (also on every Replay).
+      sound.giftOpen();
 
       if (prefersReducedMotion()) {
         if (lid) gsap.set(lid, { rotate: -20, y: -22, x: -8, transformOrigin: "24% 96%" });

@@ -27,7 +27,7 @@ import gurkhaSponsorLogo from "@/assets/partners/gurkha.svg";
 import iaMotorsLogo from "@/assets/partners/ia-motors.jpg";
 import grandEstanciaLogo from "@/assets/partners/grand-estancia.png";
 import tabInfinityLogo from "@/assets/partners/tab-infinity.png";
-import weddingWhisperersLogo from "@/assets/partners/wedding-whisperers.jpg";
+import weddingWhisperersLogo from "@/assets/partners/wedding-whisperers.webp";
 import ecoWellLogo from "@/assets/partners/eco-well.jpg";
 import tailoredLuxuryLogo from "@/assets/partners/tailored-luxury.jpeg";
 import yococoLogo from "@/assets/partners/yococo.png";
@@ -175,7 +175,7 @@ export const sponsors: readonly Sponsor[] = [
   { name: "IA Motors", logo: iaMotorsLogo },
   { name: "Grand Estancia", logo: grandEstanciaLogo },
   { name: "Tab Infinity", logo: tabInfinityLogo },
-  { name: "Wedding Whisperers", logo: weddingWhisperersLogo, fill: true },
+  { name: "Wedding Whisperers", logo: weddingWhisperersLogo },
   { name: "Eco Well", logo: ecoWellLogo },
   { name: "Tailored Luxury For You", logo: tailoredLuxuryLogo },
   { name: "Narasus Coffee", logo: narasusCoffeeLogo },
