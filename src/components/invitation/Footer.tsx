@@ -45,13 +45,13 @@ export function Footer() {
             <p className="t-display max-w-md text-balance text-[1.35rem] font-semibold leading-snug text-primary md:text-[1.6rem]">
               {footer.secureLine}
             </p>
-            {/* the goodie-bag / QR note — the client's closing message */}
-            <div className="mt-2 max-w-md">
-              <p className="t-display text-[1.35rem] font-bold leading-tight text-fg md:text-[1.5rem]">{footer.goodieBag.title}</p>
-              <p className="mt-2 text-balance text-sm text-fg-muted md:text-[0.95rem]">
-                <strong className="font-semibold text-fg">{footer.goodieBag.line.lead}</strong>
-                {footer.goodieBag.line.rest}
-              </p>
+            {/* the goodie-bag / QR note — the same display face as the
+                secure line above (the client wanted one face down this
+                column); the title semibold, the line regular, nothing bold
+                inside it and no chip behind it. */}
+            <div className="mt-1 flex max-w-md flex-col items-center gap-1.5">
+              <p className="t-display text-[1.3rem] font-semibold leading-snug text-fg md:text-[1.45rem]">{footer.goodieBag.title}</p>
+              <p className="t-display text-balance text-[1.05rem] leading-snug text-fg-muted md:text-[1.15rem]">{footer.goodieBag.line}</p>
             </div>
             <div className="mt-2 flex flex-wrap items-center justify-center gap-3">
               <Button asChild variant="outline">

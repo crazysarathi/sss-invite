@@ -269,7 +269,7 @@ export const rsvp = {
       soldOutLabel: "Sold out",
       options: [
         { value: "630-730am", label: "6:30 am to 7:30 am" },
-        { value: "8-9am", label: "8 am to 9 am" },
+        { value: "745-845am", label: "7:45 am to 8:45 am" },
         { value: "530-630pm", label: "5:30 pm to 6:30 pm" },
       ],
     },
@@ -343,15 +343,14 @@ export const footer = {
   secureLine: "Secure your spot & receive your BookMyShow registration link!",
   /**
    * Client's wording, 2026-08-25 — replaces the "host × partners" line
-   * under the crest (that list still heads the hero). `lead` is the bold
-   * run of the line, `rest` the remainder.
+   * under the crest (that list still heads the hero). Both set in the
+   * display face like the secure line above them; only the title is
+   * semibold. `line` is ONE plain string — Footer renders it directly, no
+   * bold/regular split.
    */
   goodieBag: {
-    title: "Your Goodie Bag Awaits",
-    line: {
-      lead: "Simply present your QR code at the Registration Desk",
-      rest: " on the day of the event to collect yours.",
-    },
+    title: "Your Goodie Bag Awaits 🎁",
+    line: "Simply present your QR code at the Registration Desk on the day of the event to collect yours.",
   },
   directionsCta: "Get directions",
   copyright: "© 2026 Salem Super Smashers · Pickle & Pilates",
