@@ -223,7 +223,10 @@ export function OpeningScreen({ onOpen, onComplete }: OpeningScreenProps) {
             </span>
             <span aria-hidden="true" className="my-1 block h-px w-12 bg-accent/70" />
             <span className="t-label block text-[0.62rem] leading-relaxed md:text-[0.7rem]">
-              {dateLine()} · {event.venue.name}
+              {dateLine()}
+              <span className="hidden md:inline"> · </span>
+              <br className="md:hidden" />
+              {event.venue.name}, {event.venue.city}
             </span>
           </div>
 

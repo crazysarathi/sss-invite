@@ -281,7 +281,7 @@ export const rsvp = {
       options: [
         { value: "630-730am", label: "6:30 am to 7:30 am" },
         { value: "745-845am", label: "7:45 am to 8:45 am" },
-        { value: "530-630pm", label: "5:30 pm to 6:30 pm" },
+        { value: "545-645pm", label: "5:45 pm to 6:45 pm" },
       ],
     },
     /** Client's wording, 2026-08-25. Values are the backend's whitelist — change labels only. */
