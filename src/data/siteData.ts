@@ -29,6 +29,7 @@ import armoraaLogo from "@/assets/partners/armoraa.png";
 import gurkhaSponsorLogo from "@/assets/partners/gurkha.svg";
 import iaMotorsLogo from "@/assets/partners/ia-motors.webp";
 import grandEstanciaLogo from "@/assets/partners/grand-estancia.png";
+import kotakLogo from "@/assets/partners/kotak.webp";
 import tabInfinityLogo from "@/assets/partners/tab-infinity.png";
 import weddingWhisperersLogo from "@/assets/partners/wedding-whisperers.webp";
 import ecoWellLogo from "@/assets/partners/eco-well.jpg";
@@ -131,8 +132,11 @@ export const hosts = {
 
 /* ------------------------------------------------------------------ */
 /* Partners reveal — right after "Four collaborations. One experience.": a    */
-/* plain card grid (no slider) with four set pieces — logo, jersey,     */
-/* partners, and a gift that opens on a callback to the invitation.     */
+/* plain card grid (no slider) with five set pieces — logo, jersey,     */
+/* players, the official paddle (client, 2026-08-26: Yaba Pro+ Gen4     */
+/* re-inked in the site's colours, soft blur, no lock), and a gift that  */
+/* opens on a callback to the invitation — the surprise always comes     */
+/* last.                                                                  */
 /* ------------------------------------------------------------------ */
 export const partnersReveal = {
   id: "partners-reveal",
@@ -141,6 +145,10 @@ export const partnersReveal = {
   logoKicker: "Logo launch",
   jerseyKicker: "Jersey launch",
   partnersKicker: "Players’ launch",
+  /** Client's wording, 2026-08-26 — the 4th card; the surprise moves to 5th. */
+  paddleKicker: "Official paddle launch",
+  /** Alt text for the paddle image. */
+  paddleAlt: "Yaba Pro+ Gen4 paddle",
   surpriseKicker: "Surprise element",
   openHint: "Tap to open",
   /** Shown once the gift is opened — a tease, not the actual reveal. */
@@ -196,6 +204,7 @@ export const sponsors: readonly Sponsor[] = [
   { name: "Gurkha", role: "Official Fitness Gear Partner", logo: gurkhaSponsorLogo },
   { name: "IA Motors", role: "Official Automobile Partner", logo: iaMotorsLogo },
   { name: "Grand Estancia", role: "Official Salem Hospitality Partner", logo: grandEstanciaLogo },
+  { name: "Kotak Mahindra Bank", role: "Official Banking Partner", logo: kotakLogo },
   { name: "Tab Infinity", role: "Official Creative Partner", logo: tabInfinityLogo },
   { name: "Wedding Whisperers", role: "Official Photography Partner", logo: weddingWhisperersLogo },
   { name: "Eco Well", role: "Official Eco-Wellness Partner", logo: ecoWellLogo },

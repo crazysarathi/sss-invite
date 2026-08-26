@@ -5,6 +5,7 @@ import { cn, prefersReducedMotion } from "@/lib/utils";
 import { sound } from "@/lib/audio";
 import { brand, partnersReveal } from "@/data/siteData";
 import technosportMark from "@/assets/partners/technosport-mark.png";
+import yabaProPaddle from "@/assets/partners/yaba-pro-paddle.webp";
 import { useTheme, useThemeMotion } from "@/components/theme/ThemeProvider";
 import { useIdleReady } from "@/hooks/useIdleReady";
 import { useInViewport } from "@/hooks/useInViewport";
@@ -45,10 +46,13 @@ const SPARKLE_SPOTS: readonly CSSProperties[] = [
 /**
  * The section that follows "Four collaborations. One experience." — the same
  * kind of plain card grid as the rest of the invitation (no slider, no
- * tap-through), just four set pieces: the host's crest behind a pair of
- * curtains, the jersey, two players rallying on court, and a gift that
- * opens on a callback to the invitation itself. The cards rise in together on scroll; the gift is
- * the one piece that stays interactive — tap it to open.
+ * tap-through), just five set pieces: the host's crest behind a pair of
+ * curtains, the jersey, two players rallying on court, the official paddle
+ * (client, 2026-08-26: the Yaba Pro+ Gen4 render re-inked in the site's
+ * colours, softly blurred but no lock), and — always last, on a full-width card — a gift
+ * that opens on a callback to the invitation itself. The cards rise in
+ * together on scroll; the gift is the one piece that stays interactive —
+ * tap it to open.
  */
 export function PartnerLaunch() {
   const ref = useRef<HTMLDivElement>(null);
@@ -134,6 +138,11 @@ export function PartnerLaunch() {
 
       const jerseyWrap = root.querySelector("[data-jersey-wrap]");
       if (jerseyWrap) gsap.to(jerseyWrap, { rotation: 3, duration: 3, ease: "sine.inOut", yoyo: true, repeat: -1, transformOrigin: "50% 100%" });
+
+      // The paddle sways about its grip, a touch slower than the jersey so
+      // the two never rock in step.
+      const paddleWrap = root.querySelector("[data-paddle-wrap]");
+      if (paddleWrap) gsap.to(paddleWrap, { rotation: -3, duration: 3.4, ease: "sine.inOut", yoyo: true, repeat: -1, transformOrigin: "50% 100%" });
 
       const giftWrap = root.querySelector("[data-gift-wrap]");
       if (giftWrap) gsap.to(giftWrap, { y: -5, duration: 1.7, ease: "sine.inOut", yoyo: true, repeat: -1 });
@@ -419,7 +428,25 @@ export function PartnerLaunch() {
         </div>
       </LaunchCard>
 
-      <LaunchCard seed={15} kicker={partnersReveal.surpriseKicker}>
+      <LaunchCard seed={9} kicker={partnersReveal.paddleKicker}>
+        {/* The official paddle — the client's own product render (Yaba Pro+
+            Gen4) re-inked in the site's wisteria/lime (client, 2026-08-26 —
+            baked by scripts/paddle-wisteria.py) behind a SOFT blur — a
+            tease, lighter than the logo's, and with no lock (client). */}
+        <div data-paddle-wrap className="relative h-40 w-24 sm:h-44 sm:w-28">
+          <img
+            src={yabaProPaddle}
+            alt={partnersReveal.paddleAlt}
+            width={330}
+            height={720}
+            loading="lazy"
+            decoding="async"
+            className="h-full w-full object-contain opacity-95 [filter:blur(3px)_drop-shadow(0_10px_12px_rgb(var(--c-overlay)/0.18))]"
+          />
+        </div>
+      </LaunchCard>
+
+      <LaunchCard seed={15} kicker={partnersReveal.surpriseKicker} wide>
         <div data-gift-wrap className="relative h-28 w-28 sm:h-32 sm:w-32">
           <span
             data-glow
@@ -474,12 +501,14 @@ interface LaunchCardProps {
   seed: number;
   kicker: string;
   className?: string;
+  /** Span both grid columns — the finale card. */
+  wide?: boolean;
   children: ReactNode;
 }
 
-function LaunchCard({ seed, kicker, className, children }: LaunchCardProps) {
+function LaunchCard({ seed, kicker, className, wide, children }: LaunchCardProps) {
   return (
-    <TornCard seed={seed} data-block className={cn("opacity-0", prefersReducedMotion() && "opacity-100")}>
+    <TornCard seed={seed} data-block className={cn("opacity-0", wide && "sm:col-span-2", prefersReducedMotion() && "opacity-100")}>
       <div className={cn("flex h-full min-h-[15rem] flex-col items-center justify-center gap-2 px-6 py-9 text-center sm:min-h-[17rem]", className)}>
         <p className="t-accent text-[0.68rem] text-primary">{kicker}</p>
         <div data-content className="flex flex-col items-center gap-2">

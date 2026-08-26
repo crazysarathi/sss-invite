@@ -7,10 +7,10 @@ import { Flourish } from "@/components/stationery/Ornaments";
 import { PartnerLaunch } from "@/components/invitation/launch/PartnerLaunch";
 
 /**
- * Right after "Four collaborations. One experience." (Hosts): a four-stage
- * launch the reader taps through — the host's crest, the team on court,
- * the four partners again up close, then a gift that opens on a callback
- * to the invitation. See launch/PartnerLaunch for the interactive panel.
+ * Right after "Four collaborations. One experience." (Hosts): a five-piece
+ * launch — the host's crest, the jersey, the players on court, the
+ * official paddle, then (always last) a gift that opens on a callback to
+ * the invitation. See launch/PartnerLaunch for the interactive panel.
  */
 export function PartnersReveal() {
   return (
